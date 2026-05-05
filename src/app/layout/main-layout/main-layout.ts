@@ -1,0 +1,24 @@
+import { Component } from '@angular/core';
+import { RouterOutlet,RouterModule, Router } from '@angular/router';
+import { AuthService } from '../../services/auth';
+
+@Component({
+  selector: 'app-main-layout',
+  standalone: true,
+  imports: [RouterOutlet, RouterModule],
+  templateUrl: './main-layout.html'
+})
+export class MainLayoutComponent {
+
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) {}
+
+  role = localStorage.getItem('userRole');
+
+  async logout() {
+    await this.auth.logout();
+    this.router.navigate(['/']);
+  }
+}

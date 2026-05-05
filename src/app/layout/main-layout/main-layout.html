@@ -1,0 +1,50 @@
+<div class="d-flex">
+
+  <!-- Sidebar -->
+  <div class="bg-dark text-white p-3 vh-100" style="width: 250px;">
+    <h4 class="text-center">Sistema Médico</h4>
+    <div class="text-center mb-3">
+        <span class="badge bg-info">
+            {{ role }}
+        </span>
+    </div>
+    <hr>
+
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a 
+                class="nav-link text-white"
+                routerLink="/dashboard"
+                routerLinkActive="active bg-primary text-white"
+                [routerLinkActiveOptions]="{ exact: true }"
+            >
+                🏠 Dashboard
+            </a>
+        </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#">
+          👨‍⚕️ Pacientes
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-white" href="#">
+          📄 Historias Clínicas
+        </a>
+      </li>
+
+      <li class="nav-item mt-3">
+        <button class="btn btn-danger w-100" (click)="logout()">
+          Cerrar sesión
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-grow-1 p-4">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
