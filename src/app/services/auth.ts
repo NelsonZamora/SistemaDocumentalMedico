@@ -27,6 +27,11 @@ export class AuthService {
     return data;
   }
 
+  async getUserId() {
+    const { data } = await this.supabase.auth.getSession();
+    return data.session?.user.id;
+  }
+
   async getUserProfile(userId: string) {
   const { data, error } = await this.supabase
     .from('perfiles')

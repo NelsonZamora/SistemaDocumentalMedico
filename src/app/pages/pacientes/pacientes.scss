@@ -1,0 +1,8 @@
+table tbody tr {
+  transition: all 0.2s ease;
+}
+
+table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.1); // azul suave
+  transform: scale(1.01);
+}

@@ -1,0 +1,214 @@
+<div class="container mt-4">
+
+  <h2>Pacientes</h2>
+
+  <button class="btn btn-success mb-3" (click)="abrirModal()">
+    + Añadir Paciente
+  </button>
+
+    @if (cargando) {
+    <div class="text-center mt-4">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Cargando pacientes...</p>
+    </div>
+    }
+  <!-- LISTA -->
+  <table class="table table-bordered text-center align-middle">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Cédula</th>
+      <th>Correo</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+    <tbody>
+    @for (p of pacientes; track p.id) {
+        <tr>
+        <td>{{ p.nombres }} {{ p.apellidos }}</td>
+        <td>{{ p.cedula }}</td>
+        <td>{{ p.correo }}</td>
+
+        <td>
+        <div class="d-flex justify-content-center gap-2">
+
+            <button 
+            class="btn btn-primary btn-sm"
+            (click)="editarPaciente(p); $event.stopPropagation()"
+            >
+            <i class="bi bi-pencil-square me-1"></i>
+            Editar
+            </button>
+
+            <button 
+            class="btn btn-success btn-sm"
+            (click)="verPaciente(p); $event.stopPropagation()"
+            >
+            <i class="bi bi-eye me-1"></i>
+            Ver
+            </button>
+
+        </div>
+        </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+</div>
+
+<!-- MODAL -->
+@if (mostrarModal) {
+  <div 
+    class="modal show"
+    style="display: block; background: rgba(0,0,0,0.5);"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5>Nuevo Paciente</h5>
+          <button class="btn-close" (click)="cerrarModal()"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <input class="form-control mb-2" placeholder="Cédula" [(ngModel)]="form.cedula">
+          <input class="form-control mb-2" placeholder="Nombres" [(ngModel)]="form.nombres">
+          <input class="form-control mb-2" placeholder="Apellidos" [(ngModel)]="form.apellidos">
+          <input class="form-control mb-2" type="date" [(ngModel)]="form.fecha_nacimiento">
+          <input class="form-control mb-2" placeholder="Género" [(ngModel)]="form.genero">
+          <input class="form-control mb-2" placeholder="Teléfono" [(ngModel)]="form.telefono">
+          <input class="form-control mb-2" placeholder="Correo" [(ngModel)]="form.correo">
+
+          <input type="file" class="form-control mb-2" (change)="onFileSelected($event)">
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="cerrarModal()">Volver</button>
+          <button class="btn btn-primary" (click)="guardar()">Guardar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}
+
+<!-- MODAL ÉXITO -->
+@if (mostrarModalExito) {
+  <div 
+    class="modal fade show d-block" 
+    style="background: rgba(0,0,0,0.5);"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center p-3">
+
+        <div class="modal-body">
+          <h5 class="text-success mb-3">
+            ✅ Paciente registrado exitosamente
+          </h5>
+
+          <button class="btn btn-primary" (click)="cerrarModalExito()">
+            Aceptar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}
+
+<!-- MODAL VER-->
+ @if (mostrarModalVer) {
+  <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+
+        <div class="text-center">
+          <img 
+            [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
+            width="120" 
+            class="rounded-circle mb-3"
+          />
+        </div>
+
+        <p><b>Nombre:</b> {{ pacienteSeleccionado.nombres }}</p>
+        <p><b>Apellidos:</b> {{ pacienteSeleccionado.apellidos }}</p>       
+        <p><b>Genero:</b> {{ pacienteSeleccionado.genero }}</p>
+        <p><b>Telefono:</b> {{ pacienteSeleccionado.telefono }}</p>
+        <p><b>Cédula:</b> {{ pacienteSeleccionado.cedula }}</p>
+        <p><b>Correo:</b> {{ pacienteSeleccionado.correo }}</p>
+        <p><b>Fecha de nacimiento:</b> {{ pacienteSeleccionado.fecha_nacimiento }}</p> 
+
+        <button class="btn btn-secondary" (click)="cerrarModalVer()">
+          Cerrar
+        </button>
+
+      </div>
+    </div>
+  </div>
+}
+
+
+<!-- MODAL EDITAR-->
+    @if (mostrarModalEditar) {
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+        <div class="modal-content p-3">
+
+            <h5 class="mb-3">Editar Paciente</h5>
+
+            <!-- FOTO -->
+            <div class="text-center">
+            <img 
+                [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
+                width="120" 
+                class="rounded-circle mb-3"
+            />
+            </div>
+
+            <input type="file" class="form-control mb-3" (change)="onFileSelected($event)">
+
+            <!-- CAMPOS -->
+            <label>Nombre</label>
+            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.nombres">
+
+            <label>Apellidos</label>
+            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.apellidos">
+
+            <label>Género</label>
+            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.genero">
+
+            <label>Teléfono</label>
+            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.telefono">
+
+            <label>Cédula</label>
+            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.cedula">
+
+            <label>Correo</label>
+            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.correo">
+
+            <label>Fecha de nacimiento</label>
+            <input 
+            type="date" 
+            class="form-control mb-3" 
+            [(ngModel)]="pacienteSeleccionado.fecha_nacimiento"
+            >
+
+            <!-- BOTONES -->
+            <div class="d-flex justify-content-between">
+            <button class="btn btn-secondary" (click)="cerrarModalEditar()">
+                Cancelar
+            </button>
+
+            <button class="btn btn-primary" (click)="actualizarPaciente()">
+                Guardar cambios
+            </button>
+            </div>
+
+        </div>
+        </div>
+    </div>
+    }

@@ -5,7 +5,14 @@ import { authGuard } from './guards/auth-guard';
 import { guestGuard } from './guards/guest-guard';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent, canActivate: [guestGuard]},
+  // 🔓 LOGIN (sin sidebar)
+  {
+    path: '',
+    component: LoginComponent,
+    canActivate: [guestGuard]
+  },
+
+  // 🔐 APP (con sidebar)
   {
     path: '',
     canActivate: [authGuard],
@@ -19,6 +26,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/dashboard/dashboard')
             .then(m => m.DashboardComponent)
+      },
+
+      // 🔥 NUEVA RUTA PACIENTES
+      {
+        path: 'pacientes',
+        loadComponent: () =>
+          import('./pages/pacientes/pacientes')
+            .then(m => m.PacientesComponent)
       }
     ]
   }
