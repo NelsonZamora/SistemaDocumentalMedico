@@ -1,0 +1,35 @@
+.preview-container {
+  height: 500px;
+  overflow: auto;
+  background: #e9ecef;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Hoja tipo Word */
+.documento {
+  background: white;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  padding: 40px;
+  border-radius: 6px;
+
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+
+  /* 🔥 NO editable */
+  pointer-events: none;
+  user-select: none;
+
+  //font-family: 'Times New Roman', serif;
+  line-height: 1.6;
+}
+
+.campo-doc {
+  background: #fff3cd;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  border: 1px dashed #ffc107;
+}

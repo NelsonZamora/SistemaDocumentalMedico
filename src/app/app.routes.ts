@@ -28,12 +28,18 @@ export const routes: Routes = [
             .then(m => m.DashboardComponent)
       },
 
-      // 🔥 NUEVA RUTA PACIENTES
       {
         path: 'pacientes',
         loadComponent: () =>
           import('./pages/pacientes/pacientes')
             .then(m => m.PacientesComponent)
+      },
+
+      {
+        path: 'plantillas',
+        loadComponent: () =>
+          import('./pages/plantillas/plantillas')
+            .then(m => m.PlantillasComponent)
       }
     ]
   }

@@ -16,6 +16,7 @@ export class PacientesComponent implements OnInit {
   pacientes: any[] = [];
   mostrarModal = false;
   cargando = false;
+  tablaPaciente = false;
   mostrarModalExito = false;
   
   pacienteSeleccionado: any = null;
@@ -62,6 +63,18 @@ export class PacientesComponent implements OnInit {
     this.mostrarModalEditar = false;
   }
 
+  calcularEdad(fecha: string): number {
+  if (!fecha) return 0;
+  const hoy = new Date();
+  const cumple = new Date(fecha);
+  let edad = hoy.getFullYear() - cumple.getFullYear();
+  const m = hoy.getMonth() - cumple.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < cumple.getDate())) {
+    edad--;
+  }
+  return edad;
+}
+
   async guardar() {
       try {
         let urlFoto = null;
@@ -95,9 +108,97 @@ export class PacientesComponent implements OnInit {
       
     }
 
+  // async cargarPacientes() {
+  //   this.cargando = true;
+
+  //   try {
+  //     const data = await this.pacientesService.getPacientes();
+
+  //     for (let p of data) {
+  //       if (p.foto_perfil) {
+  //         p.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
+  //       }
+  //     }
+
+  //     this.pacientes = data;
+
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+
+  //   this.cargando = false;
+  //   this.tablaPaciente = true;
+  //   this.cd.detectChanges();
+  // }
+
+  async verPaciente(p: any) {
+    this.pacienteSeleccionado = { ...p };
+
+    if (p.foto_perfil) {
+      this.pacienteSeleccionado.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
+    }
+
+    this.mostrarModalVer = true;
+    this.cd.detectChanges(); 
+  }
+
+  async editarPaciente(p: any) {
+    this.pacienteSeleccionado = { ...p };
+
+    if (p.foto_perfil) {
+      this.pacienteSeleccionado.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
+    }
+
+    this.mostrarModalEditar = true;
+    this.cd.detectChanges();
+  }
+
+    async actualizarPaciente() {
+    try {
+      let urlFoto = this.pacienteSeleccionado.foto_perfil;
+
+      // 🔥 si hay nueva imagen
+      if (this.archivo) {
+  console.log("nose")
+        // 🧨 borrar anterior si existe
+        if (this.pacienteSeleccionado.foto_perfil) {
+          await this.pacientesService.eliminarFoto(
+            this.pacienteSeleccionado.foto_perfil
+          );
+        }
+
+        // subir nueva
+        urlFoto = await this.pacientesService.subirFoto(this.archivo);
+      }
+
+      await this.pacientesService.actualizarPaciente(
+        this.pacienteSeleccionado.id,
+        {
+          nombres: this.pacienteSeleccionado.nombres,
+          apellidos: this.pacienteSeleccionado.apellidos,
+          correo: this.pacienteSeleccionado.correo,
+          telefono: this.pacienteSeleccionado.telefono,
+          genero: this.pacienteSeleccionado.genero,
+          fecha_nacimiento: this.pacienteSeleccionado.fecha_nacimiento,
+          foto_perfil: urlFoto
+        }
+      );
+
+      this.cerrarModalEditar();
+      this.cargarPacientes();
+
+    } catch (error: any) {
+      alert(error.message);
+    }
+  }
+
+    // 1. Añade estas variables a tu clase
+  pacientesOriginales: any[] = []; // Copia de respaldo
+  textoBusqueda: string = '';      // Enlace con el input
+
+  // 2. Actualiza tu método cargarPacientes
   async cargarPacientes() {
     this.cargando = true;
-
     try {
       const data = await this.pacientesService.getPacientes();
 
@@ -107,74 +208,34 @@ export class PacientesComponent implements OnInit {
         }
       }
 
-      this.pacientes = data;
+      this.pacientesOriginales = data; // Guardamos los originales
+      this.pacientes = data;           // Mostramos todos al inicio
+      
+      // Si ya había algo escrito en la búsqueda, aplicamos el filtro
+      if (this.textoBusqueda) {
+        this.filtrar();
+      }
 
     } catch (error) {
       console.error(error);
     }
-
     this.cargando = false;
+    this.tablaPaciente = true;  
     this.cd.detectChanges();
   }
 
-async verPaciente(p: any) {
-  this.pacienteSeleccionado = { ...p };
+  // 3. Crea la función de filtrado
+  filtrar() {
+    const busqueda = this.textoBusqueda.toLowerCase().trim();
 
-  if (p.foto_perfil) {
-    this.pacienteSeleccionado.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
-  }
-
-  this.mostrarModalVer = true;
-  this.cd.detectChanges(); 
-}
-
-async editarPaciente(p: any) {
-  this.pacienteSeleccionado = { ...p };
-
-  if (p.foto_perfil) {
-    this.pacienteSeleccionado.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
-  }
-
-  this.mostrarModalEditar = true;
-  this.cd.detectChanges();
-}
-
-  async actualizarPaciente() {
-  try {
-    let urlFoto = this.pacienteSeleccionado.foto_perfil;
-
-    // 🔥 si hay nueva imagen
-    if (this.archivo) {
-console.log("nose")
-      // 🧨 borrar anterior si existe
-      if (this.pacienteSeleccionado.foto_perfil) {
-        await this.pacientesService.eliminarFoto(
-          this.pacienteSeleccionado.foto_perfil
-        );
-      }
-
-      // subir nueva
-      urlFoto = await this.pacientesService.subirFoto(this.archivo);
+    if (!busqueda) {
+      this.pacientes = [...this.pacientesOriginales];
+    } else {
+      this.pacientes = this.pacientesOriginales.filter(p => 
+        p.nombres?.toLowerCase().includes(busqueda) ||
+        p.apellidos?.toLowerCase().includes(busqueda) ||
+        p.cedula?.includes(busqueda)
+      );
     }
-
-    await this.pacientesService.actualizarPaciente(
-      this.pacienteSeleccionado.id,
-      {
-        nombres: this.pacienteSeleccionado.nombres,
-        apellidos: this.pacienteSeleccionado.apellidos,
-        correo: this.pacienteSeleccionado.correo,
-        telefono: this.pacienteSeleccionado.telefono,
-        genero: this.pacienteSeleccionado.genero,
-        fecha_nacimiento: this.pacienteSeleccionado.fecha_nacimiento,
-        foto_perfil: urlFoto
-      }
-    );
-
-    this.cerrarModalEditar();
-    this.cargarPacientes();
-
-  } catch (error: any) {
-    alert(error.message);
   }
-}
 }

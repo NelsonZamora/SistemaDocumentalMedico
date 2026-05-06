@@ -1,10 +1,44 @@
 <div class="container mt-4">
 
-  <h2>Pacientes</h2>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Pacientes</h2>
+    <button class="btn btn-success shadow-sm" (click)="abrirModal()">
+      <i class="bi bi-person-plus-fill me-2"></i> Añadir Paciente
+    </button>
+  </div>
 
-  <button class="btn btn-success mb-3" (click)="abrirModal()">
-    + Añadir Paciente
-  </button>
+  <!-- BARRA DE BÚSQUEDA -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input 
+          type="text" 
+          class="form-control border-start-0 ps-0" 
+          placeholder="Buscar por nombre, apellido o cédula..."
+          [(ngModel)]="textoBusqueda"
+          (input)="filtrar()"
+        >
+        @if (textoBusqueda) {
+          <button class="btn btn-outline-secondary border-start-0" (click)="textoBusqueda = ''; filtrar()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        }
+      </div>
+    </div>
+    <div class="col-md-6 text-end d-flex align-items-center justify-content-end">
+      <span class="badge bg-light text-dark border">
+        Total: {{ pacientes.length }} paciente(s)
+      </span>
+    </div>
+  </div>
+
+  <!-- TABLA (Se mantiene igual, solo asegúrate que use 'pacientes') -->
+  <!-- ... resto de tu tabla ... -->
+</div>
 
     @if (cargando) {
     <div class="text-center mt-4">
@@ -13,87 +47,163 @@
     </div>
     }
   <!-- LISTA -->
-  <table class="table table-bordered text-center align-middle">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Cédula</th>
-      <th>Correo</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-
-    <tbody>
-    @for (p of pacientes; track p.id) {
+   @if (tablaPaciente){
+        <table class="table table-bordered text-center align-middle">
+    <thead>
         <tr>
-        <td>{{ p.nombres }} {{ p.apellidos }}</td>
-        <td>{{ p.cedula }}</td>
-        <td>{{ p.correo }}</td>
-
-        <td>
-        <div class="d-flex justify-content-center gap-2">
-
-            <button 
-            class="btn btn-primary btn-sm"
-            (click)="editarPaciente(p); $event.stopPropagation()"
-            >
-            <i class="bi bi-pencil-square me-1"></i>
-            Editar
-            </button>
-
-            <button 
-            class="btn btn-success btn-sm"
-            (click)="verPaciente(p); $event.stopPropagation()"
-            >
-            <i class="bi bi-eye me-1"></i>
-            Ver
-            </button>
-
-        </div>
-        </td>
+        <th>Nombre</th>
+        <th>Cédula</th>
+        <th>Correo</th>
+        <th>Acciones</th>
         </tr>
-    }
-    </tbody>
-</table>
+    </thead>
+
+        <tbody>
+        @for (p of pacientes; track p.id) {
+            <tr>
+            <td>{{ p.nombres }} {{ p.apellidos }}</td>
+            <td>{{ p.cedula }}</td>
+            <td>{{ p.correo }}</td>
+
+            <td>
+            <div class="d-flex justify-content-center gap-2">
+
+                <button 
+                class="btn btn-primary btn-sm"
+                (click)="editarPaciente(p); $event.stopPropagation()"
+                >
+                <i class="bi bi-pencil-square me-1"></i>
+                Editar
+                </button>
+
+                <button 
+                class="btn btn-success btn-sm"
+                (click)="verPaciente(p); $event.stopPropagation()"
+                >
+                <i class="bi bi-eye me-1"></i>
+                Ver
+                </button>
+
+            </div>
+            </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+   }
+  
 
 </div>
 
 <!-- MODAL -->
+<!-- MODAL AÑADIR REDISEÑADO -->
 @if (mostrarModal) {
-  <div 
-    class="modal show"
-    style="display: block; background: rgba(0,0,0,0.5);"
-  >
-    <div class="modal-dialog">
-      <div class="modal-content">
+<div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+      
+      <div class="row g-0">
+        <!-- COLUMNA IZQUIERDA (Avatar y Ayuda) -->
+        <div class="col-md-4 modal-sidebar-menu p-4 text-center">
+          <div class="profile-card p-4 mb-4">
+            <div class="contenedor-foto mb-3 shadow-sm mx-auto" 
+                 style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+              
+              @if (archivo) {
+                <i class="bi bi-file-earmark-image text-primary" style="font-size: 3rem;"></i>
+              } @else {
+                <img src="default-user.png" class="w-100 h-100 object-fit-cover" />
+              }
+            </div>
+            
+            <h5 class="mb-3">Nueva Ficha</h5>
+            
+            <div class="text-start">
+              <label class="data-label text-center mb-2">Foto de perfil (opcional)</label>
+              <input type="file" class="form-control form-control-sm" (change)="onFileSelected($event)">
+              <p class="text-muted small mt-2 text-center">Formatos: JPG, PNG</p>
+            </div>
+          </div>
 
-        <div class="modal-header">
-          <h5>Nuevo Paciente</h5>
-          <button class="btn-close" (click)="cerrarModal()"></button>
+          <div class="alert alert-primary py-3 small shadow-sm mx-2" style="border-radius: 10px; border-left: 5px solid #0d6efd;">
+            <i class="bi bi-shield-check me-2"></i>
+            Todos los datos proporcionados serán tratados según la normativa de protección de datos.
+          </div>
+
+          <button class="btn btn-outline-secondary w-100 mt-4" (click)="cerrarModal()">
+            <i class="bi bi-x-lg me-2"></i> Cancelar
+          </button>
         </div>
 
-        <div class="modal-body">
+        <!-- COLUMNA DERECHA (Formulario de Registro) -->
+        <div class="col-md-8 p-5 bg-white">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+            <h5 class="text-success m-0">
+              <i class="bi bi-person-plus-fill me-2"></i> Registro de nuevo paciente
+            </h5>
+            <span class="badge bg-success-subtle text-success border border-success-subtle">Nuevo Registro</span>
+          </div>
 
-          <input class="form-control mb-2" placeholder="Cédula" [(ngModel)]="form.cedula">
-          <input class="form-control mb-2" placeholder="Nombres" [(ngModel)]="form.nombres">
-          <input class="form-control mb-2" placeholder="Apellidos" [(ngModel)]="form.apellidos">
-          <input class="form-control mb-2" type="date" [(ngModel)]="form.fecha_nacimiento">
-          <input class="form-control mb-2" placeholder="Género" [(ngModel)]="form.genero">
-          <input class="form-control mb-2" placeholder="Teléfono" [(ngModel)]="form.telefono">
-          <input class="form-control mb-2" placeholder="Correo" [(ngModel)]="form.correo">
+          <div class="row g-3">
+            <!-- Identificación -->
+            <div class="col-md-12">
+              <label class="data-label">Cédula / DNI</label>
+              <input type="text" class="form-control" [(ngModel)]="form.cedula" placeholder="Ej: 09XXXXXXXX">
+            </div>
 
-          <input type="file" class="form-control mb-2" (change)="onFileSelected($event)">
+            <hr class="my-2 opacity-25">
 
+            <!-- Nombres y Apellidos -->
+            <div class="col-md-6">
+              <label class="data-label">Nombres</label>
+              <input type="text" class="form-control" [(ngModel)]="form.nombres" placeholder="Ingrese nombres">
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Apellidos</label>
+              <input type="text" class="form-control" [(ngModel)]="form.apellidos" placeholder="Ingrese apellidos">
+            </div>
+
+            <!-- Fecha y Género -->
+            <div class="col-md-6">
+              <label class="data-label">Fecha de nacimiento</label>
+              <input type="date" class="form-control" [(ngModel)]="form.fecha_nacimiento">
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Género</label>
+              <select class="form-select" [(ngModel)]="form.genero">
+                <option value="" disabled selected>Seleccione género</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <hr class="my-2 opacity-25">
+
+            <!-- Contacto -->
+            <div class="col-md-6">
+              <label class="data-label">Correo electrónico</label>
+              <input type="email" class="form-control" [(ngModel)]="form.correo" placeholder="ejemplo@correo.com">
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Teléfono móvil</label>
+              <input type="tel" class="form-control" [(ngModel)]="form.telefono" placeholder="Ej: 0987654321">
+            </div>
+          </div>
+
+          <!-- Botón de Acción Principal -->
+          <div class="mt-5 pt-3 border-top d-flex justify-content-end">
+            <button class="btn btn-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()" style="border-radius: 10px;">
+              <i class="bi bi-save2 me-2"></i> 
+              Registrar Paciente
+            </button>
+          </div>
         </div>
-
-        <div class="modal-footer">
-          <button class="btn btn-secondary" (click)="cerrarModal()">Volver</button>
-          <button class="btn btn-primary" (click)="guardar()">Guardar</button>
-        </div>
-
       </div>
+
     </div>
   </div>
+</div>
 }
 
 <!-- MODAL ÉXITO -->
@@ -120,95 +230,204 @@
   </div>
 }
 
-<!-- MODAL VER-->
- @if (mostrarModalVer) {
-  <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
-    <div class="modal-dialog">
-      <div class="modal-content p-3">
-
-        <div class="text-center">
-                <img 
+<!-- MODAL VER-->   
+@if (mostrarModalVer) {
+<div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+      
+      <div class="row g-0">
+        <!-- COLUMNA IZQUIERDA (Sidebar del Paciente) -->
+        <div class="col-md-4 modal-sidebar-menu p-4 text-center">
+          <div class="profile-card p-4 mb-4">
+            <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff;">
+              <img 
                 [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
-            width="120" 
-            class="rounded-circle mb-3"
-                />
+                class="w-100 h-100 object-fit-cover"
+              />
+            </div>
+            <h4 class="mb-1">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</h4>
+            <span class="badge bg-light text-primary border">Paciente Activo</span>
+          </div>
+
+          <!-- Menú de navegación (Simulado como el de la imagen) -->
+          <div class="list-group list-group-flush text-start rounded-3 overflow-hidden">
+            <div class="list-group-item menu-item-active p-3">
+              <i class="bi bi-person-circle me-2"></i> Datos de paciente
+            </div>
+            <div class="list-group-item list-group-item-action p-3 text-muted">
+              <i class="bi bi-clock-history me-2"></i> Historial de Visitas
+            </div>
+            <div class="list-group-item list-group-item-action p-3 text-muted">
+              <i class="bi bi-file-earmark-text me-2"></i> Documentos
+            </div>
+          </div>
+
+          <button class="btn btn-outline-secondary w-100 mt-5" (click)="cerrarModalVer()">
+            <i class="bi bi-arrow-left me-2"></i> Salir
+          </button>
+        </div>
+
+        <!-- COLUMNA DERECHA (Datos Detallados) -->
+        <div class="col-md-8 p-5 bg-white">
+          <h5 class="text-primary border-bottom pb-3 mb-4">Datos de paciente</h5>
+
+          <div class="row g-4">
+            <!-- Fila 1 -->
+            <div class="col-md-12">
+              <label class="data-label">Nombre completo</label>
+              <div class="data-value">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</div>
             </div>
 
-        <p><b>Nombre:</b> {{ pacienteSeleccionado.nombres }}</p>
-        <p><b>Apellidos:</b> {{ pacienteSeleccionado.apellidos }}</p>       
-        <p><b>Genero:</b> {{ pacienteSeleccionado.genero }}</p>
-        <p><b>Telefono:</b> {{ pacienteSeleccionado.telefono }}</p>
-        <p><b>Cédula:</b> {{ pacienteSeleccionado.cedula }}</p>
-        <p><b>Correo:</b> {{ pacienteSeleccionado.correo }}</p>
-        <p><b>Fecha de nacimiento:</b> {{ pacienteSeleccionado.fecha_nacimiento }}</p> 
+            <hr class="my-2 opacity-25">
 
-        <button class="btn btn-secondary" (click)="cerrarModalVer()">
-          Cerrar
-        </button>
+            <!-- Fila 2 -->
+            <div class="col-md-6">
+              <label class="data-label">Fecha de nacimiento</label>
+              <div class="data-value">
+                {{ pacienteSeleccionado.fecha_nacimiento }} 
+                <span class="text-muted small">({{ calcularEdad(pacienteSeleccionado.fecha_nacimiento) }} años)</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Cédula / Pasaporte</label>
+              <div class="data-value">{{ pacienteSeleccionado.cedula }}</div>
+            </div>
 
+            <hr class="my-2 opacity-25">
+
+            <!-- Fila 3 -->
+            <div class="col-md-6">
+              <label class="data-label">Correo electrónico</label>
+              <div class="data-value text-primary">{{ pacienteSeleccionado.correo }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Teléfono</label>
+              <div class="data-value">{{ pacienteSeleccionado.telefono }}</div>
+            </div>
+
+            <hr class="my-2 opacity-25">
+
+            <!-- Fila 4 -->
+            <div class="col-md-6">
+              <label class="data-label">Género</label>
+              <div class="data-value">{{ pacienteSeleccionado.genero }}</div>
+            </div>
+          </div>
+
+          <!-- Espacio para la imagen del DNI (Opcional según tu imagen) -->
+          <div class="mt-5 p-4 rounded-3 border bg-light text-center">
+            <label class="data-label mb-3">Documento de Identidad (Cédula)</label>
+            <div class="border rounded bg-white p-3 mx-auto" style="max-width: 300px;">
+              <i class="bi bi-card-heading text-muted" style="font-size: 3rem;"></i>
+              <p class="small text-muted mt-2 mb-0">Vista previa no disponible</p>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
+</div>
 }
 
 
 <!-- MODAL EDITAR-->
-    @if (mostrarModalEditar) {
-    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-        <div class="modal-content p-3">
-
-            <h5 class="mb-3">Editar Paciente</h5>
-
-            <!-- FOTO -->
-            <div class="text-center">
-            <img 
+<!-- MODAL EDITAR REDISEÑADO -->
+@if (mostrarModalEditar) {
+<div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+      
+      <div class="row g-0">
+        <!-- COLUMNA IZQUIERDA (Gestión de Identidad) -->
+        <div class="col-md-4 modal-sidebar-menu p-4 text-center">
+          <div class="profile-card p-4 mb-4">
+            <!-- Contenedor de imagen fijo para evitar saltos -->
+            <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa;">
+              <img 
                 [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
-                width="120" 
-                class="rounded-circle mb-3"
-            />
+                class="w-100 h-100 object-fit-cover"
+              />
+            </div>
+            
+            <h4 class="mb-1">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</h4>
+            
+            <div class="text-start">
+              <label class="data-label text-center mb-2">Cambiar foto de perfil</label>
+              <input type="file" class="form-control form-control-sm" (change)="onFileSelected($event)">
+            </div>
+          </div>
+
+          <div class="alert alert-info py-2 small shadow-sm" style="border-radius: 10px;">
+            <i class="bi bi-info-circle me-2"></i>
+            Edite los campos necesarios y presione "Guardar cambios" para actualizar.
+          </div>
+
+          <button class="btn btn-outline-secondary w-100 mt-4" (click)="cerrarModalEditar()">
+            Cancelar
+          </button>
+        </div>
+
+        <!-- COLUMNA DERECHA (Formulario de Edición) -->
+        <div class="col-md-8 p-5 bg-white">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+            <h5 class="text-primary m-0">Edición de datos</h5>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">ID: {{pacienteSeleccionado.id}}</span>
+          </div>
+
+          <div class="row g-3">
+            <!-- Nombres y Apellidos -->
+            <div class="col-md-6">
+              <label class="data-label">Nombres</label>
+              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.nombres" placeholder="Ej: Lucía">
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Apellidos</label>
+              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.apellidos" placeholder="Ej: Merino Díaz">
             </div>
 
-            <input type="file" class="form-control mb-3" (change)="onFileSelected($event)">
-
-            <!-- CAMPOS -->
-            <label>Nombre</label>
-            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.nombres">
-
-            <label>Apellidos</label>
-            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.apellidos">
-
-            <label>Género</label>
-            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.genero">
-
-            <label>Teléfono</label>
-            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.telefono">
-
-            <label>Cédula</label>
-            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.cedula">
-
-            <label>Correo</label>
-            <input class="form-control mb-2" [(ngModel)]="pacienteSeleccionado.correo">
-
-            <label>Fecha de nacimiento</label>
-            <input 
-            type="date" 
-            class="form-control mb-3" 
-            [(ngModel)]="pacienteSeleccionado.fecha_nacimiento"
-            >
-
-            <!-- BOTONES -->
-            <div class="d-flex justify-content-between">
-            <button class="btn btn-secondary" (click)="cerrarModalEditar()">
-                Cancelar
-            </button>
-
-            <button class="btn btn-primary" (click)="actualizarPaciente()">
-                Guardar cambios
-            </button>
+            <!-- Identificación y Fecha -->
+            <div class="col-md-6">
+              <label class="data-label">Cédula / DNI</label>
+              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.cedula">
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Fecha de nacimiento</label>
+              <input type="date" class="form-control" [(ngModel)]="pacienteSeleccionado.fecha_nacimiento">
             </div>
 
+            <!-- Contacto -->
+            <div class="col-md-6">
+              <label class="data-label">Correo electrónico</label>
+              <input type="email" class="form-control" [(ngModel)]="pacienteSeleccionado.correo">
+            </div>
+            <div class="col-md-6">
+              <label class="data-label">Teléfono móvil</label>
+              <input type="tel" class="form-control" [(ngModel)]="pacienteSeleccionado.telefono">
+            </div>
+
+            <!-- Otros -->
+            <div class="col-md-6">
+              <label class="data-label">Género</label>
+              <select class="form-select" [(ngModel)]="pacienteSeleccionado.genero">
+                <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Botón de Acción Principal -->
+          <div class="mt-5 pt-3 border-top d-flex justify-content-end">
+            <button class="btn btn-primary px-5 py-2 shadow-sm" (click)="actualizarPaciente()" style="border-radius: 10px;">
+              <i class="bi bi-check-lg me-2"></i> Guardar cambios
+            </button>
+          </div>
         </div>
-        </div>
+      </div>
+
     </div>
-    }
+  </div>
+</div>
+}

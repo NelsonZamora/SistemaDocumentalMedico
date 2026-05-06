@@ -1,0 +1,160 @@
+<div class="container mt-4">
+
+  <h3 class="mb-4">Subir Plantilla Word</h3>
+
+  <!-- INPUT -->
+  <div class="mb-3">
+    <input type="file" class="form-control" (change)="onFileSelected($event)">
+  </div>
+
+  <!-- BOTONES -->
+  <div class="mb-4">
+    <button class="btn btn-primary me-2" (click)="analizarDocumento()">
+      🔍 Analizar Documento
+    </button>
+
+    <button class="btn btn-success" (click)="subirPlantilla()">
+      ☁️ Subir Plantilla
+    </button>
+  </div>
+
+  <!-- RESULTADO -->
+  @if (totalCampos > 0) {
+
+    <div class="row mt-4">
+
+      <!-- IZQUIERDA -->
+      <!-- <div class="col-md-5">
+        <div class="card p-3 shadow-sm">
+          <h5>Campos detectados</h5>
+
+          @for (campo of camposDetectados; track campo; let i = $index) {
+
+            <div class="border rounded p-2 mb-2">
+
+              
+              <div class="fw-bold mb-1">
+                {{ '{' }} {{ campo.nombre || campo }} {{ '}' }}
+              </div>
+
+              
+              <select
+                class="form-select form-select-sm"
+                [(ngModel)]="camposDetectados[i].tipo"
+              >
+                <option value="text">Texto</option>
+                <option value="number">Número</option>
+                <option value="date">Fecha</option>
+              </select>
+
+            </div>
+
+          }
+
+        </div>
+      </div> -->
+        <div class="col-md-6">
+        <div class="card p-3 shadow-sm">
+          <h5>Campos detectados</h5>
+
+          <!-- @for (campo of camposDetectados; let i = $index; track campo.nombre) {
+
+            <div class="border rounded p-2 mb-2">
+
+              <div class="fw-bold mb-1">
+                {{ '{' }} {{ campo.nombre }} {{ '}' }}
+              </div>
+
+
+              <select
+                class="form-select form-select-sm"
+                [(ngModel)]="campo.tipo"
+              >
+                <option value="text">Texto</option>
+                <option value="number">Número</option>
+                <option value="date">Fecha</option>
+              </select>
+
+
+              <input
+                type="text"
+                class="form-control form-control-sm mt-2"
+                placeholder="Ingrese valor"
+                [(ngModel)]="valoresCampos[campo.nombre]"
+                (input)="actualizarPreview()"
+              />
+
+            </div>
+
+          } -->
+            <div class="row">
+
+            @for (campo of camposDetectados; let i = $index; track campo.nombre) {
+
+                <div class="col-md-6 mb-3">
+
+                <div class="border rounded p-2 h-100">
+
+                    <div class="fw-bold mb-1">
+                    {{ '' }} {{ campo.nombre }} {{ '' }}
+                    </div>
+
+                    <!-- tipo -->
+                    <select
+                    class="form-select form-select-sm"
+                    [(ngModel)]="campo.tipo"
+                    >
+                    <option value="text">Texto</option>
+                    <option value="number">Número</option>
+                    <option value="date">Fecha</option>
+                    </select>
+
+                    <!-- input -->
+                    <input
+                    type="text"
+                    class="form-control form-control-sm mt-2"
+                    placeholder="Ingrese valor"
+                    [(ngModel)]="valoresCampos[campo.nombre]"
+                    (input)="actualizarPreview()"
+                    />
+
+                </div>
+
+                </div>
+
+            }
+
+            </div>
+
+        </div>
+      </div>
+
+      <!-- DERECHA -->
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+
+                <h5>Vista previa del cuerpo de la plantilla</h5>
+
+                @if (previewHtml) {
+
+                <div class="preview-container">
+
+                    <div 
+                    class="documento"
+                    [innerHTML]="previewHtml"
+                    ></div>
+
+                </div>
+
+                } @else {
+                <p class="text-muted">Sin vista previa</p>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+  }
+
+</div>
