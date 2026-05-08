@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlantillasService } from '../../services/plantillas';
 import * as mammoth from 'mammoth';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-plantillas',
@@ -19,38 +21,40 @@ export class PlantillasComponent {
   nombreDocumento = '';
   previewHtml: string = '';
 
-  previewHtmlOriginal: string = ''; // 🔥 base sin modificar
+  columnasPorTabla: any = {};
+  tablasDisponibles = ['pacientes'];
+
+  previewHtmlOriginal: string = '';
   valoresCampos: any = {}; 
 
-  constructor(private plantillasService: PlantillasService) {}
+  constructor(private plantillasService: PlantillasService, private cd: ChangeDetectorRef) {}
 
   onFileSelected(event: any) {
     this.archivo = event.target.files[0];
   }
 
-  // 🔍 Analizar documento
   async analizarDocumento() {
     if (!this.archivo) return;
 
     const arrayBuffer = await this.archivo.arrayBuffer();
 
-    // TEXTO PLANO (para detectar campos)
     const result = await mammoth.extractRawText({ arrayBuffer });
     const texto = result.value; 
 
-    // 🔥 Detectar {campos}
     const regex = /\{([^}]+)\}/g;
     const matches = [...texto.matchAll(regex)];
 
     this.camposDetectados = [...new Set(matches.map(m => m[1].trim()))]
       .map(c => ({
         nombre: c.toLowerCase(),
-        tipo: 'text'
+        tipo: 'text',
+        origen: 'libre',
+        tabla: '',
+        columna: ''
       }));
 
     this.totalCampos = this.camposDetectados.length;
 
-      // 🔥 PREVIEW VISUAL (HTML)
     const htmlResult = await mammoth.convertToHtml({ arrayBuffer });
 
     let html = htmlResult.value;
@@ -63,18 +67,16 @@ export class PlantillasComponent {
     this.previewHtmlOriginal = html;
     this.previewHtml = html;
 
-    console.log("Campos:", this.camposDetectados);
+    this.cd.detectChanges();
+
   }
 
-  // 🚀 Subir + guardar
   async subirPlantilla() {
     try { 
       if (!this.archivo) return;
 
-      // 1. Subir archivo
       const ruta = await this.plantillasService.subirDocumento(this.archivo);
 
-      // 2. Guardar metadata
       await this.plantillasService.guardarPlantilla({
         nombre: this.archivo.name,
         ruta_archivo: ruta,
@@ -83,8 +85,6 @@ export class PlantillasComponent {
       });
 
       alert("Plantilla guardada correctamente");
-
-      // reset
       
       this.archivo = null;
       this.camposDetectados = [];
@@ -92,7 +92,7 @@ export class PlantillasComponent {
       this.previewHtml = '';
       this.previewHtmlOriginal = '';
       this.valoresCampos = {};
-
+      this.cd.detectChanges();
     } catch (error: any) {
       alert(error.message);
     }
@@ -120,27 +120,17 @@ export class PlantillasComponent {
     this.previewHtml = html;
   }
 
-  async guardarPlantilla() {
-  try {
-    if (!this.archivo) return;
+  async cargarColumnas(campo: any) {
+    if (!campo.tabla) return;
 
-    const ruta = await this.plantillasService.subirDocumento(this.archivo);
+    if (this.columnasPorTabla[campo.tabla]) return;
 
-    const camposFormateados = this.camposDetectados.map(c => ({
-      nombre: c,
-      tipo: 'text' // luego podrás cambiar dinámicamente
-    }));
-
-    await this.plantillasService.guardarPlantilla({
-      nombre: this.archivo.name,
-      ruta: ruta,
-      campos: camposFormateados
-    });
-
-    alert('Guardado correctamente');
-
-  } catch (error: any) {
-    alert(error.message);
+    try {
+      const columnas = await this.plantillasService.getColumnas(campo.tabla);
+      this.columnasPorTabla[campo.tabla] = columnas;
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
+  
 }

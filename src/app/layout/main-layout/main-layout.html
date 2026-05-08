@@ -1,63 +1,91 @@
 <div class="d-flex">
 
   <!-- Sidebar -->
-  <div class="bg-dark text-white p-3 vh-100" style="width: 250px;">
-    <h4 class="text-center">Sistema Médico</h4>
+  <div class="bg-dark text-white p-3 vh-100 shadow" style="width: 260px;">
+    
+    <h4 class="text-center mb-3">Sistema Médico</h4>
+
     <div class="text-center mb-3">
-        <span class="badge bg-info">
-            {{ role }}
-        </span>
+      <span class="badge bg-info">
+        {{ role }}
+      </span>
     </div>
+
     <hr>
 
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a 
-                class="nav-link text-white"
-                routerLink="/dashboard"
-                routerLinkActive="active bg-primary text-white"
-                [routerLinkActiveOptions]="{ exact: true }"
-            >
-                🏠 Pagina Principal
-            </a>
-        </li>
+    <ul class="nav flex-column gap-1">
 
+      <!-- Página Principal -->
       <li class="nav-item">
-          <a 
-            class="nav-link text-white"
-            routerLink="/pacientes"
-            routerLinkActive="active bg-primary"
-          >
-          👨‍⚕️ Pacientes
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a 
-        class="nav-link text-white" 
-        routerLink="/plantillas"
-        routerLinkActive="active bg-primary"
+        <a
+          class="nav-link "
+          routerLink="/dashboard"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
-          📄 Plantillas
+          🏠 Página Principal
         </a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link text-white" href="#">
-          📄 Historias Clínicas
+      <!-- Pacientes -->
+      <li class="nav-item mt-2">
+        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+          Pacientes
+        </div>
+
+        <a
+          class="nav-link"
+          routerLink="/pacientes"
+          routerLinkActive="active-link"
+        >
+           👨‍⚕️ Lista de pacientes
+        </a>
+
+        <a
+          class="nav-link"
+          routerLink="/pendiente"
+          routerLinkActive="active-link"
+        >
+           ⏳ Página pendiente
         </a>
       </li>
 
+      <!-- Documentos -->
       <li class="nav-item mt-3">
+        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+          Documentos
+        </div>
+
+        <a
+          class="nav-link"
+          routerLink="/plantillas"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+           📄 Subir Plantilla
+        </a>
+
+        <a
+          class="nav-link"
+          routerLink="/plantillas/lista"
+          routerLinkActive="active-link"
+        >
+           ✏️ Plantillas guardadas
+        </a>
+      </li>
+
+      <!-- Logout -->
+      <li class="nav-item mt-4">
         <button class="btn btn-danger w-100" (click)="logout()">
           Cerrar sesión
         </button>
       </li>
+
     </ul>
   </div>
 
   <!-- Contenido -->
-  <div class="flex-grow-1 p-4">
+  <div class="flex-grow-1 p-4 bg-light">
     <router-outlet></router-outlet>
   </div>
 

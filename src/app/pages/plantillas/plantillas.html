@@ -9,11 +9,11 @@
 
   <!-- BOTONES -->
   <div class="mb-4">
-    <button class="btn btn-primary me-2" (click)="analizarDocumento()">
+    <button class="btn btn-primary me-2" (click)="analizarDocumento(); $event.stopPropagation()">
       🔍 Analizar Documento
     </button>
 
-    <button class="btn btn-success" (click)="subirPlantilla()">
+    <button class="btn btn-success" (click)="subirPlantilla(); $event.stopPropagation()">
       ☁️ Subir Plantilla
     </button>
   </div>
@@ -24,119 +24,84 @@
     <div class="row mt-4">
 
       <!-- IZQUIERDA -->
-      <!-- <div class="col-md-5">
-        <div class="card p-3 shadow-sm">
-          <h5>Campos detectados</h5>
-
-          @for (campo of camposDetectados; track campo; let i = $index) {
-
-            <div class="border rounded p-2 mb-2">
-
-              
-              <div class="fw-bold mb-1">
-                {{ '{' }} {{ campo.nombre || campo }} {{ '}' }}
-              </div>
-
-              
-              <select
-                class="form-select form-select-sm"
-                [(ngModel)]="camposDetectados[i].tipo"
-              >
-                <option value="text">Texto</option>
-                <option value="number">Número</option>
-                <option value="date">Fecha</option>
-              </select>
-
-            </div>
-
-          }
-
-        </div>
-      </div> -->
         <div class="col-md-6">
         <div class="card p-3 shadow-sm">
           <h5>Campos detectados</h5>
-
-          <!-- @for (campo of camposDetectados; let i = $index; track campo.nombre) {
-
-            <div class="border rounded p-2 mb-2">
-
-              <div class="fw-bold mb-1">
-                {{ '{' }} {{ campo.nombre }} {{ '}' }}
-              </div>
-
-
-              <select
-                class="form-select form-select-sm"
-                [(ngModel)]="campo.tipo"
-              >
-                <option value="text">Texto</option>
-                <option value="number">Número</option>
-                <option value="date">Fecha</option>
-              </select>
-
-
-              <input
-                type="text"
-                class="form-control form-control-sm mt-2"
-                placeholder="Ingrese valor"
-                [(ngModel)]="valoresCampos[campo.nombre]"
-                (input)="actualizarPreview()"
-              />
-
-            </div>
-
-          } -->
             <div class="row">
 
             @for (campo of camposDetectados; let i = $index; track campo.nombre) {
-
                 <div class="col-md-6 mb-3">
+                    <div class="border rounded p-2 h-100">
+                        <div class="fw-bold mb-1">
+                        {{ '' }} {{ campo.nombre }} {{ '' }}
+                        </div>
+                        <!-- Selector de origen -->
 
-                <div class="border rounded p-2 h-100">
+                        <select
+                            class="form-select form-select-sm mb-2"
+                            [(ngModel)]="campo.origen"
+                            >
+                            <option value="" disabled selected>Seleccione origen</option>
+                            <option value="libre">✍️ Campo libre</option>
+                            <option value="bd">🗄️ Base de datos</option>
+                        </select>
 
-                    <div class="fw-bold mb-1">
-                    {{ '' }} {{ campo.nombre }} {{ '' }}
+                        <!-- tipo -->
+                        @if (campo.origen === 'bd') {
+
+                            <!-- TABLA -->
+                            <select
+                                class="form-select form-select-sm mb-2"
+                                [(ngModel)]="campo.tabla"
+                                (change)="cargarColumnas(campo)"
+                            >
+                                <option value="">Seleccionar tabla</option>
+
+                                @for (t of tablasDisponibles; track t) {
+                                <option [value]="t">{{ t }}</option>
+                                }
+
+                            </select>
+
+                            <!-- COLUMNAS DINÁMICAS -->
+                            <select
+                                class="form-select form-select-sm"
+                                [(ngModel)]="campo.columna"
+                            >
+                                <option value="">Seleccionar columna</option>
+
+                                @for (col of columnasPorTabla[campo.tabla] || []; track col) {
+                                <option [value]="col">{{ col }}</option>
+                                }
+
+                            </select>
+
+                        }
+
+                        @if (campo.origen === 'libre') {
+                            <!-- input -->
+                            <input
+                            type="text"
+                            class="form-control form-control-sm mt-2"
+                            placeholder="Ingrese valor"
+                            [(ngModel)]="valoresCampos[campo.nombre]"
+                            (input)="actualizarPreview()"
+                            />
+                        }
+                        
                     </div>
-
-                    <!-- tipo -->
-                    <select
-                    class="form-select form-select-sm"
-                    [(ngModel)]="campo.tipo"
-                    >
-                    <option value="text">Texto</option>
-                    <option value="number">Número</option>
-                    <option value="date">Fecha</option>
-                    </select>
-
-                    <!-- input -->
-                    <input
-                    type="text"
-                    class="form-control form-control-sm mt-2"
-                    placeholder="Ingrese valor"
-                    [(ngModel)]="valoresCampos[campo.nombre]"
-                    (input)="actualizarPreview()"
-                    />
-
                 </div>
-
-                </div>
-
             }
-
             </div>
-
         </div>
       </div>
 
       <!-- DERECHA -->
         <div class="col-md-6">
             <div class="card p-3 shadow-sm">
-
                 <h5>Vista previa del cuerpo de la plantilla</h5>
 
                 @if (previewHtml) {
-
                 <div class="preview-container">
 
                     <div 
@@ -152,9 +117,7 @@
 
             </div>
         </div>
-
     </div>
-
   }
 
 </div>

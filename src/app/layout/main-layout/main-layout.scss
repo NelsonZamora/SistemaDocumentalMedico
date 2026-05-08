@@ -1,0 +1,53 @@
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #d1d5db !important;
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+/* Hover */
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: white !important;
+}
+
+/* Página activa */
+.active-link {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+
+  border-left: 5px solid #6366f1;
+
+  font-weight: 600;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Opcional: icono más visible cuando está activo */
+.active-link i,
+.active-link span {
+  color: #111827 !important;
+}
+
+.active-link:hover {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* Asegurar que texto e iconos sigan visibles */
+.active-link span,
+.active-link i {
+  color: #111827 !important;
+}
+
+/* También al hover */
+.active-link:hover span,
+.active-link:hover i {
+  color: #111827 !important;
+}

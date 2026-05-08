@@ -1,10 +1,20 @@
 .preview-container {
-  height: 500px;
+  max-height: 700px;
   overflow: auto;
   background: #e9ecef;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   justify-content: center;
+  border: 1px solid #ddd;
+}
+
+/* Usamos ::ng-deep para que el estilo afecte al contenido de [innerHTML] */
+.documento {
+  ::ng-deep img {
+    max-width: 100% !important; /* Evita que la imagen se salga del contenedor */
+    height: auto !important;    /* Mantiene la relación de aspecto original */
+    display: inline-block;      /* Respeta la posición relativa al texto original */
+  }
 }
 
 /* Hoja tipo Word */

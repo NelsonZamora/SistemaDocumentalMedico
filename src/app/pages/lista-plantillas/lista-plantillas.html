@@ -1,0 +1,227 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>📄 Plantillas Subidas</h3>
+  </div>
+
+  <!-- Loading -->
+  @if (cargando) {
+
+    <div class="text-center mt-5">
+      <div class="spinner-border text-primary"></div>
+      <p class="mt-2">Cargando plantillas...</p>
+    </div>
+
+  }
+
+  <!-- Tabla -->
+  @if (!cargando && plantillas.length > 0) {
+
+    <div class="card shadow-sm border-0">
+
+      <div class="table-responsive">
+
+        <table class="table align-middle mb-0">
+
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Total Campos</th>
+              <th>Archivo</th>
+              <th>Fecha de Creacion</th>
+              <th class="text-end">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (plantilla of plantillas; track plantilla.id) {
+
+              <tr>
+
+                <td>
+                  <div class="fw-semibold">
+                    {{ plantilla.nombre_plantilla }}
+                  </div>
+                </td>
+
+                <td>
+                  <span class="badge bg-primary">
+                    {{ plantilla.total_campos }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="text-truncate d-inline-block archivo-text">
+                    {{ plantilla.archivo_url_path }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ plantilla.creado_at | date:'short' }}
+                </td>
+
+                <td class="text-end">
+                    <button
+                        class="btn btn-outline-primary btn-sm" (click)="abrirEditar(plantilla); $event.stopPropagation()"
+                    >
+                        ✏️ Editar
+                    </button>
+
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  }
+
+  <!-- Vacío -->
+  @if (!cargando && plantillas.length === 0) {
+
+    <div class="alert alert-secondary">
+      No existen plantillas registradas.
+    </div>
+
+  }
+
+</div>
+
+@if (modalEditar) {
+
+<div class="modal fade show d-block" tabindex="-1">
+
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          ✏️ Editar Plantilla
+        </h5>
+
+        <button
+          class="btn-close" (click)="cerrarModal()"
+          >
+        </button>
+
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+        <div class="row">
+          <!-- IZQUIERDA -->
+          <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+              <h5>Campos detectados</h5>
+              <div class="row">
+                @for (campo of camposDetectados; track campo.nombre) {
+                  <div class="col-md-6 mb-3">
+                    <div class="border rounded p-2 h-100">
+                      <div class="fw-bold mb-1">
+                        {{ campo.nombre }}
+                      </div>
+                      <!-- ORIGEN -->
+                      <select
+                        class="form-select form-select-sm mb-2"
+                        [(ngModel)]="campo.origen"
+                        (change)="cambiarOrigen(campo)"
+                      >
+                        <option value="libre">
+                          ✍️ Campo libre
+                        </option>
+                        <option value="bd">
+                          🗄️ Base de datos
+                        </option>
+                      </select>
+                      <!-- BASE DE DATOS -->
+                      @if (campo.origen === 'bd') {
+                        <select
+                          class="form-select form-select-sm mb-2"
+                          [(ngModel)]="campo.tabla"
+                          (change)="cargarColumnas(campo)"
+                        >
+                          <option value="">
+                            Seleccionar tabla
+                          </option>
+                          @for (t of tablasDisponibles; track t) {
+                            <option [value]="t">
+                              {{ t }}
+                            </option>
+                          }
+                        </select>
+                        <select
+                          class="form-select form-select-sm"
+                          [(ngModel)]="campo.columna"
+                        >
+                          <option value="">
+                            Seleccionar columna
+                          </option>
+
+                          @for (
+                            col of columnasPorTabla[campo.tabla] || [];
+                            track col
+                          ) {
+                            <option [value]="col">
+                              {{ col }}
+                            </option>
+                          }
+                        </select>
+                      }
+                      <!-- LIBRE -->
+                      @if (campo.origen === 'libre') {
+                        <input
+                          type="text"
+                          class="form-control form-control-sm mt-2"
+                          [(ngModel)]="valoresCampos[campo.nombre]"
+                          (input)="actualizarPreview()"
+                        />
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+          <!-- DERECHA -->
+          <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+              <h5>Vista previa</h5>
+              <div
+                class="documento"
+                [innerHTML]="previewHtml"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- FOOTER -->
+      <div class="modal-footer">
+        <button
+          class="btn btn-secondary"
+          (click)="cerrarModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          class="btn btn-primary"
+          (click)="guardarCambios()"
+        >
+          💾 Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+}

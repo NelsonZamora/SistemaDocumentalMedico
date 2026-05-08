@@ -1,0 +1,16 @@
+table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+tbody tr {
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.archivo-text {
+  max-width: 250px;
+}

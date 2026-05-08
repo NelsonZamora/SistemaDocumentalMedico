@@ -22,13 +22,12 @@ export class PacientesService {
   }
 
   async crearPaciente(paciente: any) {
-    console.log("1.1")
+
     const { data, error } = await this.supabase
       .from('pacientes')
       .insert([paciente]);
-console.log("1.2")
     if (error) throw error;
-    console.log("1.3")
+
     return data;
   }
 
@@ -59,7 +58,7 @@ console.log("1.2")
   }
 
   async eliminarFoto(path: string) {
-    console.log("eliminar")
+
   const { error } = await this.supabase.storage
     .from('pacientes')
     .remove([path]);
@@ -68,7 +67,7 @@ console.log("1.2")
 }
 
   async actualizarPaciente(id: number, paciente: any) {
-    console.log("actualizar")
+
     const { error } = await this.supabase
       .from('pacientes')
       .update(paciente)

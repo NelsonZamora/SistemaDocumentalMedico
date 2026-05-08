@@ -35,9 +35,6 @@
       </span>
     </div>
   </div>
-
-  <!-- TABLA (Se mantiene igual, solo asegúrate que use 'pacientes') -->
-  <!-- ... resto de tu tabla ... -->
 </div>
 
     @if (cargando) {
@@ -95,15 +92,14 @@
 
 </div>
 
-<!-- MODAL -->
-<!-- MODAL AÑADIR REDISEÑADO -->
+<!-- MODAL AÑADIR  -->
 @if (mostrarModal) {
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
       
       <div class="row g-0">
-        <!-- COLUMNA IZQUIERDA (Avatar y Ayuda) -->
+        <!-- COLUMNA IZQUIERDA -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
             <div class="contenedor-foto mb-3 shadow-sm mx-auto" 
@@ -135,7 +131,7 @@
           </button>
         </div>
 
-        <!-- COLUMNA DERECHA (Formulario de Registro) -->
+        <!-- COLUMNA DERECHA -->
         <div class="col-md-8 p-5 bg-white">
           <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
             <h5 class="text-success m-0">
@@ -145,15 +141,13 @@
           </div>
 
           <div class="row g-3">
-            <!-- Identificación -->
             <div class="col-md-12">
-              <label class="data-label">Cédula / DNI</label>
+              <label class="data-label">Cédula / Pasaporte</label>
               <input type="text" class="form-control" [(ngModel)]="form.cedula" placeholder="Ej: 09XXXXXXXX">
             </div>
 
             <hr class="my-2 opacity-25">
 
-            <!-- Nombres y Apellidos -->
             <div class="col-md-6">
               <label class="data-label">Nombres</label>
               <input type="text" class="form-control" [(ngModel)]="form.nombres" placeholder="Ingrese nombres">
@@ -163,7 +157,6 @@
               <input type="text" class="form-control" [(ngModel)]="form.apellidos" placeholder="Ingrese apellidos">
             </div>
 
-            <!-- Fecha y Género -->
             <div class="col-md-6">
               <label class="data-label">Fecha de nacimiento</label>
               <input type="date" class="form-control" [(ngModel)]="form.fecha_nacimiento">
@@ -180,7 +173,6 @@
 
             <hr class="my-2 opacity-25">
 
-            <!-- Contacto -->
             <div class="col-md-6">
               <label class="data-label">Correo electrónico</label>
               <input type="email" class="form-control" [(ngModel)]="form.correo" placeholder="ejemplo@correo.com">
@@ -191,7 +183,6 @@
             </div>
           </div>
 
-          <!-- Botón de Acción Principal -->
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
             <button class="btn btn-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()" style="border-radius: 10px;">
               <i class="bi bi-save2 me-2"></i> 
@@ -206,7 +197,7 @@
 </div>
 }
 
-<!-- MODAL ÉXITO -->
+<!-- MODAL EXITOSO -->
 @if (mostrarModalExito) {
   <div 
     class="modal fade show d-block" 
@@ -237,7 +228,7 @@
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
       
       <div class="row g-0">
-        <!-- COLUMNA IZQUIERDA (Sidebar del Paciente) -->
+        <!-- COLUMNA IZQUIERDA -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
             <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff;">
@@ -250,7 +241,6 @@
             <span class="badge bg-light text-primary border">Paciente Activo</span>
           </div>
 
-          <!-- Menú de navegación (Simulado como el de la imagen) -->
           <div class="list-group list-group-flush text-start rounded-3 overflow-hidden">
             <div class="list-group-item menu-item-active p-3">
               <i class="bi bi-person-circle me-2"></i> Datos de paciente
@@ -268,20 +258,17 @@
           </button>
         </div>
 
-        <!-- COLUMNA DERECHA (Datos Detallados) -->
+        <!-- COLUMNA DERECHA -->
         <div class="col-md-8 p-5 bg-white">
           <h5 class="text-primary border-bottom pb-3 mb-4">Datos de paciente</h5>
 
           <div class="row g-4">
-            <!-- Fila 1 -->
             <div class="col-md-12">
               <label class="data-label">Nombre completo</label>
               <div class="data-value">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</div>
             </div>
 
             <hr class="my-2 opacity-25">
-
-            <!-- Fila 2 -->
             <div class="col-md-6">
               <label class="data-label">Fecha de nacimiento</label>
               <div class="data-value">
@@ -295,8 +282,6 @@
             </div>
 
             <hr class="my-2 opacity-25">
-
-            <!-- Fila 3 -->
             <div class="col-md-6">
               <label class="data-label">Correo electrónico</label>
               <div class="data-value text-primary">{{ pacienteSeleccionado.correo }}</div>
@@ -307,15 +292,12 @@
             </div>
 
             <hr class="my-2 opacity-25">
-
-            <!-- Fila 4 -->
             <div class="col-md-6">
               <label class="data-label">Género</label>
               <div class="data-value">{{ pacienteSeleccionado.genero }}</div>
             </div>
           </div>
 
-          <!-- Espacio para la imagen del DNI (Opcional según tu imagen) -->
           <div class="mt-5 p-4 rounded-3 border bg-light text-center">
             <label class="data-label mb-3">Documento de Identidad (Cédula)</label>
             <div class="border rounded bg-white p-3 mx-auto" style="max-width: 300px;">
@@ -333,17 +315,15 @@
 
 
 <!-- MODAL EDITAR-->
-<!-- MODAL EDITAR REDISEÑADO -->
 @if (mostrarModalEditar) {
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
       
       <div class="row g-0">
-        <!-- COLUMNA IZQUIERDA (Gestión de Identidad) -->
+        <!-- COLUMNA IZQUIERDA -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
-            <!-- Contenedor de imagen fijo para evitar saltos -->
             <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa;">
               <img 
                 [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
@@ -369,7 +349,7 @@
           </button>
         </div>
 
-        <!-- COLUMNA DERECHA (Formulario de Edición) -->
+        <!-- COLUMNA DERECHA -->
         <div class="col-md-8 p-5 bg-white">
           <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
             <h5 class="text-primary m-0">Edición de datos</h5>
@@ -377,7 +357,6 @@
           </div>
 
           <div class="row g-3">
-            <!-- Nombres y Apellidos -->
             <div class="col-md-6">
               <label class="data-label">Nombres</label>
               <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.nombres" placeholder="Ej: Lucía">
@@ -386,8 +365,6 @@
               <label class="data-label">Apellidos</label>
               <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.apellidos" placeholder="Ej: Merino Díaz">
             </div>
-
-            <!-- Identificación y Fecha -->
             <div class="col-md-6">
               <label class="data-label">Cédula / DNI</label>
               <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.cedula">
@@ -396,8 +373,6 @@
               <label class="data-label">Fecha de nacimiento</label>
               <input type="date" class="form-control" [(ngModel)]="pacienteSeleccionado.fecha_nacimiento">
             </div>
-
-            <!-- Contacto -->
             <div class="col-md-6">
               <label class="data-label">Correo electrónico</label>
               <input type="email" class="form-control" [(ngModel)]="pacienteSeleccionado.correo">
@@ -406,8 +381,6 @@
               <label class="data-label">Teléfono móvil</label>
               <input type="tel" class="form-control" [(ngModel)]="pacienteSeleccionado.telefono">
             </div>
-
-            <!-- Otros -->
             <div class="col-md-6">
               <label class="data-label">Género</label>
               <select class="form-select" [(ngModel)]="pacienteSeleccionado.genero">
@@ -417,8 +390,6 @@
               </select>
             </div>
           </div>
-
-          <!-- Botón de Acción Principal -->
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
             <button class="btn btn-primary px-5 py-2 shadow-sm" (click)="actualizarPaciente()" style="border-radius: 10px;">
               <i class="bi bi-check-lg me-2"></i> Guardar cambios

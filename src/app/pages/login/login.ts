@@ -38,8 +38,6 @@ export class LoginComponent {
       const userId = result.user?.id;
       const profile = await this.auth.getUserProfile(userId!);
 
-      console.log(profile);
-
       localStorage.setItem('userRole', profile.rol);
 
       

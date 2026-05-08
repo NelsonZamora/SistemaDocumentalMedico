@@ -78,11 +78,11 @@ export class PacientesComponent implements OnInit {
   async guardar() {
       try {
         let urlFoto = null;
-        console.log("1")
+   
         if (this.archivo) {
           urlFoto = await this.pacientesService.subirFoto(this.archivo);
         }
-        console.log("2")
+
         const userId = await this.authService.getUserId();
       
         const paciente = {
@@ -107,29 +107,6 @@ export class PacientesComponent implements OnInit {
 
       
     }
-
-  // async cargarPacientes() {
-  //   this.cargando = true;
-
-  //   try {
-  //     const data = await this.pacientesService.getPacientes();
-
-  //     for (let p of data) {
-  //       if (p.foto_perfil) {
-  //         p.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
-  //       }
-  //     }
-
-  //     this.pacientes = data;
-
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-
-  //   this.cargando = false;
-  //   this.tablaPaciente = true;
-  //   this.cd.detectChanges();
-  // }
 
   async verPaciente(p: any) {
     this.pacienteSeleccionado = { ...p };
@@ -157,17 +134,13 @@ export class PacientesComponent implements OnInit {
     try {
       let urlFoto = this.pacienteSeleccionado.foto_perfil;
 
-      // 🔥 si hay nueva imagen
       if (this.archivo) {
-  console.log("nose")
-        // 🧨 borrar anterior si existe
         if (this.pacienteSeleccionado.foto_perfil) {
           await this.pacientesService.eliminarFoto(
             this.pacienteSeleccionado.foto_perfil
           );
         }
 
-        // subir nueva
         urlFoto = await this.pacientesService.subirFoto(this.archivo);
       }
 
@@ -192,11 +165,9 @@ export class PacientesComponent implements OnInit {
     }
   }
 
-    // 1. Añade estas variables a tu clase
-  pacientesOriginales: any[] = []; // Copia de respaldo
-  textoBusqueda: string = '';      // Enlace con el input
+  pacientesOriginales: any[] = []; 
+  textoBusqueda: string = ''; 
 
-  // 2. Actualiza tu método cargarPacientes
   async cargarPacientes() {
     this.cargando = true;
     try {
@@ -208,10 +179,9 @@ export class PacientesComponent implements OnInit {
         }
       }
 
-      this.pacientesOriginales = data; // Guardamos los originales
-      this.pacientes = data;           // Mostramos todos al inicio
+      this.pacientesOriginales = data;
+      this.pacientes = data;
       
-      // Si ya había algo escrito en la búsqueda, aplicamos el filtro
       if (this.textoBusqueda) {
         this.filtrar();
       }
@@ -224,7 +194,6 @@ export class PacientesComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  // 3. Crea la función de filtrado
   filtrar() {
     const busqueda = this.textoBusqueda.toLowerCase().trim();
 
