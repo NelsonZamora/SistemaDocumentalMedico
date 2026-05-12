@@ -72,8 +72,31 @@
         >
            ✏️ Plantillas guardadas
         </a>
+
+        <a
+          class="nav-link"
+          routerLink="/plantillas/generar"
+          routerLinkActive="active-link"
+        >
+          🧾 Generar documento
+        </a>
       </li>
 
+      <!-- Gestion -->
+      <li class="nav-item mt-3">
+        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+          Gestion
+        </div>
+
+        <a
+          class="nav-link"
+          routerLink="/plantillas"
+          routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+           👤 Creacion de usuarios
+        </a>
+      </li>
       <!-- Logout -->
       <li class="nav-item mt-4">
         <button class="btn btn-danger w-100" (click)="logout()">

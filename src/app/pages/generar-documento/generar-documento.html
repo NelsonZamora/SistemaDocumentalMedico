@@ -1,0 +1,196 @@
+<div class="container mt-4">
+
+  <h3 class="mb-4">
+    📄 Generar Documento
+  </h3>
+
+  <!-- LOADING -->
+  @if (cargando) {
+
+    <div class="text-center mt-5">
+
+      <div class="spinner-border text-primary"></div>
+
+      <p class="mt-2">
+        Cargando información...
+      </p>
+
+    </div>
+
+  }
+
+  @if (!cargando) {
+
+    <!-- SELECTORES -->
+    <div class="row mb-4">
+
+      <!-- PACIENTE -->
+      <div class="col-md-6">
+
+        <label class="form-label fw-semibold">
+          Paciente
+        </label>
+
+        <select
+          class="form-select"
+          [(ngModel)]="pacienteSeleccionado"
+          (change)="seleccionarPlantilla()"
+        >
+
+          <option [ngValue]="null">
+            Seleccione paciente
+          </option>
+
+          @for (paciente of pacientes; track paciente.id) {
+
+            <option [ngValue]="paciente">
+
+              {{ paciente.nombres }}
+              {{ paciente.apellidos }}
+
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+      <!-- PLANTILLA -->
+      <div class="col-md-6">
+
+        <label class="form-label fw-semibold">
+          Plantilla
+        </label>
+
+        <select
+          class="form-select"
+          [(ngModel)]="plantillaSeleccionada"
+          (change)="seleccionarPlantilla()"
+        >
+
+          <option [ngValue]="null">
+            Seleccione plantilla
+          </option>
+
+          @for (
+            plantilla of plantillas;
+            track plantilla.id
+          ) {
+
+            <option [ngValue]="plantilla">
+
+              {{ plantilla.nombre_plantilla }}
+
+            </option>
+
+          }
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENIDO -->
+    @if (camposPlantilla.length > 0) {
+
+      <div class="row">
+
+        <!-- IZQUIERDA -->
+        <div class="col-md-4">
+
+          <div class="card shadow-sm border-0 p-3">
+
+            <h5 class="mb-3">
+              Campos de la plantilla
+            </h5>
+
+            @for (
+              campo of camposPlantilla;
+              track campo.nombre
+            ) {
+
+              <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+
+                  {{ campo.nombre }}
+
+                </label>
+
+                <!-- LIBRE -->
+                @if (campo.origen === 'libre') {
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="
+                      valoresCampos[campo.nombre]
+                    "
+                    (input)="actualizarPreview()"
+                  />
+
+                }
+
+                <!-- BD -->
+                @if (campo.origen === 'bd') {
+
+                  <input
+                    type="text"
+                    class="form-control bg-light"
+                    [value]="
+                      valoresCampos[campo.nombre]
+                    "
+                    readonly
+                  />
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
+        </div>
+
+        <!-- DERECHA -->
+        <div class="col-md-8">
+
+          <div class="card shadow-sm border-0 p-3">
+
+            <h5 class="mb-3">
+              Vista previa del documento
+            </h5>
+
+            <div
+              class="documento"
+              [innerHTML]="previewHtml"
+            ></div>
+
+            <hr class="my-4">
+
+            <div class="d-flex justify-content-end">
+
+                <button
+                    class="btn btn-success px-4"
+                    (click)="generarDocumento()"
+                >
+                    📄 Generar documento
+                </button>
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>

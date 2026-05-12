@@ -77,5 +77,90 @@ export class PlantillasService {
     if (error) throw error;
   }
 
+
+  async guardarDocumentoGenerado(
+    archivo: Blob,
+    nombreArchivo: string,
+    data: any
+  ) {
+
+    const userId = await this.auth.getUserId();
+
+    const filePath =
+      `documentos/${crypto.randomUUID()}-${nombreArchivo}.html`;
+
+    // SUBIR ARCHIVO
+    const { error: uploadError } =
+      await this.supabase.storage
+        .from('documentos_generados')
+        .upload(filePath, archivo, {
+          contentType: 'text/html'
+        });
+
+    if (uploadError) throw uploadError;
+
+    // GUARDAR REGISTRO
+    const { error: dbError } =
+      await this.supabase
+        .from('documentos')
+        .insert([{
+          paciente_id: data.paciente_id,
+          plantilla_id: data.plantilla_id,
+          contenido_final: data.contenido_final,
+          archivo_final_path: filePath,
+          creado_por: userId,
+          estado: 'finalizado'
+        }]);
+
+    if (dbError) throw dbError;
+
+    return filePath;
+  }
+
+  async descargarPlantilla(path: string) {
+
+    const { data, error } =
+      await this.supabase.storage
+        .from('documentos')
+        .download(path);
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  async subirDocumentoGenerado(
+    file: Blob,
+    nombre: string
+  ) {
+    const path =
+      `documentos/${crypto.randomUUID()}-${nombre}.docx`;
+
+    const { error } =
+      await this.supabase.storage
+        .from('documentos_generados')
+        .upload(path, file, {
+          contentType:
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        });
+    if (error) throw error;
+    return path;
+  }
+
+  async registrarDocumento(data: any) {
+    const userId = await this.auth.getUserId();
+    const { error } =
+      await this.supabase
+        .from('documentos')
+        .insert([{
+          paciente_id: data.paciente_id,
+          plantilla_id: data.plantilla_id,
+          contenido_final: data.contenido_final,
+          archivo_final_path: data.archivo_final_path,
+          creado_por: userId,
+          estado: 'finalizado'
+        }]);
+    if (error) throw error;
+  }
   
 }

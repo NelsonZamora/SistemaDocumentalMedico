@@ -47,6 +47,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/lista-plantillas/lista-plantillas')
             .then(m => m.ListaPlantillasComponent)
+      },
+      
+      {
+        path: 'plantillas/generar',
+        loadComponent: () =>
+          import('./pages/generar-documento/generar-documento')
+            .then(m => m.GenerarDocumentoComponent)
       }
     ]
   }
