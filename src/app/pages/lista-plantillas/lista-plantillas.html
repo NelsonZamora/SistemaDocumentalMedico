@@ -4,7 +4,6 @@
     <h3>📄 Plantillas Subidas</h3>
   </div>
 
-  <!-- Loading -->
   @if (cargando) {
 
     <div class="text-center mt-5">
@@ -14,7 +13,6 @@
 
   }
 
-  <!-- Tabla -->
   @if (!cargando && plantillas.length > 0) {
 
     <div class="card shadow-sm border-0">
@@ -84,7 +82,6 @@
 
   }
 
-  <!-- Vacío -->
   @if (!cargando && plantillas.length === 0) {
 
     <div class="alert alert-secondary">
@@ -103,7 +100,6 @@
 
     <div class="modal-content">
 
-      <!-- HEADER -->
       <div class="modal-header">
 
         <h5 class="modal-title">
@@ -117,10 +113,8 @@
 
       </div>
 
-      <!-- BODY -->
       <div class="modal-body">
         <div class="row">
-          <!-- IZQUIERDA -->
           <div class="col-md-6">
             <div class="card p-3 shadow-sm">
               <h5>Campos detectados</h5>
@@ -131,7 +125,6 @@
                       <div class="fw-bold mb-1">
                         {{ campo.nombre }}
                       </div>
-                      <!-- ORIGEN -->
                       <select
                         class="form-select form-select-sm mb-2"
                         [(ngModel)]="campo.origen"
@@ -144,7 +137,6 @@
                           🗄️ Base de datos
                         </option>
                       </select>
-                      <!-- BASE DE DATOS -->
                       @if (campo.origen === 'bd') {
                         <select
                           class="form-select form-select-sm mb-2"
@@ -178,7 +170,6 @@
                           }
                         </select>
                       }
-                      <!-- LIBRE -->
                       @if (campo.origen === 'libre') {
                         <input
                           type="text"
@@ -193,7 +184,6 @@
               </div>
             </div>
           </div>
-          <!-- DERECHA -->
           <div class="col-md-6">
             <div class="card p-3 shadow-sm">
               <h5>Vista previa</h5>
@@ -205,7 +195,6 @@
           </div>
         </div>
       </div>
-      <!-- FOOTER -->
       <div class="modal-footer">
         <button
           class="btn btn-secondary"

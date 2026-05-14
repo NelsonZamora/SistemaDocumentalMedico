@@ -89,7 +89,6 @@ export class PlantillasService {
     const filePath =
       `documentos/${crypto.randomUUID()}-${nombreArchivo}.html`;
 
-    // SUBIR ARCHIVO
     const { error: uploadError } =
       await this.supabase.storage
         .from('documentos_generados')
@@ -99,7 +98,6 @@ export class PlantillasService {
 
     if (uploadError) throw uploadError;
 
-    // GUARDAR REGISTRO
     const { error: dbError } =
       await this.supabase
         .from('documentos')

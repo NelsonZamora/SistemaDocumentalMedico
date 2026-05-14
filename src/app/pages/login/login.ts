@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -18,18 +19,9 @@ export class LoginComponent {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef
   ) {}
-
-  // async onLogin() {
-  //   try {
-  //     await this.auth.login(this.email, this.password);
-
-  //     this.router.navigate(['/dashboard'])
-  //   } catch (err: any) {
-  //     this.error = err.message;
-  //   }
-  // }
 
   async onLogin() {
     
@@ -43,6 +35,7 @@ export class LoginComponent {
       
 
       this.router.navigate(['/dashboard']);
+      this.cd.detectChanges();
     } catch (err: any) {
       this.error = err.message;
     }

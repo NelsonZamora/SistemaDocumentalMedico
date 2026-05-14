@@ -47,28 +47,6 @@ export class ListaPlantillasComponent implements OnInit {
     }
   }
 
-  // async abrirEditar(plantilla: any) {
-
-  //   this.plantillaEditando = plantilla;
-  //   this.camposDetectados =
-  //     plantilla.contenido_json.campos || [];
-  //   this.previewHtml =
-  //     plantilla.preview_html || '';
-  //   this.previewHtmlOriginal =
-  //       plantilla.preview_html || '';
-
-  //     for (const campo of this.camposDetectados) {
-
-  //     if (campo.origen === 'bd' && campo.tabla) {
-
-  //       await this.cargarColumnas(campo);
-
-  //     }
-  //   }
-  //   this.modalEditar = true;
-  //   this.cd.detectChanges();
-  // }
-
   async abrirEditar(plantilla: any) {
 
     this.plantillaEditando = plantilla;

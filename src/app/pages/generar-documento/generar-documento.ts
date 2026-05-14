@@ -79,14 +79,12 @@ export class GenerarDocumentoComponent implements OnInit {
 
     try {
 
-      // CAMPOS
       this.camposPlantilla =
         structuredClone(
           this.plantillaSeleccionada
             .contenido_json.campos || []
         );
 
-      // DESCARGAR DOCX DESDE SUPABASE
       const archivo =
         await this.plantillasService
           .descargarPlantilla(
@@ -94,11 +92,9 @@ export class GenerarDocumentoComponent implements OnInit {
               .archivo_url_path
           );
 
-      // ARRAY BUFFER
       const arrayBuffer =
         await archivo.arrayBuffer();
 
-      // CONVERTIR DOCX -> HTML
       const htmlResult =
         await mammoth.convertToHtml({
           arrayBuffer
@@ -106,7 +102,6 @@ export class GenerarDocumentoComponent implements OnInit {
 
       let html = htmlResult.value;
 
-      // REEMPLAZAR CAMPOS POR SPAN
       html = html.replace(
         /\{([^}]+)\}/g,
         (_, campo) => {
@@ -126,14 +121,10 @@ export class GenerarDocumentoComponent implements OnInit {
       );
 
       this.previewHtmlOriginal = html;
-
-      // LIMPIAR VALORES
       this.valoresCampos = {};
 
-      // PRECARGAR DESDE PACIENTE
       for (const campo of this.camposPlantilla) {
 
-        // BASE DE DATOS
         if (campo.origen === 'bd') {
 
           this.valoresCampos[campo.nombre] =
@@ -143,7 +134,6 @@ export class GenerarDocumentoComponent implements OnInit {
 
         }
 
-        // LIBRE
         else {
 
           this.valoresCampos[campo.nombre] = '';
@@ -151,9 +141,7 @@ export class GenerarDocumentoComponent implements OnInit {
         }
       }
 
-      // ACTUALIZAR PREVIEW
       this.actualizarPreview();
-
       this.cd.detectChanges();
 
     } catch (error) {
@@ -179,7 +167,6 @@ export class GenerarDocumentoComponent implements OnInit {
       const valor =
         this.valoresCampos[nombreCampo] || '';
 
-      // REEMPLAZAR {campo}
       const regex = new RegExp(
         `\\{\\s*${nombreCampo}\\s*\\}`,
         'gi'
@@ -201,22 +188,18 @@ export class GenerarDocumentoComponent implements OnInit {
 
     try {
 
-      // DESCARGAR PLANTILLA
       const archivo =
         await this.plantillasService
           .descargarPlantilla(
             this.plantillaSeleccionada.archivo_url_path
           );
 
-      // ARRAY BUFFER
       const arrayBuffer =
         await archivo.arrayBuffer();
 
-      // ZIP DOCX
       const zip =
         new PizZip(arrayBuffer);
 
-      // DOCX TEMPLATE
       const doc =
         new Docxtemplater(zip, {
 
@@ -243,16 +226,11 @@ export class GenerarDocumentoComponent implements OnInit {
           }
 
         });
-
-      // REEMPLAZAR CAMPOS
-      //doc.render(this.valoresCampos);
-
       const datosRender: any = {};
 
         Object.keys(this.valoresCampos)
           .forEach(key => {
 
-            // NORMALIZAR KEY
             const keyNormalizada = key
               .trim()
               .toLowerCase()
@@ -265,27 +243,8 @@ export class GenerarDocumentoComponent implements OnInit {
 
         console.log(datosRender);
 
-        // CONFIGURAR PARSER FLEXIBLE
-        // doc.setOptions({
-        //   parser(tag: string) {
-
-        //     const limpio = tag
-        //       .trim()
-        //       .toLowerCase()
-        //       .replace(/\s+/g, '_');
-
-        //     return {
-        //       get(scope: any) {
-        //         return scope[limpio];
-        //       }
-        //     };
-        //   }
-        // });
-
         doc.render(datosRender);
 
-
-      // GENERAR DOCX FINAL
       const output =
         doc.getZip().generate({
           type: 'blob',
@@ -293,11 +252,9 @@ export class GenerarDocumentoComponent implements OnInit {
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         });
 
-      // NOMBRE
       const nombreArchivo =
         `documento-${Date.now()}`;
 
-      // SUBIR
       const ruta =
         await this.plantillasService
           .subirDocumentoGenerado(
@@ -305,7 +262,6 @@ export class GenerarDocumentoComponent implements OnInit {
             nombreArchivo
           );
 
-      // REGISTRAR
       await this.plantillasService
         .registrarDocumento({
           paciente_id:
@@ -320,7 +276,6 @@ export class GenerarDocumentoComponent implements OnInit {
           archivo_final_path:
             ruta
         });
-      // DESCARGA OPCIONAL
       saveAs(
         output,
         `${nombreArchivo}.docx`
@@ -330,19 +285,12 @@ export class GenerarDocumentoComponent implements OnInit {
         'Documento generado correctamente'
       );
 
-      // LIMPIAR FORMULARIO
       this.pacienteSeleccionado = null;
-
       this.plantillaSeleccionada = null;
-
       this.camposPlantilla = [];
-
       this.valoresCampos = {};
-
       this.previewHtml = '';
-
       this.previewHtmlOriginal = '';
-
       this.cd.detectChanges();
 
       

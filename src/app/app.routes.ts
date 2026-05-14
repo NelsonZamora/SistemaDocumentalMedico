@@ -5,14 +5,13 @@ import { authGuard } from './guards/auth-guard';
 import { guestGuard } from './guards/guest-guard';
 
 export const routes: Routes = [
-  // 🔓 LOGIN (sin sidebar)
+
   {
     path: '',
     component: LoginComponent,
     canActivate: [guestGuard]
   },
 
-  // 🔐 APP (con sidebar)
   {
     path: '',
     canActivate: [authGuard],
@@ -29,7 +28,7 @@ export const routes: Routes = [
       },
 
       {
-        path: 'pacientes',
+        path: 'pacientes/lista-pacientes',
         loadComponent: () =>
           import('./pages/pacientes/pacientes')
             .then(m => m.PacientesComponent)
@@ -54,6 +53,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/generar-documento/generar-documento')
             .then(m => m.GenerarDocumentoComponent)
+      },
+
+      {
+        path: 'gestion/creacion-usuarios',
+        loadComponent: () =>
+          import('./pages/creacion-usuarios/creacion-usuarios')
+            .then(m => m.CreacionUsuariosComponent)
       }
     ]
   }

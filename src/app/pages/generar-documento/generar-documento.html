@@ -4,7 +4,6 @@
     📄 Generar Documento
   </h3>
 
-  <!-- LOADING -->
   @if (cargando) {
 
     <div class="text-center mt-5">
@@ -21,10 +20,8 @@
 
   @if (!cargando) {
 
-    <!-- SELECTORES -->
     <div class="row mb-4">
 
-      <!-- PACIENTE -->
       <div class="col-md-6">
 
         <label class="form-label fw-semibold">
@@ -56,7 +53,6 @@
 
       </div>
 
-      <!-- PLANTILLA -->
       <div class="col-md-6">
 
         <label class="form-label fw-semibold">
@@ -92,12 +88,10 @@
 
     </div>
 
-    <!-- CONTENIDO -->
     @if (camposPlantilla.length > 0) {
 
       <div class="row">
 
-        <!-- IZQUIERDA -->
         <div class="col-md-4">
 
           <div class="card shadow-sm border-0 p-3">
@@ -119,7 +113,6 @@
 
                 </label>
 
-                <!-- LIBRE -->
                 @if (campo.origen === 'libre') {
 
                   <input
@@ -133,7 +126,6 @@
 
                 }
 
-                <!-- BD -->
                 @if (campo.origen === 'bd') {
 
                   <input
@@ -155,7 +147,6 @@
 
         </div>
 
-        <!-- DERECHA -->
         <div class="col-md-8">
 
           <div class="card shadow-sm border-0 p-3">

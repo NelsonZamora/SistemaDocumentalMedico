@@ -1,0 +1,20 @@
+.card {
+  transition: transform 0.3s ease;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #17a2b8;
+}
+
+.input-group-text {
+  border-color: #dee2e6;
+}
+
+.btn-primary:hover {
+  background-color: #138496 !important;
+}
+
+body {
+  background-color: #e0f2f1;
+}

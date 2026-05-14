@@ -1,6 +1,5 @@
 <div class="d-flex">
 
-  <!-- Sidebar -->
   <div class="bg-dark text-white p-3 vh-100 shadow" style="width: 260px;">
     
     <h4 class="text-center mb-3">Sistema Médico</h4>
@@ -15,7 +14,6 @@
 
     <ul class="nav flex-column gap-1">
 
-      <!-- Página Principal -->
       <li class="nav-item">
         <a
           class="nav-link "
@@ -27,7 +25,6 @@
         </a>
       </li>
 
-      <!-- Pacientes -->
       <li class="nav-item mt-2">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Pacientes
@@ -35,7 +32,7 @@
 
         <a
           class="nav-link"
-          routerLink="/pacientes"
+          routerLink="/pacientes/lista-pacientes"
           routerLinkActive="active-link"
         >
            👨‍⚕️ Lista de pacientes
@@ -50,7 +47,6 @@
         </a>
       </li>
 
-      <!-- Documentos -->
       <li class="nav-item mt-3">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Documentos
@@ -82,7 +78,6 @@
         </a>
       </li>
 
-      <!-- Gestion -->
       <li class="nav-item mt-3">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Gestion
@@ -90,14 +85,13 @@
 
         <a
           class="nav-link"
-          routerLink="/plantillas"
+          routerLink="/gestion/creacion-usuarios"
           routerLinkActive="active-link"
           [routerLinkActiveOptions]="{ exact: true }"
         >
            👤 Creacion de usuarios
         </a>
       </li>
-      <!-- Logout -->
       <li class="nav-item mt-4">
         <button class="btn btn-danger w-100" (click)="logout()">
           Cerrar sesión
@@ -107,7 +101,6 @@
     </ul>
   </div>
 
-  <!-- Contenido -->
   <div class="flex-grow-1 p-4 bg-light">
     <router-outlet></router-outlet>
   </div>

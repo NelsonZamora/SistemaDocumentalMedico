@@ -8,7 +8,6 @@
     </button>
   </div>
 
-  <!-- BARRA DE BÚSQUEDA -->
   <div class="row mb-4">
     <div class="col-md-6">
       <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
@@ -43,7 +42,6 @@
         <p class="mt-2">Cargando pacientes...</p>
     </div>
     }
-  <!-- LISTA -->
    @if (tablaPaciente){
         <table class="table table-bordered text-center align-middle">
     <thead>
@@ -92,14 +90,12 @@
 
 </div>
 
-<!-- MODAL AÑADIR  -->
 @if (mostrarModal) {
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
       
       <div class="row g-0">
-        <!-- COLUMNA IZQUIERDA -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
             <div class="contenedor-foto mb-3 shadow-sm mx-auto" 
@@ -131,7 +127,6 @@
           </button>
         </div>
 
-        <!-- COLUMNA DERECHA -->
         <div class="col-md-8 p-5 bg-white">
           <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
             <h5 class="text-success m-0">
@@ -197,7 +192,6 @@
 </div>
 }
 
-<!-- MODAL EXITOSO -->
 @if (mostrarModalExito) {
   <div 
     class="modal fade show d-block" 
@@ -221,14 +215,12 @@
   </div>
 }
 
-<!-- MODAL VER-->   
 @if (mostrarModalVer) {
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
       
       <div class="row g-0">
-        <!-- COLUMNA IZQUIERDA -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
             <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff;">
@@ -258,7 +250,6 @@
           </button>
         </div>
 
-        <!-- COLUMNA DERECHA -->
         <div class="col-md-8 p-5 bg-white">
           <h5 class="text-primary border-bottom pb-3 mb-4">Datos de paciente</h5>
 
@@ -314,14 +305,12 @@
 }
 
 
-<!-- MODAL EDITAR-->
 @if (mostrarModalEditar) {
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
       
       <div class="row g-0">
-        <!-- COLUMNA IZQUIERDA -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
             <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa;">
@@ -349,7 +338,6 @@
           </button>
         </div>
 
-        <!-- COLUMNA DERECHA -->
         <div class="col-md-8 p-5 bg-white">
           <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
             <h5 class="text-primary m-0">Edición de datos</h5>
