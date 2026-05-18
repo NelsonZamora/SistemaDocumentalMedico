@@ -1,6 +1,6 @@
-<div class="d-flex">
+<div class="layout-container">
 
-  <div class="bg-dark text-white p-3 vh-100 shadow" style="width: 260px;">
+  <aside class="sidebar">
     
     <h4 class="text-center mb-3">Sistema Médico</h4>
 
@@ -78,7 +78,8 @@
         </a>
       </li>
 
-      <li class="nav-item mt-3">
+      @if (role === 'admin') {
+        <li class="nav-item mt-3">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Gestion
         </div>
@@ -92,6 +93,8 @@
            👤 Creacion de usuarios
         </a>
       </li>
+        
+      }
       <li class="nav-item mt-4">
         <button class="btn btn-danger w-100" (click)="logout()">
           Cerrar sesión
@@ -99,10 +102,11 @@
       </li>
 
     </ul>
-  </div>
 
-  <div class="flex-grow-1 p-4 bg-light">
+  </aside>
+
+  <main class="main-content">
     <router-outlet></router-outlet>
-  </div>
+  </main>
 
 </div>

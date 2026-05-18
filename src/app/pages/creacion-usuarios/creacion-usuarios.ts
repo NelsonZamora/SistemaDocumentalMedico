@@ -109,15 +109,13 @@ implements OnInit {
       this.rol = 'medico';
 
       await this.cargarUsuarios();
+      this.creando = false;
+      this.cd.detectChanges();
 
     } catch (error: any) {
 
       console.error(error);
       alert(error.message);
-
-    } finally {
-
-      this.creando = false;
 
     }
 

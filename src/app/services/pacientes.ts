@@ -21,6 +21,26 @@ export class PacientesService {
     return data;
   }
 
+  async getDocumentosPaciente(pacienteId: string) {
+    const { data, error } = await this.supabase
+      .from('documentos')
+      .select(`
+        id,
+        estado,
+        creado_at,
+        archivo_final_path,
+        plantillas (
+          nombre_plantilla
+        )
+      `)
+      .eq('paciente_id', pacienteId)
+      .order('creado_at', { ascending: false });
+
+    if (error) throw error;
+
+    return data;
+  }
+
   async crearPaciente(paciente: any) {
 
     const { data, error } = await this.supabase

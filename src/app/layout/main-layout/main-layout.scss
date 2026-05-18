@@ -51,3 +51,29 @@
 .active-link:hover i {
   color: #111827 !important;
 }
+
+.layout-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  height: 100vh;
+  overflow-y: auto;
+  background: #212529;
+  color: #fff;
+  padding: 1rem;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  box-sizing: border-box;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.5rem;
+  background: #f8f9fa;
+}

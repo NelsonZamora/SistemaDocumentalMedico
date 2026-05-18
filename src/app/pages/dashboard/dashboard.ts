@@ -15,6 +15,9 @@ export class DashboardComponent {
     private router: Router
   ) {}
 
+  
+  role = localStorage.getItem('userRole');
+
   async logout() {
     await this.auth.logout();
     this.router.navigate(['/']);

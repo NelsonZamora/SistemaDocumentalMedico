@@ -3,6 +3,7 @@ import { LoginComponent } from './pages/login/login';
 import { DashboardComponent } from './pages/dashboard/dashboard';
 import { authGuard } from './guards/auth-guard';
 import { guestGuard } from './guards/guest-guard';
+import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
 
@@ -57,9 +58,14 @@ export const routes: Routes = [
 
       {
         path: 'gestion/creacion-usuarios',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./pages/creacion-usuarios/creacion-usuarios')
             .then(m => m.CreacionUsuariosComponent)
+      },
+      {
+        path: '**',
+        redirectTo: '/dashboard'
       }
     ]
   }

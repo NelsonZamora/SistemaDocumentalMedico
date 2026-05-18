@@ -23,6 +23,10 @@ export class PacientesComponent implements OnInit {
   mostrarModalVer = false;
   mostrarModalEditar = false;
 
+  seccionActiva: string = 'datos';
+  documentosPaciente: any[] = [];
+  vistaActual: 'datos' | 'documentos' = 'datos';
+
 
   form: any = {};
   archivo: File | null = null;
@@ -109,6 +113,7 @@ export class PacientesComponent implements OnInit {
     }
 
   async verPaciente(p: any) {
+    this.vistaActual = 'datos'
     this.pacienteSeleccionado = { ...p };
 
     if (p.foto_perfil) {
@@ -207,4 +212,19 @@ export class PacientesComponent implements OnInit {
       );
     }
   }
+
+  async verDocumentosPaciente() {
+    this.cd.detectChanges();
+    this.vistaActual = 'documentos';
+
+    this.documentosPaciente =
+      await this.pacientesService.getDocumentosPaciente(
+        this.pacienteSeleccionado.id
+      );
+      this.cd.detectChanges();
+  }
+  mostrarDatosPaciente() {
+    this.vistaActual = 'datos';
+  }
+
 }

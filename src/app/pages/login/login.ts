@@ -24,7 +24,7 @@ export class LoginComponent {
   ) {}
 
   async onLogin() {
-    
+    this.cd.detectChanges();
     try {
       const result = await this.auth.login(this.email, this.password);
       const userId = result.user?.id;
@@ -39,6 +39,6 @@ export class LoginComponent {
     } catch (err: any) {
       this.error = err.message;
     }
-    
+    this.cd.detectChanges();
   }
 }

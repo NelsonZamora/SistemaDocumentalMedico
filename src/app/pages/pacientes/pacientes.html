@@ -1,92 +1,281 @@
 <div class="container mt-4">
 
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Pacientes</h2>
-    <button class="btn btn-success shadow-sm" (click)="abrirModal()">
-      <i class="bi bi-person-plus-fill me-2"></i> Añadir Paciente
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+
+    <div>
+      <h2 class="fw-bold mb-1">
+        👨‍⚕️ Gestión de Pacientes
+      </h2>
+
+      <p class="text-muted mb-0">
+        Desde esta sección puede registrar, buscar, visualizar y actualizar la información clínica básica de los pacientes.
+      </p>
+    </div>
+
+    <button
+      class="btn btn-success shadow-sm px-4"
+      (click)="abrirModal()"
+    >
+      <i class="bi bi-person-plus-fill me-2"></i>
+      Añadir Paciente
     </button>
+
   </div>
 
+  <!-- GUIA -->
+  <div class="alert alert-info border-0 shadow-sm mb-4">
+
+    <h6 class="fw-bold mb-2">
+      ℹ️ ¿Cómo utilizar esta sección?
+    </h6>
+
+    <div class="row">
+
+      <div class="col-md-4 mb-2">
+        <div class="d-flex">
+          <div class="me-2 fs-5">🔍</div>
+          <div>
+            <strong>Buscar pacientes</strong><br>
+            Utilice el buscador para localizar rápidamente un paciente por nombre, apellido o cédula.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <div class="d-flex">
+          <div class="me-2 fs-5">👁️</div>
+          <div>
+            <strong>Ver información</strong><br>
+            Presione el botón "Ver" para consultar la ficha completa del paciente.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <div class="d-flex">
+          <div class="me-2 fs-5">✏️</div>
+          <div>
+            <strong>Editar datos</strong><br>
+            Presione "Editar" para actualizar información personal o de contacto.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- BUSQUEDA -->
   <div class="row mb-4">
-    <div class="col-md-6">
-      <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
+
+    <div class="col-md-7">
+
+      <div
+        class="input-group shadow-sm"
+        style="border-radius: 10px; overflow: hidden;"
+      >
+
         <span class="input-group-text bg-white border-end-0">
           <i class="bi bi-search text-muted"></i>
         </span>
-        <input 
-          type="text" 
-          class="form-control border-start-0 ps-0" 
+
+        <input
+          type="text"
+          class="form-control border-start-0 ps-0"
           placeholder="Buscar por nombre, apellido o cédula..."
           [(ngModel)]="textoBusqueda"
           (input)="filtrar()"
         >
+
         @if (textoBusqueda) {
-          <button class="btn btn-outline-secondary border-start-0" (click)="textoBusqueda = ''; filtrar()">
+
+          <button
+            class="btn btn-outline-secondary border-start-0"
+            (click)="textoBusqueda = ''; filtrar()"
+          >
             <i class="bi bi-x-lg"></i>
           </button>
+
         }
+
       </div>
+
+      <small class="text-muted ms-1">
+        Ejemplos: "María", "Pérez", "0912345678"
+      </small>
+
     </div>
-    <div class="col-md-6 text-end d-flex align-items-center justify-content-end">
-      <span class="badge bg-light text-dark border">
-        Total: {{ pacientes.length }} paciente(s)
+
+    <div class="col-md-5 d-flex align-items-center justify-content-end">
+
+      <span class="badge bg-light text-dark border fs-6 px-3 py-2">
+        Total registrados: {{ pacientes.length }} paciente(s)
       </span>
+
     </div>
+
   </div>
-</div>
 
-    @if (cargando) {
-    <div class="text-center mt-4">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p class="mt-2">Cargando pacientes...</p>
+  <!-- LOADING -->
+  @if (cargando) {
+
+    <div class="text-center mt-5">
+
+      <div
+        class="spinner-border text-primary"
+        role="status"
+      ></div>
+
+      <p class="mt-2 text-muted">
+        Cargando pacientes...
+      </p>
+
     </div>
-    }
-   @if (tablaPaciente){
-        <table class="table table-bordered text-center align-middle">
-    <thead>
-        <tr>
-        <th>Nombre</th>
-        <th>Cédula</th>
-        <th>Correo</th>
-        <th>Acciones</th>
-        </tr>
-    </thead>
 
-        <tbody>
-        @for (p of pacientes; track p.id) {
-            <tr>
-            <td>{{ p.nombres }} {{ p.apellidos }}</td>
-            <td>{{ p.cedula }}</td>
-            <td>{{ p.correo }}</td>
+  }
 
-            <td>
-            <div class="d-flex justify-content-center gap-2">
+  @if (!cargando && pacientes.length === 0) {
 
-                <button 
-                class="btn btn-primary btn-sm"
-                (click)="editarPaciente(p); $event.stopPropagation()"
-                >
-                <i class="bi bi-pencil-square me-1"></i>
-                Editar
-                </button>
+    <div class="card border-0 shadow-sm p-5 text-center">
 
-                <button 
-                class="btn btn-success btn-sm"
-                (click)="verPaciente(p); $event.stopPropagation()"
-                >
-                <i class="bi bi-eye me-1"></i>
-                Ver
-                </button>
+      <div class="mb-3 fs-1">
+        👨‍⚕️
+      </div>
 
-            </div>
-            </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-   }
-  
+      <h5 class="fw-bold">
+        No existen pacientes registrados
+      </h5>
+
+      <p class="text-muted">
+        Presione el botón 
+        <strong>“Añadir Paciente”</strong>
+        para registrar el primero.
+      </p>
+
+      <div>
+        <button
+          class="btn btn-success"
+          (click)="abrirModal()"
+        >
+          <i class="bi bi-person-plus-fill me-2"></i>
+          Añadir Paciente
+        </button>
+      </div>
+
+    </div>
+
+  }
+
+  <!-- TABLA -->
+  @if (tablaPaciente) {
+
+    <div class="card shadow-sm border-0">
+
+      <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+          <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
+
+              <tr>
+                <th>Paciente</th>
+                <th>Cédula</th>
+                <th>Correo</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              @for (p of pacientes; track p.id) {
+
+                <tr>
+
+                  <td>
+
+                    <div class="d-flex align-items-center">
+
+                      <div
+                        class="rounded-circle overflow-hidden me-3"
+                        style="width: 45px; height: 45px;"
+                      >
+
+                        <img
+                          [src]="p.foto_url || 'default-user.png'"
+                          class="w-100 h-100 object-fit-cover"
+                        />
+
+                      </div>
+
+                      <div>
+
+                        <div class="fw-semibold">
+                        {{ p.apellidos }} {{ p.nombres }} 
+                        </div>
+
+                        <small class="text-muted">
+                          Paciente registrado
+                        </small>
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+                  <td>
+                    {{ p.cedula }}
+                  </td>
+
+                  <td>
+                    {{ p.correo }}
+                  </td>
+
+                  <td>
+
+                    <div class="d-flex justify-content-center gap-2">
+
+                      <!-- VER -->
+                      <button
+                        class="btn btn-success btn-sm shadow-sm"
+                        (click)="verPaciente(p); $event.stopPropagation()"
+                      >
+                        <i class="bi bi-eye me-1"></i>
+                        Ver
+                      </button>
+
+                      <!-- EDITAR -->
+                      <button
+                        class="btn btn-primary btn-sm shadow-sm"
+                        (click)="editarPaciente(p); $event.stopPropagation()"
+                      >
+                        <i class="bi bi-pencil-square me-1"></i>
+                        Editar
+                      </button>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
 
 </div>
 
@@ -216,92 +405,422 @@
 }
 
 @if (mostrarModalVer) {
-<div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
+
+<div 
+  class="modal fade show d-block"
+  style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"
+>
+
   <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-      
+
+    <div 
+      class="modal-content border-0 shadow-lg"
+      style="border-radius: 20px; overflow: hidden;"
+    >
+
       <div class="row g-0">
+
+        <!-- SIDEBAR -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
+
           <div class="profile-card p-4 mb-4">
-            <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff;">
-              <img 
-                [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
+
+            <div
+              class="contenedor-foto mb-3 shadow-sm mx-auto"
+              style="
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                overflow: hidden;
+                border: 4px solid #fff;
+              "
+            >
+
+              <img
+                [src]="
+                  pacienteSeleccionado.foto_url
+                  || 'default-user.png'
+                "
                 class="w-100 h-100 object-fit-cover"
               />
+
             </div>
-            <h4 class="mb-1">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</h4>
-            <span class="badge bg-light text-primary border">Paciente Activo</span>
+
+            <h4 class="mb-1">
+
+              {{ pacienteSeleccionado.apellidos }},
+              {{ pacienteSeleccionado.nombres }}
+
+            </h4>
+
+            <span class="badge bg-light text-primary border">
+              Paciente Activo
+            </span>
+
           </div>
 
-          <div class="list-group list-group-flush text-start rounded-3 overflow-hidden">
-            <div class="list-group-item menu-item-active p-3">
-              <i class="bi bi-person-circle me-2"></i> Datos de paciente
+          <!-- MENU -->
+          <div
+            class="list-group list-group-flush text-start rounded-3 overflow-hidden"
+          >
+
+            <!-- DATOS -->
+            <div
+              class="list-group-item list-group-item-action p-3"
+              [class.menu-item-active]="vistaActual === 'datos'"
+              (click)="mostrarDatosPaciente()"
+            >
+
+              <i class="bi bi-person-circle me-2"></i>
+
+              Datos de paciente
+
             </div>
-            <div class="list-group-item list-group-item-action p-3 text-muted">
-              <i class="bi bi-clock-history me-2"></i> Historial de Visitas
+
+            <!-- HISTORIAL -->
+            <div
+              class="list-group-item list-group-item-action p-3 text-muted"
+            >
+
+              <i class="bi bi-clock-history me-2"></i>
+
+              Historial de Visitas
+
             </div>
-            <div class="list-group-item list-group-item-action p-3 text-muted">
-              <i class="bi bi-file-earmark-text me-2"></i> Documentos
+
+            <!-- DOCUMENTOS -->
+            <div
+              class="list-group-item list-group-item-action p-3"
+              [class.menu-item-active]="vistaActual === 'documentos'"
+              (click)="verDocumentosPaciente()"
+            >
+
+              <i class="bi bi-file-earmark-text me-2"></i>
+
+              Documentos
+
             </div>
+
           </div>
 
-          <button class="btn btn-outline-secondary w-100 mt-5" (click)="cerrarModalVer()">
-            <i class="bi bi-arrow-left me-2"></i> Salir
+          <button
+            class="btn btn-outline-secondary w-100 mt-5"
+            (click)="cerrarModalVer()"
+          >
+
+            <i class="bi bi-arrow-left me-2"></i>
+
+            Salir
+
           </button>
+
         </div>
 
+        <!-- CONTENIDO DERECHO -->
         <div class="col-md-8 p-5 bg-white">
-          <h5 class="text-primary border-bottom pb-3 mb-4">Datos de paciente</h5>
 
-          <div class="row g-4">
-            <div class="col-md-12">
-              <label class="data-label">Nombre completo</label>
-              <div class="data-value">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</div>
-            </div>
+          <!-- DATOS -->
+          @if (vistaActual === 'datos') {
 
-            <hr class="my-2 opacity-25">
-            <div class="col-md-6">
-              <label class="data-label">Fecha de nacimiento</label>
-              <div class="data-value">
-                {{ pacienteSeleccionado.fecha_nacimiento }} 
-                <span class="text-muted small">({{ calcularEdad(pacienteSeleccionado.fecha_nacimiento) }} años)</span>
+            <h5 class="text-primary border-bottom pb-3 mb-4">
+              Datos de paciente
+            </h5>
+
+            <div class="row g-4">
+
+              <div class="col-md-12">
+
+                <label class="data-label">
+                  Nombre completo
+                </label>
+
+                <div class="data-value">
+
+                  {{ pacienteSeleccionado.apellidos }},
+                  {{ pacienteSeleccionado.nombres }}
+
+                </div>
+
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="data-label">Cédula / Pasaporte</label>
-              <div class="data-value">{{ pacienteSeleccionado.cedula }}</div>
+
+              <hr class="my-2 opacity-25">
+
+              <div class="col-md-6">
+
+                <label class="data-label">
+                  Fecha de nacimiento
+                </label>
+
+                <div class="data-value">
+
+                  {{ pacienteSeleccionado.fecha_nacimiento }}
+
+                  <span class="text-muted small">
+
+                    (
+                    {{
+                      calcularEdad(
+                        pacienteSeleccionado.fecha_nacimiento
+                      )
+                    }}
+                    años
+                    )
+
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div class="col-md-6">
+
+                <label class="data-label">
+                  Cédula / Pasaporte
+                </label>
+
+                <div class="data-value">
+                  {{ pacienteSeleccionado.cedula }}
+                </div>
+
+              </div>
+
+              <hr class="my-2 opacity-25">
+
+              <div class="col-md-6">
+
+                <label class="data-label">
+                  Correo electrónico
+                </label>
+
+                <div class="data-value text-primary">
+                  {{ pacienteSeleccionado.correo }}
+                </div>
+
+              </div>
+
+              <div class="col-md-6">
+
+                <label class="data-label">
+                  Teléfono
+                </label>
+
+                <div class="data-value">
+                  {{ pacienteSeleccionado.telefono }}
+                </div>
+
+              </div>
+
+              <hr class="my-2 opacity-25">
+
+              <div class="col-md-6">
+
+                <label class="data-label">
+                  Género
+                </label>
+
+                <div class="data-value">
+                  {{ pacienteSeleccionado.genero }}
+                </div>
+
+              </div>
+
             </div>
 
-            <hr class="my-2 opacity-25">
-            <div class="col-md-6">
-              <label class="data-label">Correo electrónico</label>
-              <div class="data-value text-primary">{{ pacienteSeleccionado.correo }}</div>
-            </div>
-            <div class="col-md-6">
-              <label class="data-label">Teléfono</label>
-              <div class="data-value">{{ pacienteSeleccionado.telefono }}</div>
+            <div
+              class="mt-5 p-4 rounded-3 border bg-light text-center"
+            >
+
+              <label class="data-label mb-3">
+
+                Documento de Identidad (Cédula)
+
+              </label>
+
+              <div
+                class="border rounded bg-white p-3 mx-auto"
+                style="max-width: 300px;"
+              >
+
+                <i
+                  class="bi bi-card-heading text-muted"
+                  style="font-size: 3rem;"
+                ></i>
+
+                <p class="small text-muted mt-2 mb-0">
+                  Vista previa no disponible
+                </p>
+
+              </div>
+
             </div>
 
-            <hr class="my-2 opacity-25">
-            <div class="col-md-6">
-              <label class="data-label">Género</label>
-              <div class="data-value">{{ pacienteSeleccionado.genero }}</div>
-            </div>
-          </div>
+          }
 
-          <div class="mt-5 p-4 rounded-3 border bg-light text-center">
-            <label class="data-label mb-3">Documento de Identidad (Cédula)</label>
-            <div class="border rounded bg-white p-3 mx-auto" style="max-width: 300px;">
-              <i class="bi bi-card-heading text-muted" style="font-size: 3rem;"></i>
-              <p class="small text-muted mt-2 mb-0">Vista previa no disponible</p>
+          <!-- DOCUMENTOS -->
+          @if (vistaActual === 'documentos') {
+
+            <div
+              class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"
+            >
+
+              <div>
+
+                <h5 class="text-primary mb-1">
+                  📄 Documentos del paciente
+                </h5>
+
+                <p class="text-muted small mb-0">
+                  Historial de documentos generados
+                </p>
+
+              </div>
+
+              <span class="badge bg-primary">
+
+                {{ documentosPaciente.length }}
+
+                documento(s)
+
+              </span>
+
             </div>
-          </div>
+
+            @if (documentosPaciente.length > 0) {
+
+              <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                  <thead class="table-light">
+
+                    <tr>
+                      <th>Plantilla</th>
+                      <th>Estado</th>
+                      <th>Fecha</th>
+                      <th>Archivo</th>
+                    </tr>
+
+                  </thead>
+
+                  <tbody>
+
+                    @for (
+                      documento of documentosPaciente;
+                      track documento.id
+                    ) {
+
+                      <tr>
+
+                        <td>
+
+                          {{
+                            documento.plantillas
+                              ?.nombre_plantilla
+                          }}
+
+                        </td>
+
+                        <td>
+
+                          <span
+                            class="badge"
+                            [class.bg-success]="
+                              documento.estado === 'finalizado'
+                            "
+                            [class.bg-warning]="
+                              documento.estado === 'borrador'
+                            "
+                          >
+
+                            {{ documento.estado }}
+
+                          </span>
+
+                        </td>
+
+                        <td>
+
+                          {{
+                            documento.creado_at
+                            | date:'short'
+                          }}
+
+                        </td>
+
+                        <td>
+
+                          @if (
+                            documento.archivo_final_path
+                          ) {
+
+                            <button
+                              class="btn btn-outline-primary btn-sm"
+                            >
+
+                              <i
+                                class="bi bi-download me-1"
+                              ></i>
+
+                              Descargar
+
+                            </button>
+
+                          } @else {
+
+                            <span class="text-muted small">
+                              Sin archivo
+                            </span>
+
+                          }
+
+                        </td>
+
+                      </tr>
+
+                    }
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            } @else {
+
+              <div class="text-center py-5">
+
+                <i
+                  class="bi bi-file-earmark-text text-muted"
+                  style="font-size: 4rem;"
+                ></i>
+
+                <h5 class="mt-3 text-muted">
+                  No existen documentos
+                </h5>
+
+                <p class="text-muted small">
+
+                  Este paciente todavía no tiene
+                  documentos generados.
+
+                </p>
+
+              </div>
+
+            }
+
+          }
+
         </div>
+
       </div>
 
     </div>
+
   </div>
+
 </div>
+
 }
 
 

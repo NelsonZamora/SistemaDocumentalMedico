@@ -1,113 +1,382 @@
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
 
-  <h3 class="mb-4">Subir Plantilla Word</h3>
-
-  <div class="mb-3">
-    <input type="file" class="form-control" (change)="onFileSelected($event)">
-  </div>
-
+  <!-- HEADER -->
   <div class="mb-4">
-    <button class="btn btn-primary me-2" (click)="analizarDocumento(); $event.stopPropagation()">
-      🔍 Analizar Documento
-    </button>
 
-    <button class="btn btn-success" (click)="subirPlantilla(); $event.stopPropagation()">
-      ☁️ Subir Plantilla
-    </button>
+    <h2 class="fw-bold mb-1">
+      📄 Subir Plantilla Word
+    </h2>
+
+    <p class="text-muted mb-0">
+      Cree plantillas dinámicas para generar documentos automáticamente.
+    </p>
+
   </div>
 
+  <!-- GUÍA -->
+  <div class="alert alert-info border-0 shadow-sm">
+
+    <h6 class="fw-bold mb-3">
+      ¿Cómo funciona?
+    </h6>
+
+    <div class="row">
+
+      <div class="col-md-3 mb-2">
+        <div class="small">
+          <div class="fw-semibold mb-1">
+            1️⃣ Suba el documento
+          </div>
+          <div class="text-muted">
+            Seleccione un archivo Word (.docx)
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <div class="small">
+          <div class="fw-semibold mb-1">
+            2️⃣ Analice la plantilla
+          </div>
+          <div class="text-muted">
+            El sistema detectará automáticamente los campos.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <div class="small">
+          <div class="fw-semibold mb-1">
+            3️⃣ Configure los campos
+          </div>
+          <div class="text-muted">
+            Seleccione si son campos libres o datos de la base.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-2">
+        <div class="small">
+          <div class="fw-semibold mb-1">
+            4️⃣ Guarde la plantilla
+          </div>
+          <div class="text-muted">
+            La plantilla quedará lista para generar documentos.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- EJEMPLOS -->
+  <div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+      <h6 class="fw-bold mb-3">
+        Ejemplos de campos reconocidos
+      </h6>
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+
+        <span class="badge bg-primary">
+            {{ '{ nombre }' }}
+        </span>
+
+        <span class="badge bg-success">
+            {{ '{ apellido }' }}
+        </span>
+
+        <span class="badge bg-warning text-dark">
+            {{ '{ campo 1 }' }}
+        </span>
+
+        <span class="badge bg-info text-dark">
+            {{ '{ fecha_actual }' }}
+        </span>
+
+        <span class="badge bg-dark">
+            {{ '{ nombre completo }' }}
+        </span>
+
+        </div>
+
+      <div class="small text-muted">
+        Los campos deben escribirse entre llaves dentro del documento Word.
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SUBIR -->
+  <div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+      <div class="row align-items-end">
+
+        <div class="col-md-8">
+
+          <label class="form-label fw-semibold">
+            Documento Word
+          </label>
+
+          <input
+            type="file"
+            class="form-control"
+            accept=".docx"
+            (change)="onFileSelected($event)"
+          >
+
+          <div class="form-text">
+            Formato permitido: .docx , .xlsx, .pdf
+          </div>
+
+        </div>
+
+        <div class="col-md-4 mt-3 mt-md-0">
+
+          <div class="d-grid gap-2">
+
+            <button
+              class="btn btn-primary"
+              (click)="analizarDocumento(); $event.stopPropagation()"
+            >
+              🔍 Analizar Documento
+            </button>
+
+            <button
+              class="btn btn-success"
+              (click)="subirPlantilla(); $event.stopPropagation()"
+              [disabled]="totalCampos === 0"
+            >
+              ☁️ Guardar Plantilla
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- RESULTADO -->
   @if (totalCampos > 0) {
 
     <div class="row mt-4">
 
-        <div class="col-md-6">
-        <div class="card p-3 shadow-sm">
-          <h5>Campos detectados</h5>
-            <div class="row">
+      <!-- IZQUIERDA -->
+      <div class="col-md-6">
 
-            @for (campo of camposDetectados; let i = $index; track campo.nombre) {
-                <div class="col-md-6 mb-3">
-                    <div class="border rounded p-2 h-100">
-                        <div class="fw-bold mb-1">
-                        {{ '' }} {{ campo.nombre }} {{ '' }}
-                        </div>
+        <div class="card p-3 shadow-sm border-0 h-100">
 
-                        <select
-                            class="form-select form-select-sm mb-2"
-                            [(ngModel)]="campo.origen"
-                            >
-                            <option value="" disabled selected>Seleccione origen</option>
-                            <option value="libre">✍️ Campo libre</option>
-                            <option value="bd">🗄️ Base de datos</option>
-                        </select>
+          <div class="d-flex justify-content-between align-items-center mb-3">
 
-                        @if (campo.origen === 'bd') {
+            <div>
 
-                            <select
-                                class="form-select form-select-sm mb-2"
-                                [(ngModel)]="campo.tabla"
-                                (change)="cargarColumnas(campo)"
-                            >
-                                <option value="">Seleccionar tabla</option>
+              <h5 class="mb-1">
+                ⚙️ Campos detectados
+              </h5>
 
-                                @for (t of tablasDisponibles; track t) {
-                                <option [value]="t">{{ t }}</option>
-                                }
+              <small class="text-muted">
+                Configure el comportamiento de cada campo
+              </small>
 
-                            </select>
-
-                            <select
-                                class="form-select form-select-sm"
-                                [(ngModel)]="campo.columna"
-                            >
-                                <option value="">Seleccionar columna</option>
-
-                                @for (col of columnasPorTabla[campo.tabla] || []; track col) {
-                                <option [value]="col">{{ col }}</option>
-                                }
-
-                            </select>
-
-                        }
-
-                        @if (campo.origen === 'libre') {
-                            <input
-                            type="text"
-                            class="form-control form-control-sm mt-2"
-                            placeholder="Ingrese valor"
-                            [(ngModel)]="valoresCampos[campo.nombre]"
-                            (input)="actualizarPreview()"
-                            />
-                        }
-                        
-                    </div>
-                </div>
-            }
             </div>
+
+            <span class="badge bg-primary">
+              {{ totalCampos }} campos
+            </span>
+
+          </div>
+
+          <div class="row">
+
+            @for (
+              campo of camposDetectados;
+              let i = $index;
+              track campo.nombre
+            ) {
+
+              <div class="col-md-6 mb-3">
+
+                <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+
+                  <!-- NOMBRE -->
+                  <div class="fw-bold mb-2 text-primary">
+
+                    🏷️ {{ campo.nombre }}
+
+                  </div>
+
+                  <!-- ORIGEN -->
+                  <label class="form-label small fw-semibold">
+                    Tipo de campo
+                  </label>
+
+                  <select
+                    class="form-select form-select-sm mb-3"
+                    [(ngModel)]="campo.origen"
+                  >
+
+                    <option value="" disabled selected>
+                      Seleccione origen
+                    </option>
+
+                    <option value="libre">
+                      ✍️ Campo libre
+                    </option>
+
+                    <option value="bd">
+                      🗄️ Base de datos
+                    </option>
+
+                  </select>
+
+                  <!-- BD -->
+                  @if (campo.origen === 'bd') {
+
+                    <label class="form-label small fw-semibold">
+                      Tabla
+                    </label>
+
+                    <select
+                      class="form-select form-select-sm mb-2"
+                      [(ngModel)]="campo.tabla"
+                      (change)="cargarColumnas(campo)"
+                    >
+
+                      <option value="">
+                        Seleccionar tabla
+                      </option>
+
+                      @for (t of tablasDisponibles; track t) {
+
+                        <option [value]="t">
+                          {{ t }}
+                        </option>
+
+                      }
+
+                    </select>
+
+                    <label class="form-label small fw-semibold">
+                      Columna
+                    </label>
+
+                    <select
+                      class="form-select form-select-sm"
+                      [(ngModel)]="campo.columna"
+                    >
+
+                      <option value="">
+                        Seleccionar columna
+                      </option>
+
+                      @for (
+                        col of columnasPorTabla[campo.tabla] || [];
+                        track col
+                      ) {
+
+                        <option [value]="col">
+                          {{ col }}
+                        </option>
+
+                      }
+
+                    </select>
+
+                  }
+
+                  <!-- LIBRE -->
+                  @if (campo.origen === 'libre') {
+
+                    <label class="form-label small fw-semibold">
+                      Valor de ejemplo
+                    </label>
+
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      placeholder="Ingrese un ejemplo"
+                      [(ngModel)]="valoresCampos[campo.nombre]"
+                      (input)="actualizarPreview()"
+                    />
+
+                  }
+
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
         </div>
+
       </div>
 
-        <div class="col-md-6">
-            <div class="card p-3 shadow-sm">
-                <h5>Vista previa del cuerpo de la plantilla</h5>
+      <!-- DERECHA -->
+      <div class="col-md-6">
 
-                @if (previewHtml) {
-                <div class="preview-container">
+        <div class="card p-3 shadow-sm border-0 h-100">
 
-                    <div 
-                    class="documento"
-                    [innerHTML]="previewHtml"
-                    ></div>
+          <div class="d-flex justify-content-between align-items-center mb-3">
 
-                </div>
+            <div>
 
-                } @else {
-                <p class="text-muted">Sin vista previa</p>
-                }
+              <h5 class="mb-1">
+                👁️ Vista previa
+              </h5>
+
+              <small class="text-muted">
+                Visualice cómo se verá el documento
+              </small>
 
             </div>
+
+          </div>
+
+          @if (previewHtml) {
+
+            <div class="preview-container border rounded-3 bg-white p-4">
+
+              <div
+                class="documento"
+                [innerHTML]="previewHtml"
+              ></div>
+
+            </div>
+
+          } @else {
+
+            <div class="text-center text-muted py-5">
+
+              <div class="mb-2" style="font-size: 3rem;">
+                📄
+              </div>
+
+              <div>
+                La vista previa aparecerá aquí
+              </div>
+
+            </div>
+
+          }
+
         </div>
+
+      </div>
+
     </div>
+
   }
 
 </div>

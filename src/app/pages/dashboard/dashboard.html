@@ -1,145 +1,559 @@
 <div class="container mt-4">
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <h2 class="fw-bold text-dark">Panel de Control</h2>
-      <p class="text-muted">Bienvenido al sistema del Centro Médico Bienestar Familiar. Esto es lo que sucede hoy.</p>
-    </div>
-  </div>
 
-  <div class="row g-4 mb-5">
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #0d6efd; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-people-fill text-primary fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Total Pacientes</h6>
-            <h3 class="fw-bold mb-0">1,254</h3>
-          </div>
-        </div>
+  <!-- ========================================= -->
+  <!-- DASHBOARD ADMINISTRADOR -->
+  <!-- ========================================= -->
+
+  @if (role === 'admin') {
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+
+        <h2 class="fw-bold text-dark">
+          Panel Administrativo
+        </h2>
+
+        <p class="text-muted">
+          Bienvenido al panel de gestión del sistema médico.
+        </p>
+
       </div>
     </div>
 
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #198754; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-calendar-check text-success fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Citas Hoy</h6>
-            <h3 class="fw-bold mb-0">12</h3>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- TARJETAS -->
+    <div class="row g-4 mb-5">
 
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #ffc107; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-person-plus text-warning fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Nuevos (Mes)</h6>
-            <h3 class="fw-bold mb-0">45</h3>
-          </div>
-        </div>
-      </div>
-    </div>
+      <div class="col-md-3">
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #0d6efd; border-radius: 15px;"
+        >
+          <div class="d-flex align-items-center">
 
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #dc3545; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-exclamation-triangle text-danger fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Pendientes</h6>
-            <h3 class="fw-bold mb-0">3</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+            <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-people-fill text-primary fs-4"></i>
+            </div>
 
-  <div class="row g-4">
-    <div class="col-md-8">
-      <div class="card border-0 shadow-sm p-4" style="border-radius: 20px;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5 class="fw-bold m-0">Últimos Pacientes Registrados</h5>
-          <button class="btn btn-sm btn-outline-primary" routerLink="/pacientes">Ver todos</button>
-        </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>Paciente</th>
-                <th>Cédula</th>
-                <th>Fecha Registro</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <img src="default-user.png" width="30" class="rounded-circle me-2"> 
-                  Juan Pérez
-                </td>
-                <td>0987654321</td>
-                <td>05/05/2026</td>
-                <td><span class="badge bg-success-subtle text-success">Completado</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <img src="default-user.png" width="30" class="rounded-circle me-2"> 
-                  María García
-                </td>
-                <td>0912345678</td>
-                <td>04/05/2026</td>
-                <td><span class="badge bg-success-subtle text-success">Completado</span></td>
-              </tr>
-              <tr>
-                <td>
-                  <img src="default-user.png" width="30" class="rounded-circle me-2"> 
-                  Carlos Andrade
-                </td>
-                <td>0955443322</td>
-                <td>04/05/2026</td>
-                <td><span class="badge bg-warning-subtle text-warning">Pendiente</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+            <div>
+              <h6 class="text-muted mb-0">
+                Total Pacientes
+              </h6>
 
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background: #0d6efd;">
-        <h5 class="text-white mb-4 fw-bold">Accesos Rápidos</h5>
-        <div class="d-grid gap-2">
-          <button class="btn btn-light text-primary fw-bold py-2" >
-            <i class="bi bi-person-plus-fill me-2"></i> Nuevo Paciente
-          </button>
-          <button class="btn btn-primary border border-white py-2">
-            <i class="bi bi-calendar-event me-2"></i> Agendar Cita
-          </button>
-          <button class="btn btn-primary border border-white py-2">
-            <i class="bi bi-file-earmark-pdf me-2"></i> Reporte Diario
-          </button>
+              <h3 class="fw-bold mb-0">
+                1,254
+              </h3>
+            </div>
+
+          </div>
         </div>
       </div>
 
-      <div class="card border-0 shadow-sm p-4" style="border-radius: 20px;">
-        <h5 class="fw-bold mb-3">Notas del Día</h5>
-        <div class="p-3 bg-light rounded-3 border-start border-primary border-4 mb-2">
-          <p class="small mb-0 text-dark fw-medium">Reunión de staff médico a las 15:00.</p>
-        </div>
-        <div class="p-3 bg-light rounded-3 border-start border-warning border-4">
-          <p class="small mb-0 text-dark fw-medium">Revisar stock de insumos odontológicos.</p>
+      <div class="col-md-3">
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #198754; border-radius: 15px;"
+        >
+          <div class="d-flex align-items-center">
+
+            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-file-earmark-text text-success fs-4"></i>
+            </div>
+
+            <div>
+              <h6 class="text-muted mb-0">
+                Documentos Generados
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                532
+              </h3>
+            </div>
+
+          </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #ffc107; border-radius: 15px;"
+        >
+          <div class="d-flex align-items-center">
+
+            <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-person-badge-fill text-warning fs-4"></i>
+            </div>
+
+            <div>
+              <h6 class="text-muted mb-0">
+                Usuarios Activos
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                8
+              </h3>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #dc3545; border-radius: 15px;"
+        >
+          <div class="d-flex align-items-center">
+
+            <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
+            </div>
+
+            <div>
+              <h6 class="text-muted mb-0">
+                Pendientes
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                3
+              </h3>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
+
+    <!-- CONTENIDO -->
+    <div class="row g-4">
+
+      <!-- ACTIVIDAD -->
+      <div class="col-md-8">
+
+        <div
+          class="card border-0 shadow-sm p-4"
+          style="border-radius: 20px;"
+        >
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h5 class="fw-bold m-0">
+              Actividad Reciente del Sistema
+            </h5>
+
+            <button
+              class="btn btn-sm btn-outline-primary"
+            >
+              Ver historial
+            </button>
+
+          </div>
+
+          <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+              <thead class="table-light">
+                <tr>
+                  <th>Usuario</th>
+                  <th>Acción</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Dr. Juan Pérez</td>
+                  <td>Generó documento</td>
+                  <td>Hace 5 minutos</td>
+                </tr>
+
+                <tr>
+                  <td>Administrador</td>
+                  <td>Creó nuevo usuario</td>
+                  <td>Hace 20 minutos</td>
+                </tr>
+
+                <tr>
+                  <td>Dra. María López</td>
+                  <td>Registró paciente</td>
+                  <td>Hace 1 hora</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ACCESOS -->
+      <div class="col-md-4">
+
+        <div
+          class="card border-0 shadow-sm p-4 mb-4"
+          style="border-radius: 20px; background: #0d6efd;"
+        >
+
+          <h5 class="text-white mb-4 fw-bold">
+            Accesos Administrativos
+          </h5>
+
+          <div class="d-grid gap-2">
+
+            <button
+              class="btn btn-light text-primary fw-bold py-2"
+            >
+              👤 Crear Usuario
+            </button>
+
+            <button
+              class="btn btn-primary border border-white py-2"
+            >
+              📄 Subir Plantilla
+            </button>
+
+            <button
+              class="btn btn-primary border border-white py-2"
+            >
+              📊 Ver Reportes
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- ESTADO -->
+        <div
+          class="card border-0 shadow-sm p-4"
+          style="border-radius: 20px;"
+        >
+
+          <h5 class="fw-bold mb-3">
+            Estado del Sistema
+          </h5>
+
+          <div class="p-3 bg-light rounded-3 border-start border-success border-4 mb-2">
+            <p class="small mb-0 fw-medium">
+              ✅ Base de datos conectada
+            </p>
+          </div>
+
+          <div class="p-3 bg-light rounded-3 border-start border-primary border-4 mb-2">
+            <p class="small mb-0 fw-medium">
+              ✅ Storage operativo
+            </p>
+          </div>
+
+          <div class="p-3 bg-light rounded-3 border-start border-warning border-4">
+            <p class="small mb-0 fw-medium">
+              ⚠ 2 documentos pendientes
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+  <!-- ========================================= -->
+  <!-- DASHBOARD MÉDICO -->
+  <!-- ========================================= -->
+
+  @if (role === 'medico') {
+
+    <!-- HEADER -->
+    <div class="row mb-4">
+
+      <div class="col-md-12">
+
+        <h2 class="fw-bold text-dark">
+          Panel Médico
+        </h2>
+
+        <p class="text-muted">
+          Bienvenido. Aquí tiene el resumen de su actividad médica.
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- TARJETAS -->
+    <div class="row g-4 mb-5">
+
+      <div class="col-md-3">
+
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #0d6efd; border-radius: 15px;"
+        >
+
+          <div class="d-flex align-items-center">
+
+            <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-person-heart text-primary fs-4"></i>
+            </div>
+
+            <div>
+
+              <h6 class="text-muted mb-0">
+                Pacientes Hoy
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                12
+              </h3>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #198754; border-radius: 15px;"
+        >
+
+          <div class="d-flex align-items-center">
+
+            <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-file-earmark-medical text-success fs-4"></i>
+            </div>
+
+            <div>
+
+              <h6 class="text-muted mb-0">
+                Documentos Emitidos
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                8
+              </h3>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #ffc107; border-radius: 15px;"
+        >
+
+          <div class="d-flex align-items-center">
+
+            <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-clock-history text-warning fs-4"></i>
+            </div>
+
+            <div>
+
+              <h6 class="text-muted mb-0">
+                Pendientes
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                3
+              </h3>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <div
+          class="card border-0 shadow-sm p-3"
+          style="border-left: 5px solid #dc3545; border-radius: 15px;"
+        >
+
+          <div class="d-flex align-items-center">
+
+            <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
+              <i class="bi bi-calendar-check text-danger fs-4"></i>
+            </div>
+
+            <div>
+
+              <h6 class="text-muted mb-0">
+                Próxima Cita
+              </h6>
+
+              <h3 class="fw-bold mb-0">
+                15:30
+              </h3>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="row g-4">
+
+      <!-- PACIENTES -->
+      <div class="col-md-8">
+
+        <div
+          class="card border-0 shadow-sm p-4"
+          style="border-radius: 20px;"
+        >
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h5 class="fw-bold m-0">
+              Pacientes Recientes
+            </h5>
+
+            <button
+              class="btn btn-sm btn-outline-primary"
+            >
+              Ver todos
+            </button>
+
+          </div>
+
+          <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+              <thead class="table-light">
+                <tr>
+                  <th>Paciente</th>
+                  <th>Hora</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>María Pérez</td>
+                  <td>10:30</td>
+                  <td>
+                    <span class="badge bg-success-subtle text-success">
+                      Atendido
+                    </span>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Carlos Ruiz</td>
+                  <td>11:00</td>
+                  <td>
+                    <span class="badge bg-warning-subtle text-warning">
+                      Pendiente
+                    </span>
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ACCESOS -->
+      <div class="col-md-4">
+
+        <div
+          class="card border-0 shadow-sm p-4 mb-4"
+          style="border-radius: 20px; background: #198754;"
+        >
+
+          <h5 class="text-white mb-4 fw-bold">
+            Accesos Rápidos
+          </h5>
+
+          <div class="d-grid gap-2">
+
+            <button
+              class="btn btn-light text-success fw-bold py-2"
+            >
+              ➕ Nuevo Paciente
+            </button>
+
+            <button
+              class="btn btn-success border border-white py-2"
+            >
+              📄 Generar Documento
+            </button>
+
+            <button
+              class="btn btn-success border border-white py-2"
+            >
+              📋 Ver Historial
+            </button>
+
+          </div>
+
+        </div>
+
+        <!-- NOTAS -->
+        <div
+          class="card border-0 shadow-sm p-4"
+          style="border-radius: 20px;"
+        >
+
+          <h5 class="fw-bold mb-3">
+            Notas del Día
+          </h5>
+
+          <div class="p-3 bg-light rounded-3 border-start border-primary border-4 mb-2">
+
+            <p class="small mb-0 fw-medium">
+              📌 Revisión médica general a las 16:00
+            </p>
+
+          </div>
+
+          <div class="p-3 bg-light rounded-3 border-start border-warning border-4">
+
+            <p class="small mb-0 fw-medium">
+              ⚠ Paciente María López requiere seguimiento
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
 </div>

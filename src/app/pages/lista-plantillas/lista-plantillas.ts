@@ -81,6 +81,7 @@ export class ListaPlantillasComponent implements OnInit {
       alert('Plantilla actualizada');
       this.modalEditar = false;
       await this.cargarPlantillas();
+      this.cd.detectChanges();
     } catch (error) {
       console.error(error);
       alert('Error actualizando');
@@ -100,7 +101,7 @@ export class ListaPlantillasComponent implements OnInit {
         ...this.columnasPorTabla,
         [campo.tabla]: columnas
       };
-
+      this.cd.detectChanges();
     } catch (error) {
 
       console.error(error);
@@ -124,6 +125,7 @@ export class ListaPlantillasComponent implements OnInit {
       );
     });
     this.previewHtml = html;
+    this.cd.detectChanges();
   }
 
   cambiarOrigen(campo: any) {
@@ -139,6 +141,7 @@ export class ListaPlantillasComponent implements OnInit {
       this.camposOriginales
     );
     this.modalEditar = false;
+    this.cd.detectChanges();
   }
 
 }
