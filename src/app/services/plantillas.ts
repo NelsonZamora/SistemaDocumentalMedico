@@ -13,7 +13,9 @@ export class PlantillasService {
   }
 
   async subirDocumento(file: File) {
-    const fileName = `documentos/${crypto.randomUUID()}.docx`;
+    const extension = file.name.split('.').pop()?.toLowerCase();
+
+    const fileName = `documentos/${crypto.randomUUID()}.${extension}`;
 
     const { error } = await this.supabase.storage
       .from('documentos')
@@ -129,10 +131,11 @@ export class PlantillasService {
 
   async subirDocumentoGenerado(
     file: Blob,
-    nombre: string
+    nombre: string,
+    extension: string
   ) {
     const path =
-      `documentos/${crypto.randomUUID()}-${nombre}.docx`;
+      `documentos/${crypto.randomUUID()}-${nombre}.${extension}`;
 
     const { error } =
       await this.supabase.storage

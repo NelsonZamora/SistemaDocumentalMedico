@@ -1,0 +1,155 @@
+.preview-container {
+  max-height: 700px;
+  overflow: auto;
+  background: #e9ecef;
+  padding: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+/* =========================
+   CONTENIDO DOCUMENTO
+========================= */
+
+.documento {
+
+  background: white;
+
+  // width: fit-content;
+  // min-width: 800px;
+  // max-width: none;
+
+  width: auto;
+  max-width: 100%;
+
+  transform-origin: top center;
+
+  zoom: 0.85;
+
+  margin: auto;
+
+  padding: 30px;
+
+  border-radius: 8px;
+
+  box-shadow: 0 0 15px rgba(0,0,0,0.12);
+
+  line-height: 1.5;
+
+  position: relative;
+
+  /* 🔥 SOLO VISTA PREVIA */
+  pointer-events: none;
+  user-select: none;
+
+  /* =========================
+     IMÁGENES WORD
+  ========================= */
+
+  ::ng-deep img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: inline-block;
+  }
+
+  /* =========================
+     TABLAS EXCEL
+  ========================= */
+
+  ::ng-deep table {
+
+    border-collapse: collapse !important;
+
+    width: 100% !important;
+
+    background: white;
+
+    table-layout: auto;
+
+    margin: auto;
+  }
+
+  ::ng-deep td,
+  ::ng-deep th {
+
+    border: 1px solid #000 !important;
+
+    padding: 6px 8px !important;
+
+    vertical-align: middle;
+
+    font-size: 14px;
+
+    white-space: pre-wrap;
+
+    min-width: 50px;
+
+    height: 32px;
+  }
+
+  /* Mantener estilos inline del Excel */
+  ::ng-deep td[style],
+  ::ng-deep th[style] {
+    white-space: pre-wrap;
+  }
+
+  /* =========================
+     PÁRRAFOS WORD
+  ========================= */
+
+  ::ng-deep p {
+    margin-bottom: 10px;
+  }
+
+  ::ng-deep h1,
+  ::ng-deep h2,
+  ::ng-deep h3,
+  ::ng-deep h4,
+  ::ng-deep h5,
+  ::ng-deep h6 {
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+}
+
+/* =========================
+   CAMPOS DINÁMICOS
+========================= */
+
+.campo-doc {
+
+  background: #fff3cd;
+
+  color: #856404;
+
+  padding: 2px 6px;
+
+  border-radius: 5px;
+
+  font-weight: 700;
+
+  border: 1px dashed #ffc107;
+
+  display: inline-block;
+}
+
+/* =========================
+   SCROLL BONITO
+========================= */
+
+.preview-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.preview-container::-webkit-scrollbar-thumb {
+  background: #adb5bd;
+  border-radius: 10px;
+}
+
+.preview-container::-webkit-scrollbar-track {
+  background: #dee2e6;
+}

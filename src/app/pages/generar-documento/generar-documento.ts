@@ -7,6 +7,7 @@ import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
 import { saveAs } from 'file-saver';
 import * as mammoth from 'mammoth';
+import * as XLSX from 'xlsx';
 
 import { PlantillasService } from '../../services/plantillas';
 import { PacientesService } from '../../services/pacientes';
@@ -32,6 +33,7 @@ export class GenerarDocumentoComponent implements OnInit {
 
   previewHtml = '';
   previewHtmlOriginal = '';
+  tipoArchivo = '';
 
   cargando = true;
 
@@ -71,7 +73,9 @@ export class GenerarDocumentoComponent implements OnInit {
   }
 
   async seleccionarPlantilla() {
+    this.cd.detectChanges();
 
+    
     if (
       !this.plantillaSeleccionada ||
       !this.pacienteSeleccionado
@@ -95,32 +99,166 @@ export class GenerarDocumentoComponent implements OnInit {
       const arrayBuffer =
         await archivo.arrayBuffer();
 
-      const htmlResult =
-        await mammoth.convertToHtml({
-          arrayBuffer
-        });
+      // =========================
+      // DETECTAR TIPO
+      // =========================
 
-      let html = htmlResult.value;
+      const extension =
+        this.plantillaSeleccionada
+          .archivo_url_path
+          .split('.')
+          .pop()
+          ?.toLowerCase();
 
-      html = html.replace(
-        /\{([^}]+)\}/g,
-        (_, campo) => {
+      this.tipoArchivo = extension || '';
 
-          const limpio =
-            campo.trim().toLowerCase();
+      // =========================
+      // WORD
+      // =========================
 
-          return `
-            <span
-              class="campo-doc"
-              data-campo="${limpio}"
-            >
-              {${campo}}
-            </span>
-          `;
+      if (extension === 'docx') {
+
+        const htmlResult =
+          await mammoth.convertToHtml({
+            arrayBuffer
+          });
+
+        let html = htmlResult.value;
+
+        html = html.replace(
+          /\{([^}]+)\}/g,
+          (_: string, campo: string) => {
+
+            const limpio =
+              campo.trim().toLowerCase();
+
+            return `
+              <span
+                class="campo-doc"
+                data-campo="${limpio}"
+              >
+                {${campo}}
+              </span>
+            `;
+          }
+        );
+
+        this.previewHtmlOriginal = html;
+      }
+
+      // =========================
+      // EXCEL
+      // =========================
+
+      else if (
+        extension === 'xlsx' ||
+        extension === 'xls'
+      ) {
+
+        const workbook = XLSX.read(
+          arrayBuffer,
+          { type: 'array' }
+        );
+
+        const firstSheet =
+          workbook.Sheets[
+            workbook.SheetNames[0]
+          ];
+
+        // Limpiar filas vacías
+        const range = XLSX.utils.decode_range(
+          firstSheet['!ref']!
+        );
+
+        let ultimaFila = range.e.r;
+
+        for (
+          let R = range.e.r;
+          R >= range.s.r;
+          --R
+        ) {
+
+          let tieneContenido = false;
+
+          for (
+            let C = range.s.c;
+            C <= range.e.c;
+            ++C
+          ) {
+
+            const cellAddress =
+              XLSX.utils.encode_cell({
+                r: R,
+                c: C
+              });
+
+            const cell =
+              firstSheet[cellAddress];
+
+            if (
+              cell &&
+              cell.v !== undefined &&
+              cell.v !== ''
+            ) {
+
+              tieneContenido = true;
+              break;
+            }
+          }
+
+          if (tieneContenido) {
+            ultimaFila = R;
+            break;
+          }
         }
-      );
 
-      this.previewHtmlOriginal = html;
+        firstSheet['!ref'] =
+          XLSX.utils.encode_range({
+            s: range.s,
+            e: {
+              r: ultimaFila,
+              c: range.e.c
+            }
+          });
+
+        let html =
+          XLSX.utils.sheet_to_html(
+            firstSheet
+          );
+
+        html = html
+          .replace(
+            /<caption>.*?<\/caption>/g,
+            ''
+          )
+          .replace(/id="[^"]*"/g, '')
+          .replace(/class="[^"]*"/g, '');
+
+        html = html.replace(
+          /\{([^}]+)\}/g,
+          (_: string, campo: string) => {
+
+            const limpio =
+              campo.trim().toLowerCase();
+
+            return `
+              <span
+                class="campo-doc"
+                data-campo="${limpio}"
+              >
+                {${campo}}
+              </span>
+            `;
+          }
+        );
+
+        this.previewHtmlOriginal = html;
+      }
+
+      // =========================
+      // CARGAR DATOS
+      // =========================
+
       this.valoresCampos = {};
 
       for (const campo of this.camposPlantilla) {
@@ -131,17 +269,17 @@ export class GenerarDocumentoComponent implements OnInit {
             this.pacienteSeleccionado[
               campo.columna
             ] || '';
-
         }
 
         else {
 
-          this.valoresCampos[campo.nombre] = '';
-
+          this.valoresCampos[campo.nombre] =
+            '';
         }
       }
 
       this.actualizarPreview();
+
       this.cd.detectChanges();
 
     } catch (error) {
@@ -149,9 +287,8 @@ export class GenerarDocumentoComponent implements OnInit {
       console.error(error);
 
       alert(
-        'Error cargando la plantilla'
+        'Error cargando plantilla'
       );
-
     }
   }
 
@@ -191,42 +328,56 @@ export class GenerarDocumentoComponent implements OnInit {
       const archivo =
         await this.plantillasService
           .descargarPlantilla(
-            this.plantillaSeleccionada.archivo_url_path
+            this.plantillaSeleccionada
+              .archivo_url_path
           );
 
       const arrayBuffer =
         await archivo.arrayBuffer();
 
-      const zip =
-        new PizZip(arrayBuffer);
+      const extension =
+        this.tipoArchivo;
 
-      const doc =
-        new Docxtemplater(zip, {
+      const nombreArchivo =
+        `documento-${Date.now()}`;
 
-          paragraphLoop: true,
-          linebreaks: true,
+      // =========================
+      // WORD
+      // =========================
 
-          parser(tag: string) {
+      if (extension === 'docx') {
 
-            const limpio = tag
-              .trim()
-              .toLowerCase()
-              .replace(/\s+/g, '_');
+        const zip =
+          new PizZip(arrayBuffer);
 
-            return {
+        const doc =
+          new Docxtemplater(zip, {
 
-              get(scope: any) {
+            paragraphLoop: true,
+            linebreaks: true,
 
-                return scope[limpio];
+            parser(tag: string) {
 
-              }
+              const limpio = tag
+                .trim()
+                .toLowerCase()
+                .replace(/\s+/g, '_');
 
-            };
+              return {
 
-          }
+                get(scope: any) {
 
-        });
-      const datosRender: any = {};
+                  return scope[limpio];
+
+                }
+
+              };
+
+            }
+
+          });
+
+        const datosRender: any = {};
 
         Object.keys(this.valoresCampos)
           .forEach(key => {
@@ -241,67 +392,162 @@ export class GenerarDocumentoComponent implements OnInit {
 
           });
 
-        console.log(datosRender);
-
         doc.render(datosRender);
 
-      const output =
-        doc.getZip().generate({
-          type: 'blob',
-          mimeType:
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        });
+        const output =
+          doc.getZip().generate({
 
-      const nombreArchivo =
-        `documento-${Date.now()}`;
+            type: 'blob',
 
-      const ruta =
+            mimeType:
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+
+          });
+
+        const ruta =
+          await this.plantillasService
+            .subirDocumentoGenerado(
+              output,
+              nombreArchivo,
+              'docx'
+            );
+
         await this.plantillasService
-          .subirDocumentoGenerado(
-            output,
-            nombreArchivo
+          .registrarDocumento({
+
+            paciente_id:
+              this.pacienteSeleccionado.id,
+
+            plantilla_id:
+              this.plantillaSeleccionada.id,
+
+            contenido_final:
+              this.valoresCampos,
+
+            archivo_final_path:
+              ruta
+          });
+
+        saveAs(
+          output,
+          `${nombreArchivo}.docx`
+        );
+      }
+
+      // =========================
+      // EXCEL
+      // =========================
+
+      else if (
+        extension === 'xlsx' ||
+        extension === 'xls'
+      ) {
+
+        const workbook =
+          XLSX.read(arrayBuffer, {
+            type: 'array'
+          });
+
+        const sheet =
+          workbook.Sheets[
+            workbook.SheetNames[0]
+          ];
+
+        Object.keys(sheet).forEach(
+          cellKey => {
+
+            if (
+              cellKey.startsWith('!')
+            ) return;
+
+            const cell = sheet[cellKey];
+
+            if (
+              typeof cell.v === 'string'
+            ) {
+
+              Object.keys(
+                this.valoresCampos
+              ).forEach(campo => {
+
+                const valor =
+                  this.valoresCampos[campo];
+
+                const regex =
+                  new RegExp(
+                    `\\{\\s*${campo}\\s*\\}`,
+                    'gi'
+                  );
+
+                cell.v =
+                  cell.v.replace(
+                    regex,
+                    valor || ''
+                  );
+              });
+            }
+          }
+        );
+
+        const output =
+          XLSX.write(
+            workbook,
+            {
+              bookType: 'xlsx',
+              type: 'array'
+            }
           );
 
-      await this.plantillasService
-        .registrarDocumento({
-          paciente_id:
-            this.pacienteSeleccionado.id,
+        const blob =
+          new Blob(
+            [output],
+            {
+              type:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+          );
 
-          plantilla_id:
-            this.plantillaSeleccionada.id,
+        const ruta =
+          await this.plantillasService
+            .subirDocumentoGenerado(
+              blob,
+              nombreArchivo,
+              'xlsx'
+            );
 
-          contenido_final:
-            this.valoresCampos,
+        await this.plantillasService
+          .registrarDocumento({
 
-          archivo_final_path:
-            ruta
-        });
-      saveAs(
-        output,
-        `${nombreArchivo}.docx`
-      );
+            paciente_id:
+              this.pacienteSeleccionado.id,
+
+            plantilla_id:
+              this.plantillaSeleccionada.id,
+
+            contenido_final:
+              this.valoresCampos,
+
+            archivo_final_path:
+              ruta
+          });
+
+        saveAs(
+          blob,
+          `${nombreArchivo}.xlsx`
+        );
+      }
 
       alert(
         'Documento generado correctamente'
       );
 
-      this.pacienteSeleccionado = null;
-      this.plantillaSeleccionada = null;
-      this.camposPlantilla = [];
-      this.valoresCampos = {};
-      this.previewHtml = '';
-      this.previewHtmlOriginal = '';
-      this.cd.detectChanges();
-
-      
-      
     } catch (error) {
 
       console.error(error);
+
       alert(
         'Error generando documento'
       );
-
     }
   }
 
