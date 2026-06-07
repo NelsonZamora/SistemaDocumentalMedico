@@ -98,7 +98,6 @@ export class UsuariosService {
         .from('perfiles')
         .select('*')
         ;
-        console.log(data);
     if (error) {
       throw error;
     }

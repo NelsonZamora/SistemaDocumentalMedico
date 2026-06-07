@@ -1,0 +1,257 @@
+<div class="container-fluid mt-4">
+
+  <!-- HEADER -->
+  <div class="card border-0 shadow-sm mb-3">
+
+    <div class="card-body">
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+        <div>
+
+          <h3 class="mb-1">
+            📅 Agenda Médica
+          </h3>
+
+          <p class="text-muted mb-0">
+            Gestión de citas médicas y seguimiento diario.
+          </p>
+
+        </div>
+
+        <button
+          class="btn btn-primary"
+          (click)="mostrarModal = true" 
+        >
+          <i class="bi bi-plus-circle me-2"></i>
+          Nueva cita
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- CALENDARIO -->
+  <div class="card border-0 shadow-sm">
+
+    <div class="card-body p-2">
+
+      <full-calendar
+        [options]="calendarOptions">
+      </full-calendar>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL -->
+@if (mostrarModal) {
+
+<div
+  class="modal fade show d-block"
+  style="
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(3px);
+  "
+>
+
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+
+    <div class="modal-content border-0 shadow-lg">
+
+      <!-- HEADER -->
+      <div class="modal-header bg-primary text-white">
+
+        <h5 class="modal-title">
+
+          @if (!citaSeleccionada) {
+            📅 Nueva Cita Médica
+          }
+
+          @if (citaSeleccionada) {
+            ✏️ Editar Cita Médica
+          }
+
+        </h5>
+
+        <button
+          class="btn-close btn-close-white"
+          (click)="cerrarModal()"
+        >
+        </button>
+
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body p-4">
+
+        <div class="row">
+
+          <!-- PACIENTE -->
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label fw-semibold">
+              👤 Paciente
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="paciente_id"
+            >
+
+              <option value="">
+                Seleccione un paciente
+              </option>
+
+              @for (
+                paciente of pacientes;
+                track paciente.id
+              ) {
+
+                <option [value]="paciente.id">
+
+                  {{ paciente.apellidos }},
+                  {{ paciente.nombres }}
+
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+          <!-- MEDICO -->
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label fw-semibold">
+              🩺 Médico
+            </label>
+
+            <select
+              class="form-select"
+              [(ngModel)]="medico_id"
+            >
+
+              <option value="">
+                Seleccione un médico
+              </option>
+
+              @for (
+                medico of medicos;
+                track medico.id
+              ) {
+
+                <option [value]="medico.id">
+
+                  {{ medico.nombre_completo }}
+
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+          <!-- FECHA -->
+          <div class="col-md-12 mb-3">
+
+            <label class="form-label fw-semibold">
+              📅 Fecha
+            </label>
+
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="fechaSeleccionada"
+            >
+
+          </div>
+
+          <!-- HORA INICIO -->
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label fw-semibold">
+              🕒 Hora Inicio
+            </label>
+
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="hora_inicio"
+            >
+
+          </div>
+
+          <!-- HORA FIN -->
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label fw-semibold">
+              🕓 Hora Fin
+            </label>
+
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="hora_fin"
+            >
+
+          </div>
+
+          <!-- MOTIVO -->
+          <div class="col-12 mb-3">
+
+            <label class="form-label fw-semibold">
+              📝 Motivo de la consulta
+            </label>
+
+            <textarea
+              rows="3"
+              class="form-control"
+              [(ngModel)]="motivo"
+              placeholder="Describa el motivo de la cita..."
+            >
+            </textarea>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="modal-footer">
+
+        @if (citaSeleccionada) {
+
+
+        }
+
+        <button
+          class="btn btn-secondary"
+          (click)="cerrarModal()"
+        >
+          Cancelar
+        </button>
+
+        <button
+          class="btn btn-primary"
+          (click)="guardarCita()"
+        >   
+          💾 Guardar cita
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

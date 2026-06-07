@@ -24,7 +24,7 @@
           🏠 Página Principal
         </a>
       </li>
-
+      @if(role === 'admin' || role === 'medico' || role === 'auxiliar'){
       <li class="nav-item mt-2">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Pacientes
@@ -47,6 +47,30 @@
         </a>
       </li>
 
+      <li class="nav-item mt-2">
+        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+          Citas Medicas
+        </div>
+
+        <a
+          class="nav-link"
+          routerLink="/calendario/calendario"
+          routerLinkActive="active-link"
+        >
+           Calendario
+        </a>
+
+        <a
+          class="nav-link"
+          routerLink="/pendiente"
+          routerLinkActive="active-link"
+        >
+           ⏳ Citas Medicas
+        </a>
+      </li>
+      }
+      
+      @if(role === 'admin' || role === 'medico'){
       <li class="nav-item mt-3">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Documentos
@@ -77,6 +101,7 @@
           🧾 Generar documento
         </a>
       </li>
+      }
 
       @if (role === 'admin') {
         <li class="nav-item mt-3">

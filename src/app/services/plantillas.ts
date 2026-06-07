@@ -66,7 +66,7 @@ export class PlantillasService {
   }
 
   async actualizarPlantilla(id: string, campos: any[]) {
-    console.log(id, campos)
+
     const { error } = await this.supabase
       .from('plantillas')
       .update({

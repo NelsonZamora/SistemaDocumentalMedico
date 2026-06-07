@@ -1,0 +1,64 @@
+:host ::ng-deep .fc {
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .fc-toolbar {
+  padding: 10px;
+}
+
+:host ::ng-deep .fc-toolbar-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .fc-button {
+  border-radius: 0;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .fc-daygrid-day {
+  min-height: 120px;
+}
+
+:host ::ng-deep .fc-daygrid-day-number {
+  color: #5a5a5a;
+  font-weight: 500;
+}
+
+:host ::ng-deep .fc-event {
+  border: none;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-size: .8rem;
+  cursor: pointer;
+}
+
+:host ::ng-deep .fc-scrollgrid {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .fc-col-header-cell {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+:host ::ng-deep .fc-day-today {
+  background: rgba(13,110,253,.08) !important;
+}
+
+.card {
+  border-radius: 15px;
+}
+
+.modal-content {
+  border-radius: 15px;
+}
+
+.modal-header {
+  border-bottom: 0;
+}
+
+.modal-footer {
+  border-top: 0;
+}
