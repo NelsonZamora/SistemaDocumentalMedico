@@ -1,6 +1,5 @@
 <div class="container mt-4">
 
-  <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center mb-4">
 
     <div>
@@ -16,7 +15,6 @@
 
   </div>
 
-  <!-- GUÍA -->
   <div class="alert alert-info border-0 shadow-sm mb-4">
 
     <div class="d-flex align-items-start">
@@ -60,7 +58,6 @@
 
   </div>
 
-  <!-- LOADING -->
   @if (cargando) {
 
     <div class="text-center mt-5">
@@ -77,14 +74,12 @@
 
   @if (!cargando) {
 
-    <!-- SELECCIÓN -->
     <div class="card shadow-sm border-0 mb-4">
 
       <div class="card-body">
 
         <div class="row g-4">
 
-          <!-- PACIENTE -->
           <div class="col-md-6">
 
             <label class="form-label fw-semibold">
@@ -120,7 +115,6 @@
 
           </div>
 
-          <!-- PLANTILLA -->
           <div class="col-md-6">
 
             <label class="form-label fw-semibold">
@@ -164,12 +158,10 @@
 
     </div>
 
-    <!-- CONTENIDO -->
     @if (camposPlantilla.length > 0) {
 
       <div class="row g-4">
 
-        <!-- CAMPOS -->
         <div class="col-md-4">
 
           <div class="card shadow-sm border-0 sticky-top">
@@ -215,7 +207,6 @@
 
                   </label>
 
-                  <!-- CAMPO LIBRE -->
                   @if (campo.origen === 'libre') {
 
                     <input
@@ -234,7 +225,6 @@
 
                   }
 
-                  <!-- CAMPO AUTOMÁTICO -->
                   @if (campo.origen === 'bd') {
 
                     <input
@@ -262,7 +252,6 @@
 
         </div>
 
-        <!-- VISTA PREVIA -->
         <div class="col-md-8">
 
           <div class="card shadow-sm border-0">
@@ -295,14 +284,12 @@
 
               </div>
 
-              <!-- DOCUMENTO -->
               <div
                 class="documento border rounded p-4 bg-white shadow-sm"
                 [innerHTML]="previewHtml"
 
               ></div>
 
-              <!-- BOTÓN -->
               <div class="border-top mt-4 pt-4 d-flex justify-content-end">
 
                 <button
@@ -324,7 +311,6 @@
 
     }
 
-    <!-- MENSAJE INICIAL -->
     @if (
       !pacienteSeleccionado ||
       !plantillaSeleccionada

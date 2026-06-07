@@ -1,6 +1,5 @@
 <div class="container mt-4 mb-5">
 
-  <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center mb-3">
 
     <div>
@@ -17,7 +16,6 @@
 
   </div>
 
-  <!-- GUÍA -->
   <div class="alert alert-info border-0 shadow-sm mb-4">
 
     <h6 class="fw-bold mb-3">
@@ -78,7 +76,6 @@
 
   </div>
 
-  <!-- LOADING -->
   @if (cargando) {
 
     <div class="text-center mt-5">
@@ -93,7 +90,6 @@
 
   }
 
-  <!-- TABLA -->
   @if (!cargando && plantillas.length > 0) {
 
     <div class="card shadow-sm border-0">
@@ -152,7 +148,6 @@
 
               <tr>
 
-                <!-- NOMBRE -->
                 <td>
 
                   <div class="fw-semibold">
@@ -163,7 +158,6 @@
 
                 </td>
 
-                <!-- CAMPOS -->
                 <td>
 
                   <span class="badge bg-primary">
@@ -174,7 +168,6 @@
 
                 </td>
 
-                <!-- ARCHIVO -->
                 <td>
 
                   <span
@@ -187,14 +180,12 @@
 
                 </td>
 
-                <!-- FECHA -->
                 <td>
 
                   {{ plantilla.creado_at | date:'short' }}
 
                 </td>
 
-                <!-- ACCIONES -->
                 <td class="text-end">
 
                   <button
@@ -222,7 +213,6 @@
 
   }
 
-  <!-- VACÍO -->
   @if (!cargando && plantillas.length === 0) {
 
     <div class="alert alert-secondary shadow-sm border-0">
@@ -235,7 +225,6 @@
 
 </div>
 
-<!-- MODAL -->
 @if (modalEditar) {
 
 <div class="modal fade show d-block" tabindex="-1">
@@ -244,7 +233,6 @@
 
     <div class="modal-content border-0 shadow-lg">
 
-      <!-- HEADER -->
       <div class="modal-header bg-light">
 
         <div>
@@ -266,10 +254,8 @@
 
       </div>
 
-      <!-- BODY -->
       <div class="modal-body">
 
-        <!-- GUÍA -->
         <div class="alert alert-info border-0 shadow-sm mb-4">
 
           <h6 class="fw-bold mb-2">
@@ -316,7 +302,6 @@
 
         <div class="row">
 
-          <!-- IZQUIERDA -->
           <div class="col-md-6">
 
             <div class="card p-3 shadow-sm border-0 h-100">
@@ -345,14 +330,12 @@
 
                     <div class="border rounded-3 p-3 h-100 bg-light-subtle">
 
-                      <!-- NOMBRE -->
                       <div class="fw-bold mb-2 text-primary">
 
                         🏷️ {{ campo.nombre }}
 
                       </div>
 
-                      <!-- ORIGEN -->
                       <label class="form-label small fw-semibold">
                         Tipo de campo
                       </label>
@@ -373,7 +356,6 @@
 
                       </select>
 
-                      <!-- BASE DE DATOS -->
                       @if (campo.origen === 'bd') {
 
                         <label class="form-label small fw-semibold">
@@ -428,7 +410,6 @@
 
                       }
 
-                      <!-- LIBRE -->
                       @if (campo.origen === 'libre') {
 
                         <label class="form-label small fw-semibold">
@@ -457,7 +438,6 @@
 
           </div>
 
-          <!-- DERECHA -->
           <div class="col-md-6">
 
             <div class="card p-3 shadow-sm border-0 h-100">
@@ -491,7 +471,6 @@
 
       </div>
 
-      <!-- FOOTER -->
       <div class="modal-footer bg-light">
 
         <button

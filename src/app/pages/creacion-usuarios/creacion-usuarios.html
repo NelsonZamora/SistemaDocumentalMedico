@@ -1,6 +1,5 @@
 <div class="container mt-4">
 
-  <!-- HEADER -->
   <div class="mb-4">
 
     <h2 class="fw-bold mb-1">
@@ -13,7 +12,6 @@
 
   </div>
 
-  <!-- GUIA -->
   <div class="alert alert-info border-0 shadow-sm mb-4">
 
     <h6 class="fw-bold mb-3">
@@ -79,14 +77,12 @@
 
   <div class="row g-4">
 
-    <!-- FORMULARIO -->
     <div class="col-lg-4">
 
       <div class="card shadow-sm border-0 h-100">
 
         <div class="card-body p-4">
 
-          <!-- TITULO -->
           <div class="mb-4">
 
             <h4 class="fw-bold mb-1">
@@ -99,7 +95,6 @@
 
           </div>
 
-          <!-- NOMBRE -->
           <div class="mb-3">
 
             <label class="form-label fw-semibold">
@@ -120,7 +115,6 @@
 
           </div>
 
-          <!-- EMAIL -->
           <div class="mb-3">
 
             <label class="form-label fw-semibold">
@@ -141,7 +135,6 @@
 
           </div>
 
-          <!-- PASSWORD -->
           <div class="mb-3">
 
             <label class="form-label fw-semibold">
@@ -162,7 +155,6 @@
 
           </div>
 
-          <!-- ROL -->
           <div class="mb-4">
 
             <label class="form-label fw-semibold">
@@ -203,7 +195,6 @@
 
           </div>
 
-          <!-- BOTON -->
           <button
             class="btn btn-primary w-100 py-2 shadow-sm"
             [disabled]="creando"
@@ -233,7 +224,6 @@
 
           </button>
 
-          <!-- ALERTA -->
           <div
             class="alert alert-light border mt-4 small mb-0"
           >
@@ -258,14 +248,12 @@
 
     </div>
 
-    <!-- TABLA -->
     <div class="col-lg-8">
 
       <div class="card shadow-sm border-0">
 
         <div class="card-body p-4">
 
-          <!-- HEADER -->
           <div
             class="d-flex justify-content-between align-items-center mb-4"
           >
@@ -292,7 +280,6 @@
 
           </div>
 
-          <!-- LOADING -->
           @if (cargando) {
 
             <div class="text-center py-5">
@@ -309,7 +296,6 @@
 
           }
 
-          <!-- TABLA -->
           @if (!cargando) {
 
             <div class="table-responsive">
@@ -335,7 +321,6 @@
 
                     <tr>
 
-                      <!-- NOMBRE -->
                       <td>
 
                         <div class="d-flex align-items-center">
@@ -369,7 +354,6 @@
 
                       </td>
 
-                      <!-- ROL -->
                       <td>
 
                         <span
@@ -410,7 +394,6 @@
 
                       </td>
 
-                      <!-- FECHA -->
                       <td>
 
                         {{

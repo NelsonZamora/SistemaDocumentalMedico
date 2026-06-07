@@ -1,6 +1,5 @@
 <div class="container mt-4">
 
-  <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center mb-3">
 
     <div>
@@ -23,7 +22,6 @@
 
   </div>
 
-  <!-- GUIA -->
   <div class="alert alert-info border-0 shadow-sm mb-4">
 
     <h6 class="fw-bold mb-2">
@@ -66,7 +64,6 @@
 
   </div>
 
-  <!-- BUSQUEDA -->
   <div class="row mb-4">
 
     <div class="col-md-7">
@@ -117,7 +114,6 @@
 
   </div>
 
-  <!-- LOADING -->
   @if (cargando) {
 
     <div class="text-center mt-5">
@@ -167,7 +163,6 @@
 
   }
 
-  <!-- TABLA -->
   @if (tablaPaciente) {
 
     <div class="card shadow-sm border-0">
@@ -239,7 +234,6 @@
 
                     <div class="d-flex justify-content-center gap-2">
 
-                      <!-- VER -->
                       <button
                         class="btn btn-success btn-sm shadow-sm"
                         (click)="verPaciente(p); $event.stopPropagation()"
@@ -248,7 +242,6 @@
                         Ver
                       </button>
 
-                      <!-- EDITAR -->
                       <button
                         class="btn btn-primary btn-sm shadow-sm"
                         (click)="editarPaciente(p); $event.stopPropagation()"
@@ -420,7 +413,6 @@
 
       <div class="row g-0">
 
-        <!-- SIDEBAR -->
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
 
           <div class="profile-card p-4 mb-4">
@@ -459,12 +451,10 @@
 
           </div>
 
-          <!-- MENU -->
           <div
             class="list-group list-group-flush text-start rounded-3 overflow-hidden"
           >
 
-            <!-- DATOS -->
             <div
               class="list-group-item list-group-item-action p-3"
               [class.menu-item-active]="vistaActual === 'datos'"
@@ -477,7 +467,6 @@
 
             </div>
 
-            <!-- HISTORIAL -->
             <div
               class="list-group-item list-group-item-action p-3 text-muted"
             >
@@ -488,7 +477,6 @@
 
             </div>
 
-            <!-- DOCUMENTOS -->
             <div
               class="list-group-item list-group-item-action p-3"
               [class.menu-item-active]="vistaActual === 'documentos'"
@@ -516,10 +504,8 @@
 
         </div>
 
-        <!-- CONTENIDO DERECHO -->
         <div class="col-md-8 p-5 bg-white">
 
-          <!-- DATOS -->
           @if (vistaActual === 'datos') {
 
             <h5 class="text-primary border-bottom pb-3 mb-4">
@@ -656,7 +642,6 @@
 
           }
 
-          <!-- DOCUMENTOS -->
           @if (vistaActual === 'documentos') {
 
             <div

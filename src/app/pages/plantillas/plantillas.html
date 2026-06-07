@@ -1,6 +1,5 @@
 <div class="container mt-4 mb-5">
 
-  <!-- HEADER -->
   <div class="mb-4">
 
     <h2 class="fw-bold mb-1">
@@ -13,7 +12,6 @@
 
   </div>
 
-  <!-- GUÍA -->
   <div class="alert alert-info border-0 shadow-sm">
 
     <h6 class="fw-bold mb-3">
@@ -70,7 +68,6 @@
 
   </div>
 
-  <!-- EJEMPLOS -->
   <div class="card border-0 shadow-sm mb-4">
 
     <div class="card-body">
@@ -111,7 +108,6 @@
 
   </div>
 
-  <!-- SUBIR -->
   <div class="card shadow-sm border-0 mb-4">
 
     <div class="card-body">
@@ -166,12 +162,10 @@
 
   </div>
 
-  <!-- RESULTADO -->
   @if (totalCampos > 0) {
 
     <div class="row mt-4">
 
-      <!-- IZQUIERDA -->
       <div class="col-md-6">
 
         <div class="card p-3 shadow-sm border-0 h-100">
@@ -208,14 +202,12 @@
 
                 <div class="border rounded-3 p-3 h-100 bg-light-subtle">
 
-                  <!-- NOMBRE -->
                   <div class="fw-bold mb-2 text-primary">
 
                     🏷️ {{ campo.nombre }}
 
                   </div>
 
-                  <!-- ORIGEN -->
                   <label class="form-label small fw-semibold">
                     Tipo de campo
                   </label>
@@ -239,7 +231,6 @@
 
                   </select>
 
-                  <!-- BD -->
                   @if (campo.origen === 'bd') {
 
                     <label class="form-label small fw-semibold">
@@ -294,7 +285,6 @@
 
                   }
 
-                  <!-- LIBRE -->
                   @if (campo.origen === 'libre') {
 
                     <label class="form-label small fw-semibold">
@@ -323,7 +313,6 @@
 
       </div>
 
-      <!-- DERECHA -->
       <div class="col-md-6">
 
         <div class="card p-3 shadow-sm border-0 h-100">
