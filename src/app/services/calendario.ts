@@ -13,7 +13,6 @@ export class CalendarioService {
   }
 
   async getCitas() {
-
     const { data, error } =
       await this.supabase
       .from('citas_medicas')
@@ -29,7 +28,6 @@ export class CalendarioService {
   }
 
   async crearCita(cita: any) {
-
     const { error } =
       await this.supabase
       .from('citas_medicas')
@@ -39,7 +37,6 @@ export class CalendarioService {
   }
 
   async actualizarCita(id: string, datos: any) {
-
     const { error } =
       await this.supabase
       .from('citas_medicas')
@@ -50,7 +47,6 @@ export class CalendarioService {
   }
 
   async getPacientes() {
-
     const { data, error } =
       await this.supabase
       .from('pacientes')
@@ -63,7 +59,6 @@ export class CalendarioService {
   }
 
   async getMedicos() {
-
     const { data, error } =
       await this.supabase
       .from('perfiles')
@@ -73,5 +68,43 @@ export class CalendarioService {
     if (error) throw error;
 
     return data;
+  }
+
+  async getSignosVitales(citaId: string) {
+    const { data, error } =
+      await this.supabase
+        .from('signos_vitales')
+        .select('*')
+        .eq('cita_id', citaId)
+        .maybeSingle();
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  async guardarSignosVitales(datos: any) {
+    const existente =
+      await this.getSignosVitales(datos.cita_id);
+
+    if (existente) {
+
+      const { error } =
+        await this.supabase
+        .from('signos_vitales')
+        .update(datos)
+        .eq('cita_id', datos.cita_id);
+
+      if (error) throw error;
+
+    } else {
+
+      const { error } =
+        await this.supabase
+        .from('signos_vitales')
+        .insert([datos]);
+
+      if (error) throw error;
+    }
   }
 }

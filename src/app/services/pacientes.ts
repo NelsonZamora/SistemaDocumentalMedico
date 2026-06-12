@@ -21,6 +21,16 @@ export class PacientesService {
     return data;
   }
 
+  async getPacienteHistorial(pacienteId: string) {
+    const { data, error } = await this.supabase
+      .from('citas_medicas')
+      .select('*')
+      .eq('paciente_id', pacienteId);
+
+    if (error) throw error;
+    return data;
+  }
+
   async getDocumentosPaciente(pacienteId: string) {
     const { data, error } = await this.supabase
       .from('documentos')

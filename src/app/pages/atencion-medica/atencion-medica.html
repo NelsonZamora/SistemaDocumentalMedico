@@ -1,0 +1,413 @@
+<div class="container-fluid mt-4">
+
+  <div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+      <h3 class="mb-1">
+        🩺 Atención Médica
+      </h3>
+
+      <p class="text-muted mb-0">
+        Pacientes pendientes de atención.
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <!-- LISTADO -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h5 class="mb-0">
+                📋 Citas pendientes de hoy
+                </h5>
+
+            </div>
+
+            @if (citasPendientes.length === 0) {
+
+                <div class="alert alert-light text-center mb-0">
+                No existen citas pendientes para hoy.
+                </div>
+
+            }
+
+            @for (
+                cita of citasPendientes;
+                track cita.id
+            ) {
+
+                <div
+                class="cita-card mb-3"
+                [class.cita-seleccionada]="citaSeleccionada?.id === cita.id"
+                (click)="seleccionarCita(cita)"
+                >
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+
+                    <div class="fw-bold">
+
+                        {{ cita.pacientes.nombres }}
+                        {{ cita.pacientes.apellidos }}
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        🕒 {{ cita.hora_inicio.substring(0,5) }}
+
+                    </small>
+
+                    </div>
+
+                    @if (citaSeleccionada?.id === cita.id) {
+
+                    <span class="badge bg-success">
+                        Seleccionada
+                    </span>
+
+                    }
+
+                </div>
+
+                @if (cita.motivo) {
+
+                    <div class="small text-muted mt-2">
+
+                    {{ cita.motivo }}
+
+                    </div>
+
+                }
+
+                </div>
+
+            }
+
+            </div>
+
+        </div>
+
+        </div>
+
+    <!-- FORMULARIO -->
+
+    <div class="col-md-8">
+
+      @if (citaSeleccionada) {
+
+        <div class="row">
+
+        <!-- DATOS DEL PACIENTE Y SIGNOS -->
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm border-0 mb-3">
+
+            <div class="card-header bg-primary text-white">
+
+                <h5 class="mb-0">
+                👤 Información del Paciente
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <h5 class="fw-bold mb-3">
+
+                {{ citaSeleccionada.pacientes.nombres }}
+                {{ citaSeleccionada.pacientes.apellidos }}
+
+                </h5>
+
+                <div class="small text-muted">
+
+                <div class="mb-2">
+                    📅 Fecha:
+                    <strong>{{ citaSeleccionada.fecha }}</strong>
+                </div>
+
+                <div class="mb-2">
+                    🕒 Hora:
+                    <strong>{{ citaSeleccionada.hora_inicio }}</strong>
+                </div>
+
+                <div>
+                    📝 Motivo:
+                    <strong>{{ citaSeleccionada.motivo }}</strong>
+                </div>
+
+                </div>
+
+            </div>
+
+            </div>
+
+            <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-success text-white">
+
+                <h5 class="mb-0">
+                🩺 Signos Vitales
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                <div class="col-6">
+
+                    <label class="form-label text-muted small">
+                    Presión Arterial
+                    </label>
+
+                    <input
+                    class="form-control bg-light"
+                    [value]="signos?.presion_arterial || 'No registrado'"
+                    readonly
+                    >
+
+                </div>
+
+                <div class="col-6">
+
+                    <label class="form-label text-muted small">
+                    Frecuencia Cardíaca
+                    </label>
+
+                    <input
+                    class="form-control bg-light"
+                    [value]="signos?.frecuencia_cardiaca || '-'"
+                    readonly
+                    >
+
+                </div>
+
+                <div class="col-6">
+
+                    <label class="form-label text-muted small">
+                    Saturación O₂
+                    </label>
+
+                    <input
+                    class="form-control bg-light"
+                    [value]="signos?.saturacion ? signos.saturacion + '%' : '-'"
+                    readonly
+                    >
+
+                </div>
+
+                <div class="col-6">
+
+                    <label class="form-label text-muted small">
+                    Temperatura
+                    </label>
+
+                    <input
+                    class="form-control bg-light"
+                    [value]="signos?.temperatura ? signos.temperatura + ' °C' : '-'"
+                    readonly
+                    >
+
+                </div>
+
+                <div class="col-6">
+
+                    <label class="form-label text-muted small">
+                    Peso
+                    </label>
+
+                    <input
+                    class="form-control bg-light"
+                    [value]="signos?.peso ? signos.peso + ' kg' : '-'"
+                    readonly
+                    >
+
+                </div>
+
+                <div class="col-6">
+
+                    <label class="form-label text-muted small">
+                    Talla
+                    </label>
+
+                    <input
+                    class="form-control bg-light"
+                    [value]="signos?.talla ? signos.talla + ' m' : '-'"
+                    readonly
+                    >
+
+                </div>
+
+                </div>
+
+                @if (signos?.observaciones) {
+
+                <div class="alert alert-light border mt-3">
+
+                <strong>Observaciones del auxiliar:</strong>
+
+                <div class="mt-1">
+                    {{ signos.observaciones }}
+                </div>
+
+                </div>
+
+                }
+
+            </div>
+
+            </div>
+
+        </div>
+
+        <!-- ATENCIÓN MÉDICA -->
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-warning">
+
+                <h5 class="mb-0">
+                👨‍⚕️ Registro de Atención Médica
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Síntomas
+                </label>
+
+                <textarea
+                    rows="3"
+                    class="form-control"
+                    [(ngModel)]="sintomas"
+                ></textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Enfermedad Actual
+                </label>
+
+                <textarea
+                    rows="3"
+                    class="form-control"
+                    [(ngModel)]="enfermedad_actual"
+                ></textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Examen Físico
+                </label>
+
+                <textarea
+                    rows="3"
+                    class="form-control"
+                    [(ngModel)]="examen_fisico"
+                ></textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Diagnóstico
+                </label>
+
+                <textarea
+                    rows="3"
+                    class="form-control"
+                    [(ngModel)]="diagnostico"
+                ></textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Tratamiento
+                </label>
+
+                <textarea
+                    rows="3"
+                    class="form-control"
+                    [(ngModel)]="tratamiento"
+                ></textarea>
+
+                </div>
+
+                <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Observaciones Médicas
+                </label>
+
+                <textarea
+                    rows="3"
+                    class="form-control"
+                    [(ngModel)]="observaciones"
+                ></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer bg-white">
+
+                <div class="d-flex justify-content-end gap-2">
+
+                <button
+                    class="btn btn-primary"
+                    (click)="irAGenerarDocumento()"
+                >
+                    📄 Generar Documento
+                </button>
+
+                <button
+                    class="btn btn-success"
+                    (click)="guardarAtencion()"
+                >
+                    💾 Guardar Atención
+                </button>
+
+                </div>
+
+            </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+        }
+
+    </div>
+
+  </div>
+
+</div>

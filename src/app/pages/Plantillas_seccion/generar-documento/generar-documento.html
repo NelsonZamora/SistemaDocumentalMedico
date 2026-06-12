@@ -93,7 +93,7 @@
             <select
               class="form-select shadow-sm"
               [(ngModel)]="pacienteSeleccionado"
-              (change)="seleccionarPlantilla()"
+              (change)="seleccionarPaciente()"
             >
 
               <option [ngValue]="null">
@@ -143,6 +143,54 @@
                 <option [ngValue]="plantilla">
 
                   {{ plantilla.nombre_plantilla }}
+
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label fw-semibold">
+              🩺 Atención médica
+            </label>
+
+            <p class="small text-muted mb-2">
+              Seleccione una atención médica previa para cargar automáticamente signos vitales y datos clínicos.
+            </p>
+
+            <select
+              class="form-select shadow-sm"
+              [(ngModel)]="atencionSeleccionada"
+              (change)="seleccionarAtencion()"
+            >
+
+              <option [ngValue]="null">
+                Seleccione una atención médica
+              </option>
+
+              @for (
+                atencion of atenciones;
+                track atencion.id
+              ) {
+
+                <option [ngValue]="atencion">
+
+                  {{
+                    atencion.citas_medicas.pacientes.nombres
+                  }}
+
+                  {{
+                    atencion.citas_medicas.pacientes.apellidos
+                  }}
+
+                  -
+
+                  {{
+                    atencion.citas_medicas.fecha
+                  }}
 
                 </option>
 

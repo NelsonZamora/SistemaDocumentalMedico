@@ -25,7 +25,8 @@ export class PacientesComponent implements OnInit {
 
   seccionActiva: string = 'datos';
   documentosPaciente: any[] = [];
-  vistaActual: 'datos' | 'documentos' = 'datos';
+  historialPaciente: any[] = [];
+  vistaActual: 'datos' | 'documentos' | 'historial' = 'datos';
 
 
   form: any = {};
@@ -221,6 +222,18 @@ export class PacientesComponent implements OnInit {
       await this.pacientesService.getDocumentosPaciente(
         this.pacienteSeleccionado.id
       );
+      this.cd.detectChanges();
+  }
+
+  async mostrarHistorialVisitas() {
+    this.cd.detectChanges();
+    this.vistaActual = 'historial';
+
+    this.historialPaciente =
+      await this.pacientesService.getPacienteHistorial(
+        this.pacienteSeleccionado.id
+      );
+    console.log(this.historialPaciente);
       this.cd.detectChanges();
   }
   mostrarDatosPaciente() {

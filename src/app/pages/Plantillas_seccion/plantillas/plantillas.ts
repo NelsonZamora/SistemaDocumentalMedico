@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PlantillasService } from '../../services/plantillas';
+import { PlantillasService } from '../../../services/plantillas';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import { ChangeDetectorRef } from '@angular/core';

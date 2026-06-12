@@ -8,9 +8,12 @@ import Docxtemplater from 'docxtemplater';
 import { saveAs } from 'file-saver';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
-import { PlantillasService } from '../../services/plantillas';
-import { PacientesService } from '../../services/pacientes';
+import { PlantillasService } from '../../../services/plantillas';
+import { PacientesService } from '../../../services/pacientes';
+import { AtencionMedicaService } from '../../../services/atencion-medica';
+
 
 @Component({
   selector: 'app-generar-documento',
@@ -28,8 +31,12 @@ export class GenerarDocumentoComponent implements OnInit {
   plantillaSeleccionada: any = null;
 
   camposPlantilla: any[] = [];
+  contextoClinico: any = null;
 
   valoresCampos: any = {};
+
+  atenciones: any[] = [];
+  atencionSeleccionada: any = null;
 
   previewHtml = '';
   previewHtmlOriginal = '';
@@ -40,13 +47,44 @@ export class GenerarDocumentoComponent implements OnInit {
   constructor(
     private plantillasService: PlantillasService,
     private pacientesService: PacientesService,
+    private generarDocumentoService: AtencionMedicaService,
     private cd: ChangeDetectorRef
   ) {}
 
   async ngOnInit() {
 
+    this.contextoClinico =
+      history.state?.contextoClinico;
+    console.log(this.contextoClinico);
     await this.cargarDatos();
+    await this.cargarContexto();
+    this.cd.detectChanges();
+  }
 
+  async cargarContexto() {
+
+    if (this.contextoClinico?.paciente_id) {
+      this.pacienteSeleccionado =
+        this.pacientes.find(
+          p =>
+          p.id ===
+          this.contextoClinico.paciente_id
+        );
+        console.log('paciente seleccionada',this.pacienteSeleccionado);
+    }
+
+    if (this.contextoClinico?.atencion_medica_id) {
+    this.atenciones =
+          await this.generarDocumentoService.getAtencionesMedicas();
+
+      this.atencionSeleccionada =
+        this.atenciones.find(
+          a =>
+            a.id ===
+            this.contextoClinico.atencion_medica_id
+        );
+      console.log('atencion seleccionada',this.atencionSeleccionada);
+    }
   }
 
   async cargarDatos() {
@@ -72,9 +110,31 @@ export class GenerarDocumentoComponent implements OnInit {
     }
   }
 
+  async cargarAtenciones() {
+    try {
+
+      this.atenciones =
+        await this.generarDocumentoService
+          .getAtencionesMedicas();
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+  }
+
+  async seleccionarPaciente(){
+    console.log(2)
+    this.cargarAtenciones();
+    console.log(1)
+    this.seleccionarPlantilla();
+    this.cd.detectChanges();
+  }
+
   async seleccionarPlantilla() {
     this.cd.detectChanges();
-
     
     if (
       !this.plantillaSeleccionada ||
@@ -235,20 +295,21 @@ export class GenerarDocumentoComponent implements OnInit {
           .replace(/class="[^"]*"/g, '');
 
         html = html.replace(
-          /\{([^}]+)\}/g,
-          (_: string, campo: string) => {
+          />([^<]*\{([^}]+)\}[^<]*)</g,
+          (match, contenido, campo) => {
 
             const limpio =
               campo.trim().toLowerCase();
 
-            return `
-              <span
-                class="campo-doc"
-                data-campo="${limpio}"
-              >
-                {${campo}}
-              </span>
-            `;
+            const reemplazo =
+              contenido.replace(
+                `{${campo}}`,
+                `<span class="campo-doc" data-campo="${limpio}">
+                  {${campo}}
+                </span>`
+              );
+
+            return `>${reemplazo}<`;
           }
         );
 
@@ -290,6 +351,73 @@ export class GenerarDocumentoComponent implements OnInit {
         'Error cargando plantilla'
       );
     }
+  }
+
+  seleccionarAtencion() {
+    if (!this.atencionSeleccionada) {
+      console.log(4)
+      return;
+    }
+    console.log(3)
+    const cita =
+      this.atencionSeleccionada.citas_medicas;
+    console.log(cita);
+
+    this.actualizarCamposAtencion();
+    this.cd.detectChanges();
+  }
+
+  actualizarCamposAtencion() {
+    if (!this.atencionSeleccionada) {
+      return;
+    }
+
+    const atencion =
+      this.atencionSeleccionada;
+
+    const signos =
+      atencion.signos_vitales;
+
+    this.valoresCampos['sintomas'] =
+      atencion.sintomas || '';
+
+    this.valoresCampos['enfermedad actual'] =
+      atencion.enfermedad_actual || '';
+
+    this.valoresCampos['examen fisico'] =
+      atencion.examen_fisico || '';
+
+    this.valoresCampos['diagnostico'] =
+      atencion.diagnostico || '';
+
+    this.valoresCampos['tratamiento'] =
+      atencion.tratamiento || '';
+
+    this.valoresCampos['observaciones'] =
+      atencion.observaciones || '';
+
+    if (signos) {
+
+      this.valoresCampos['presion arterial'] =
+        signos.presion_arterial || '';
+
+      this.valoresCampos['frecuencia cardiaca'] =
+        signos.frecuencia_cardiaca || '';
+
+      this.valoresCampos['saturacion'] =
+        signos.saturacion || '';
+
+      this.valoresCampos['temperatura'] =
+        signos.temperatura || '';
+
+      this.valoresCampos['peso'] =
+        signos.peso || '';
+
+      this.valoresCampos['talla'] =
+        signos.talla || '';
+    }
+
+    this.actualizarPreview();
   }
 
   actualizarPreview() {
@@ -444,63 +572,59 @@ export class GenerarDocumentoComponent implements OnInit {
       ) {
 
         const workbook =
-          XLSX.read(arrayBuffer, {
-            type: 'array'
+          new ExcelJS.Workbook();
+
+        await workbook.xlsx.load(arrayBuffer);
+
+        workbook.worksheets.forEach(sheet => {
+
+          sheet.eachRow(row => {
+
+            row.eachCell(cell => {
+
+              if (
+                typeof cell.value === 'string'
+              ) {
+
+                let texto =
+                  cell.value;
+
+                Object.keys(
+                  this.valoresCampos
+                ).forEach(campo => {
+
+                  const valor =
+                    this.valoresCampos[campo] || '';
+
+                  const regex =
+                    new RegExp(
+                      `\\{\\s*${campo}\\s*\\}`,
+                      'gi'
+                    );
+
+                  texto =
+                    texto.replace(
+                      regex,
+                      valor
+                    );
+                });
+
+                cell.value = texto;
+
+              }
+
+            });
+
           });
 
-        const sheet =
-          workbook.Sheets[
-            workbook.SheetNames[0]
-          ];
+        });
 
-        Object.keys(sheet).forEach(
-          cellKey => {
-
-            if (
-              cellKey.startsWith('!')
-            ) return;
-
-            const cell = sheet[cellKey];
-
-            if (
-              typeof cell.v === 'string'
-            ) {
-
-              Object.keys(
-                this.valoresCampos
-              ).forEach(campo => {
-
-                const valor =
-                  this.valoresCampos[campo];
-
-                const regex =
-                  new RegExp(
-                    `\\{\\s*${campo}\\s*\\}`,
-                    'gi'
-                  );
-
-                cell.v =
-                  cell.v.replace(
-                    regex,
-                    valor || ''
-                  );
-              });
-            }
-          }
-        );
-
-        const output =
-          XLSX.write(
-            workbook,
-            {
-              bookType: 'xlsx',
-              type: 'array'
-            }
-          );
+        const buffer =
+          await workbook.xlsx.writeBuffer();
 
         const blob =
           new Blob(
-            [output],
+            [buffer],
             {
               type:
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -529,12 +653,14 @@ export class GenerarDocumentoComponent implements OnInit {
 
             archivo_final_path:
               ruta
+
           });
 
         saveAs(
           blob,
           `${nombreArchivo}.xlsx`
         );
+
       }
 
       alert(

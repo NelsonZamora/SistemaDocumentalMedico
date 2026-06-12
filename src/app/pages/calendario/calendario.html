@@ -63,17 +63,58 @@
 
       <div class="modal-header bg-primary text-white">
 
-        <h5 class="modal-title">
+        <div class="w-100">
+          <div class="d-flex justify-content-between align-items-center">
 
-          @if (!citaSeleccionada) {
-            📅 Nueva Cita Médica
-          }
+            <h5 class="modal-title mb-0">
 
-          @if (citaSeleccionada) {
-            ✏️ Editar Cita Médica
-          }
+              @if (!citaSeleccionada) {
+                📅 Nueva Cita Médica
+              }
 
-        </h5>
+              @if (citaSeleccionada) {
+                ✏️ Editar Cita Médica
+              }
+
+            </h5>
+
+          </div>
+
+          <ul class="nav nav-tabs mt-3">
+
+            <li class="nav-item">
+
+              <button
+                class="nav-link"
+                [class.active]="pestanaActiva === 'cita'"
+                [class.text-white]="pestanaActiva !== 'cita'"
+                (click)="pestanaActiva='cita'"
+              >
+                📅 Información de la cita
+              </button>
+
+            </li>
+
+            @if (citaSeleccionada) {
+
+              <li class="nav-item">
+
+                <button
+                  class="nav-link"
+                  [class.active]="pestanaActiva === 'signos'"  
+                  [class.text-white]="pestanaActiva !== 'signos'"
+                  (click)="abrirSignosVitales()"
+                >
+                  🩺 Signos Vitales
+                </button>
+
+              </li>
+
+            }
+
+          </ul>
+
+        </div>
 
         <button
           class="btn-close btn-close-white"
@@ -85,132 +126,231 @@
 
       <div class="modal-body p-4">
 
-        <div class="row">
+        @if(pestanaActiva === 'cita'){
+          <div class="row">
+            <div class="col-md-6 mb-3">
 
-          <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">
+                👤 Paciente
+              </label>
 
-            <label class="form-label fw-semibold">
-              👤 Paciente
-            </label>
+              <select
+                class="form-select"
+                [(ngModel)]="paciente_id"
+              >
 
-            <select
-              class="form-select"
-              [(ngModel)]="paciente_id"
-            >
-
-              <option value="">
-                Seleccione un paciente
-              </option>
-
-              @for (
-                paciente of pacientes;
-                track paciente.id
-              ) {
-
-                <option [value]="paciente.id">
-
-                  {{ paciente.apellidos }},
-                  {{ paciente.nombres }}
-
+                <option value="">
+                  Seleccione un paciente
                 </option>
 
-              }
+                @for (
+                  paciente of pacientes;
+                  track paciente.id
+                ) {
 
-            </select>
+                  <option [value]="paciente.id">
 
-          </div>
+                    {{ paciente.apellidos }},
+                    {{ paciente.nombres }}
 
-          <div class="col-md-6 mb-3">
+                  </option>
 
-            <label class="form-label fw-semibold">
-              🩺 Médico
-            </label>
+                }
 
-            <select
-              class="form-select"
-              [(ngModel)]="medico_id"
-            >
+              </select>
 
-              <option value="">
-                Seleccione un médico
-              </option>
+            </div>
 
-              @for (
-                medico of medicos;
-                track medico.id
-              ) {
+            <div class="col-md-6 mb-3">
 
-                <option [value]="medico.id">
+              <label class="form-label fw-semibold">
+                🩺 Médico
+              </label>
 
-                  {{ medico.nombre_completo }}
+              <select
+                class="form-select"
+                [(ngModel)]="medico_id"
+              >
 
+                <option value="">
+                  Seleccione un médico
                 </option>
 
-              }
+                @for (
+                  medico of medicos;
+                  track medico.id
+                ) {
 
-            </select>
+                  <option [value]="medico.id">
+
+                    {{ medico.nombre_completo }}
+
+                  </option>
+
+                }
+
+              </select>
+
+            </div>
+
+            <div class="col-md-12 mb-3">
+
+              <label class="form-label fw-semibold">
+                📅 Fecha
+              </label>
+
+              <input
+                type="date"
+                class="form-control"
+                [(ngModel)]="fechaSeleccionada"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                🕒 Hora Inicio
+              </label>
+
+              <input
+                type="time"
+                class="form-control"
+                [(ngModel)]="hora_inicio"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label fw-semibold">
+                🕓 Hora Fin
+              </label>
+
+              <input
+                type="time"
+                class="form-control"
+                [(ngModel)]="hora_fin"
+              >
+
+            </div>
+
+            <div class="col-12 mb-3">
+
+              <label class="form-label fw-semibold">
+                📝 Motivo de la consulta
+              </label>
+
+              <textarea
+                rows="3"
+                class="form-control"
+                [(ngModel)]="motivo"
+                placeholder="Describa el motivo de la cita..."
+              >
+              </textarea>
+
+            </div>
+
+          </div>
+        }
+
+        @if (
+          pestanaActiva === 'signos' &&
+          citaSeleccionada
+        ) {
+
+          <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label">
+                Presión Arterial
+              </label>
+
+              <input
+                class="form-control"
+                [(ngModel)]="presion_arterial"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label">
+                Frecuencia Cardíaca
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="frecuencia_cardiaca"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label">
+                Saturación
+              </label>
+
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="saturacion"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label">
+                Temperatura
+              </label>
+
+              <input
+                type="number"
+                step="0.1"
+                class="form-control"
+                [(ngModel)]="temperatura"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label">
+                Peso
+              </label>
+
+              <input
+                type="number"
+                step="0.1"
+                class="form-control"
+                [(ngModel)]="peso"
+              >
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+              <label class="form-label">
+                Talla
+              </label>
+
+              <input
+                type="number"
+                step="0.01"
+                class="form-control"
+                [(ngModel)]="talla"
+              >
+
+            </div>
 
           </div>
 
-          <div class="col-md-12 mb-3">
-
-            <label class="form-label fw-semibold">
-              📅 Fecha
-            </label>
-
-            <input
-              type="date"
-              class="form-control"
-              [(ngModel)]="fechaSeleccionada"
-            >
-
-          </div>
-
-          <div class="col-md-6 mb-3">
-
-            <label class="form-label fw-semibold">
-              🕒 Hora Inicio
-            </label>
-
-            <input
-              type="time"
-              class="form-control"
-              [(ngModel)]="hora_inicio"
-            >
-
-          </div>
-
-          <div class="col-md-6 mb-3">
-
-            <label class="form-label fw-semibold">
-              🕓 Hora Fin
-            </label>
-
-            <input
-              type="time"
-              class="form-control"
-              [(ngModel)]="hora_fin"
-            >
-
-          </div>
-
-          <div class="col-12 mb-3">
-
-            <label class="form-label fw-semibold">
-              📝 Motivo de la consulta
-            </label>
-
-            <textarea
-              rows="3"
-              class="form-control"
-              [(ngModel)]="motivo"
-              placeholder="Describa el motivo de la cita..."
-            >
-            </textarea>
-
-          </div>
-
-        </div>
+        }
+        
 
       </div>
 
@@ -228,12 +368,30 @@
           Cancelar
         </button>
 
-        <button
-          class="btn btn-primary"
-          (click)="guardarCita()"
-        >   
-          💾 Guardar cita
-        </button>
+        @if (pestanaActiva === 'cita') {
+
+          <button
+            class="btn btn-primary"
+            (click)="guardarCita()"
+          >
+            💾 Guardar cita
+          </button>
+
+        }
+
+        @if (
+          pestanaActiva === 'signos' &&
+          citaSeleccionada
+        ) {
+
+          <button
+            class="btn btn-success"
+            (click)="guardarSignosVitales()"
+          >
+            🩺 Guardar signos
+          </button>
+
+        }
 
       </div>
 

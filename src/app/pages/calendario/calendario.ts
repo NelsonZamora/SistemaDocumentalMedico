@@ -31,6 +31,17 @@ export class CalendarioComponent implements OnInit {
   mostrarModal = false;
 
   fechaSeleccionada = '';
+  pestanaActiva: 'cita' | 'signos' = 'cita';
+  mostrarModalSignos = false;
+
+  presion_arterial = '';
+  frecuencia_cardiaca: number | null = null;
+  saturacion: number | null = null;
+  temperatura: number | null = null;
+  peso: number | null = null;
+  talla: number | null = null;
+
+  observaciones_signos = '';
 
   paciente_id = '';
   medico_id = '';
@@ -122,7 +133,43 @@ export class CalendarioComponent implements OnInit {
       this.cd.detectChanges();
   }
 
+  async abrirSignosVitales() {
+
+    const signos =
+      await this.calendarioService
+        .getSignosVitales(
+          this.citaSeleccionada.id
+        );
+
+    this.presion_arterial =
+      signos?.presion_arterial || '';
+
+    this.frecuencia_cardiaca =
+      signos?.frecuencia_cardiaca || null;
+
+    this.saturacion =
+      signos?.saturacion || null;
+
+    this.temperatura =
+      signos?.temperatura || null;
+
+    this.peso =
+      signos?.peso || null;
+
+    this.talla =
+      signos?.talla || null;
+
+    this.observaciones_signos =
+      signos?.observaciones || '';
+
+    this.pestanaActiva = 'signos';
+
+    this.cd.detectChanges();
+  }
+
   onDateClick(info: any) {
+
+    this.pestanaActiva = 'cita';
 
     this.citaSeleccionada = null;
 
@@ -133,7 +180,45 @@ export class CalendarioComponent implements OnInit {
     this.cd.detectChanges();
   }
 
+  async guardarSignosVitales() {
+    await this.calendarioService
+      .guardarSignosVitales({
+
+        cita_id:
+          this.citaSeleccionada.id,
+
+        presion_arterial:
+          this.presion_arterial,
+
+        frecuencia_cardiaca:
+          this.frecuencia_cardiaca,
+
+        saturacion:
+          this.saturacion,
+
+        temperatura:
+          this.temperatura,
+
+        peso:
+          this.peso,
+
+        talla:
+          this.talla,
+
+        observaciones:
+          this.observaciones_signos
+      });
+
+    this.pestanaActiva = 'cita';
+
+    alert(
+      'Signos vitales guardados'
+    );
+  }
+
   onEventClick(info: any) {
+
+    this.pestanaActiva = 'cita';
 
     this.citaSeleccionada =
       info.event.extendedProps;
@@ -212,6 +297,8 @@ export class CalendarioComponent implements OnInit {
   cerrarModal() {
 
     this.mostrarModal = false;
+
+    this.pestanaActiva = 'cita';
 
     this.paciente_id = '';
 
