@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 
-import { UsuariosService } from '../../services/usuarios';
+import { UsuariosService } from '../../../services/usuarios';
 
 @Component({
   selector: 'app-creacion-usuarios',

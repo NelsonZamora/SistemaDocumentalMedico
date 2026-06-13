@@ -74,9 +74,18 @@ export const routes: Routes = [
         path: 'gestion/creacion-usuarios',
         canActivate: [adminGuard],
         loadComponent: () =>
-          import('./pages/creacion-usuarios/creacion-usuarios')
+          import('./pages/Administrador_seccion/creacion-usuarios/creacion-usuarios')
             .then(m => m.CreacionUsuariosComponent)
       },
+
+      {
+        path: 'gestion/gestion-usuarios',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./pages/Administrador_seccion/gestion-usuarios/gestion-usuarios')
+            .then(m => m.GestionUsuariosComponent)
+      },
+
       {
         path: '**',
         redirectTo: '/dashboard'

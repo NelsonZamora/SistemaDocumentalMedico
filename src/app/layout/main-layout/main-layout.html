@@ -100,19 +100,28 @@
 
       @if (role === 'admin') {
         <li class="nav-item mt-3">
-        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
-          Gestion
-        </div>
+          <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+            Gestion
+          </div>
 
-        <a
-          class="nav-link"
-          routerLink="/gestion/creacion-usuarios"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-           👤 Creacion de usuarios
-        </a>
-      </li>
+          <a
+            class="nav-link"
+            routerLink="/gestion/creacion-usuarios"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            👤 Creacion de usuarios
+          </a>
+
+          <a
+            class="nav-link"
+            routerLink="/gestion/gestion-usuarios"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            👤 Gestion de usuarios
+          </a>
+        </li>
         
       }
 

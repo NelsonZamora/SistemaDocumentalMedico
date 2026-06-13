@@ -103,4 +103,80 @@ export class UsuariosService {
     }
     return data;
   }
+
+    async cambiarEstado(
+    id: string,
+    activo: boolean
+  ) {
+
+    const { error } =
+      await this.supabase
+      .from('perfiles')
+      .update({
+        activo
+      })
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async cambiarRol(
+    id: string,
+    rol: string
+  ) {
+
+    const { error } =
+      await this.supabase
+      .from('perfiles')
+      .update({
+        rol
+      })
+      .eq('id', id);
+      
+      console.log(id);
+      console.log(3);
+    if (error) throw error;
+  }
+
+  async resetearPassword(
+    userId: string,
+    password: string
+  ) {
+
+    const { data, error } =
+      await this.supabase.functions.invoke(
+        'admin-reset-password',
+        {
+          body: {
+            userId,
+            password
+          }
+        }
+      );
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  async cerrarSesiones(
+    userId: string
+  ) {
+
+    const {
+      data,
+      error
+    } = await this.supabase.functions.invoke(
+      'admin-signout',
+      {
+        body: {
+          userId
+        }
+      }
+    );
+
+    if (error) throw error;
+
+    return data;
+  }
 }
