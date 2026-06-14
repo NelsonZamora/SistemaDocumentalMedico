@@ -2,7 +2,10 @@
 
   <aside class="sidebar">
     
-    <h4 class="text-center mb-3">Sistema Médico</h4>
+    <h4 class="text-center mb-3">
+      <i class="bi bi-hospital me-2"></i> 
+      Sistema Médico
+    </h4>
 
     <div class="text-center mb-3">
       <span class="badge bg-info">
@@ -21,7 +24,8 @@
           routerLinkActive="active-link"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          🏠 Página Principal
+          <i class="bi bi-house-door me-2"></i>
+          Página Principal
         </a>
       </li>
       @if(role === 'admin' || role === 'medico' || role === 'auxiliar'){
@@ -35,7 +39,8 @@
           routerLink="/pacientes/lista-pacientes"
           routerLinkActive="active-link"
         >
-           👨‍⚕️ Lista de pacientes
+          <i class="bi bi-people me-2"></i>
+          Lista de pacientes
         </a>
 
       </li>
@@ -50,7 +55,8 @@
           routerLink="/calendario/calendario"
           routerLinkActive="active-link"
         >
-           📅 Agenda Medica
+          <i class="bi bi-calendar3 me-2"></i>
+          Agenda Medica
         </a>
 
         @if (role === 'medico') {
@@ -59,7 +65,8 @@
           routerLink="/calendario/atencion-medica"
           routerLinkActive="active-link"
         >
-           🧑🏻‍⚕️ Atencion Medica
+          <i class="bi bi-clipboard2-pulse me-2"></i>
+          Atencion Medica
         </a>
         }
       </li>
@@ -77,7 +84,8 @@
           routerLinkActive="active-link"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-           📄 Subir Plantilla
+          <i class="bi bi-cloud-upload me-2"></i>
+          Subir Plantilla
         </a>
 
         <a
@@ -85,7 +93,8 @@
           routerLink="/plantillas/lista"
           routerLinkActive="active-link"
         >
-           ✏️ Plantillas guardadas
+          <i class="bi bi-file-earmark-text me-2"></i>
+          Plantillas guardadas
         </a>
 
         <a
@@ -93,7 +102,8 @@
           routerLink="/plantillas/generar"
           routerLinkActive="active-link"
         >
-          🧾 Generar documento
+          <i class="bi bi-file-earmark-medical me-2"></i>
+          Generar documento
         </a>
       </li>
       }
@@ -110,7 +120,8 @@
             routerLinkActive="active-link"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            👤 Creacion de usuarios
+            <i class="bi bi-person-plus me-2"></i>
+            Creacion de usuarios
           </a>
 
           <a
@@ -119,7 +130,8 @@
             routerLinkActive="active-link"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            👤 Gestion de usuarios
+            <i class="bi bi-people-fill me-2"></i>
+            Gestion de usuarios
           </a>
         </li>
         
@@ -136,12 +148,14 @@
           routerLinkActive="active-link"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-           ⚙️ Configuracion de la cuenta
+          <i class="bi bi-gear me-2"></i>
+          Configuracion de la cuenta
         </a>
       </li>
 
       <li class="nav-item mt-4">
         <button class="btn btn-danger w-100" (click)="logout()">
+          <i class="bi bi-box-arrow-right me-2"></i>
           Cerrar sesión
         </button>
       </li>

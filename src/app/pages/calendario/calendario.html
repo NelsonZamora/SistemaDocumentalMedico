@@ -10,7 +10,8 @@
         <div>
 
           <h3 class="mb-1">
-            📅 Agenda Médica
+            <i class="bi bi-calendar3 me-2"></i>
+            Agenda Médica
           </h3>
 
           <p class="text-muted mb-0">
@@ -27,6 +28,55 @@
           Nueva cita
         </button>
 
+      </div>
+
+    </div>
+
+  </div>
+
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+
+    <h6 class="fw-bold mb-2">
+      <i class="bi bi-info-circle me-2"></i>
+      ¿Cómo utilizar esta sección?
+    </h6>
+
+    <div class="row">
+
+      <div class="col-md-4 mb-2">
+        <div class="d-flex">
+          <div class="me-2 fs-5">
+            <i class="bi bi-calendar-plus"></i>
+          </div>
+          <div>
+            <strong>Registrar citas</strong><br>
+            Utilice el botón "Nueva cita" para programar consultas médicas y asignarlas a un paciente y médico.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <div class="d-flex">
+          <div class="me-2 fs-5">
+            <i class="bi bi-pencil-square"></i>
+          </div>
+          <div>
+            <strong>Modificar información</strong><br>
+            Seleccione una cita del calendario para actualizar horarios, paciente, médico o motivo de consulta.
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-2">
+        <div class="d-flex">
+          <div class="me-2 fs-5">
+            <i class="bi bi-heart-pulse"></i>
+          </div>
+          <div>
+            <strong>Registrar signos vitales</strong><br>
+            Desde una cita existente puede acceder a la pestaña de signos vitales para registrar la información clínica inicial.
+          </div>
+        </div>
       </div>
 
     </div>
@@ -69,11 +119,13 @@
             <h5 class="modal-title mb-0">
 
               @if (!citaSeleccionada) {
-                📅 Nueva Cita Médica
+                <i class="bi bi-calendar3 me-2"></i>
+                Nueva Cita Médica
               }
 
               @if (citaSeleccionada) {
-                ✏️ Editar Cita Médica
+                <i class="bi bi-pencil-square"></i>
+                Editar Cita Médica
               }
 
             </h5>
@@ -90,7 +142,8 @@
                 [class.text-white]="pestanaActiva !== 'cita'"
                 (click)="pestanaActiva='cita'"
               >
-                📅 Información de la cita
+                <i class="bi bi-calendar3 me-2"></i>
+                Información de la cita
               </button>
 
             </li>
@@ -105,7 +158,8 @@
                   [class.text-white]="pestanaActiva !== 'signos'"
                   (click)="abrirSignosVitales()"
                 >
-                  🩺 Signos Vitales
+                  <i class="bi bi-heart-pulse me-2"></i>
+                  Signos Vitales
                 </button>
 
               </li>
@@ -131,7 +185,8 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label fw-semibold">
-                👤 Paciente
+                <i class="bi bi-person-vcard me-2"></i>
+                Paciente
               </label>
 
               <select
@@ -164,7 +219,8 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label fw-semibold">
-                🩺 Médico
+                <i class="bi bi-person-badge me-2"></i>
+                Médico
               </label>
 
               <select
@@ -196,7 +252,8 @@
             <div class="col-md-12 mb-3">
 
               <label class="form-label fw-semibold">
-                📅 Fecha
+                <i class="bi bi-calendar-event me-2"></i>
+                Fecha
               </label>
 
               <input
@@ -210,7 +267,8 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label fw-semibold">
-                🕒 Hora Inicio
+                <i class="bi bi-clock me-2"></i>
+                Hora Inicio
               </label>
 
               <input
@@ -224,7 +282,8 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label fw-semibold">
-                🕓 Hora Fin
+                <i class="bi bi-clock-history me-2"></i>
+                Hora Fin
               </label>
 
               <input
@@ -238,7 +297,8 @@
             <div class="col-12 mb-3">
 
               <label class="form-label fw-semibold">
-                📝 Motivo de la consulta
+                <i class="bi bi-journal-medical me-2"></i>
+                Motivo de la consulta
               </label>
 
               <textarea
@@ -264,6 +324,7 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label">
+                <i class="bi bi-heart me-2"></i>
                 Presión Arterial
               </label>
 
@@ -277,6 +338,7 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label">
+                <i class="bi bi-heart-pulse me-2"></i>
                 Frecuencia Cardíaca
               </label>
 
@@ -291,6 +353,7 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label">
+                <i class="bi bi-lungs me-2"></i>
                 Saturación
               </label>
 
@@ -305,6 +368,7 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label">
+                <i class="bi bi-thermometer-half me-2"></i>
                 Temperatura
               </label>
 
@@ -320,6 +384,7 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label">
+                <i class="bi bi-speedometer2 me-2"></i>
                 Peso
               </label>
 
@@ -335,6 +400,7 @@
             <div class="col-md-6 mb-3">
 
               <label class="form-label">
+                <i class="bi bi-arrows-vertical"></i>
                 Talla
               </label>
 
@@ -374,7 +440,8 @@
             class="btn btn-primary"
             (click)="guardarCita()"
           >
-            💾 Guardar cita
+            <i class="bi bi-floppy me-2"></i>
+            Guardar cita
           </button>
 
         }
@@ -388,7 +455,8 @@
             class="btn btn-success"
             (click)="guardarSignosVitales()"
           >
-            🩺 Guardar signos
+            <i class="bi bi-heart-pulse me-2"></i>
+            Guardar signos
           </button>
 
         }

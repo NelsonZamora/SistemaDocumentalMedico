@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PacientesService } from '../../services/pacientes';
 import { AuthService } from '../../services/auth';
 import { ChangeDetectorRef } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pacientes',
@@ -101,12 +102,33 @@ export class PacientesComponent implements OnInit {
         this.cerrarModal();
         this.mostrarModalExito = true;
         this.cargarPacientes();
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Paciente creado correctamente',
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true
+        });
     
       } catch (error: any) {
         if (error.message.includes('pacientes_cedula_key')) {
-          alert('La cédula ya está registrada');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'La cedula ya se encuentra ingresada en un paciente'
+          });
         } else {
-          alert(error.message);
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: error.message,
+            showConfirmButton: false,
+            timer: 4000,
+            timerProgressBar: true
+          });
         }
       }
 
@@ -167,7 +189,15 @@ export class PacientesComponent implements OnInit {
       this.cargarPacientes();
 
     } catch (error: any) {
-      alert(error.message);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: error.message,
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true
+      });
     }
   }
 

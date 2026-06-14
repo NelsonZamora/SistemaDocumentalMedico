@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import Swal from 'sweetalert2';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 
@@ -211,9 +212,15 @@ export class CalendarioComponent implements OnInit {
 
     this.pestanaActiva = 'cita';
 
-    alert(
-      'Signos vitales guardados'
-    );
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: 'Signos Vitales guardados',
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true
+    });
   }
 
   onEventClick(info: any) {
@@ -288,7 +295,11 @@ export class CalendarioComponent implements OnInit {
 
       console.error(error);
 
-      alert('Error guardando cita');
+      Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Ha ocurrido un error guardando la cita'
+                });
       this.cd.detectChanges();
     }
 

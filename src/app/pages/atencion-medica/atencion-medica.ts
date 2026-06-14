@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AtencionMedicaService } from '../../services/atencion-medica';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -103,9 +104,15 @@ implements OnInit {
 
       });
 
-    alert(
-      'Atención registrada'
-    );
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: 'Atencion registrada correctamente',
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true
+    });
 
     this.atencion_id = nuevaAtencion.id;
     await this.cargarPendientes();

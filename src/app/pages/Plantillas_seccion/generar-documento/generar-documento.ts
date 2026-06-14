@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import ExcelJS from 'exceljs';
+import Swal from 'sweetalert2';
 
 import { PlantillasService } from '../../../services/plantillas';
 import { PacientesService } from '../../../services/pacientes';
@@ -105,7 +106,11 @@ export class GenerarDocumentoComponent implements OnInit {
 
       console.error(error);
 
-      alert('Error cargando información');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error cargando la informacion'
+      });
 
     }
   }
@@ -347,9 +352,11 @@ export class GenerarDocumentoComponent implements OnInit {
 
       console.error(error);
 
-      alert(
-        'Error cargando plantilla'
-      );
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error cargando la plantilla'
+      });
     }
   }
 
@@ -663,17 +670,25 @@ export class GenerarDocumentoComponent implements OnInit {
 
       }
 
-      alert(
-        'Documento generado correctamente'
-      );
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Se ha generado el documento correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
 
     } catch (error) {
 
       console.error(error);
 
-      alert(
-        'Error generando documento'
-      );
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrio un error generando el documento'
+      });
     }
   }
 

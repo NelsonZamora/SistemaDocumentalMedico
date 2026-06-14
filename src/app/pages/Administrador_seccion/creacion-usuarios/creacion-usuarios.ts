@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import Swal from 'sweetalert2';
 
 import { UsuariosService } from '../../../services/usuarios';
 
@@ -55,7 +56,11 @@ implements OnInit {
     } catch (error) {
 
       console.error(error);
-      alert('Error cargando usuarios');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error cargando los usuarios'
+      });
 
     } finally {
 
@@ -75,9 +80,11 @@ implements OnInit {
         !this.password
       ) {
 
-        alert(
-          'Complete todos los campos'
-        );
+        Swal.fire({
+          icon: 'warning',
+          title: 'Error',
+          text: 'No fue posible cargar los usuarios'
+        });
 
         return;
       }
@@ -101,7 +108,15 @@ implements OnInit {
 
         });
 
-      alert('Usuario creado');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Usuario creado correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
 
       this.nombre_completo = '';
       this.email = '';
@@ -115,7 +130,11 @@ implements OnInit {
     } catch (error: any) {
 
       console.error(error);
-      alert(error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error al crear el usuario'
+      });
 
     }
 

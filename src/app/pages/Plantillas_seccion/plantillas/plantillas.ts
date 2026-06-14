@@ -5,7 +5,7 @@ import { PlantillasService } from '../../../services/plantillas';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import { ChangeDetectorRef } from '@angular/core';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-plantillas',
@@ -229,7 +229,15 @@ export class PlantillasComponent {
         total_campos: this.totalCampos
       });
 
-      alert("Plantilla guardada correctamente");
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Plantilla guardada correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
       
       this.archivo = null;
       this.camposDetectados = [];
@@ -239,7 +247,15 @@ export class PlantillasComponent {
       this.valoresCampos = {};
       this.cd.detectChanges();
     } catch (error: any) {
-      alert(error.message);
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'error',
+        title: error.message,
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true
+      });
     }
   }
 

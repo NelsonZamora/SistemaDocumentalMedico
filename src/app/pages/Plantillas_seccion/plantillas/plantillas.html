@@ -1,9 +1,10 @@
-<div class="container mt-4 mb-5">
+<div class="container-fluid mt-4 mb-5">
 
   <div class="mb-4">
 
     <h2 class="fw-bold mb-1">
-      📄 Subir Plantilla Word
+      <i class="bi bi-file-earmark-medical me-2"></i>
+      Subir Plantilla Medica
     </h2>
 
     <p class="text-muted mb-0">
@@ -23,7 +24,8 @@
       <div class="col-md-3 mb-2">
         <div class="small">
           <div class="fw-semibold mb-1">
-            1️⃣ Suba el documento
+            <i class="bi bi-file-earmark-arrow-up me-2"></i>
+            Suba el documento
           </div>
           <div class="text-muted">
             Seleccione un archivo Word (.docx)
@@ -34,7 +36,8 @@
       <div class="col-md-3 mb-2">
         <div class="small">
           <div class="fw-semibold mb-1">
-            2️⃣ Analice la plantilla
+            <i class="bi bi-search me-2"></i>
+            Analice la plantilla
           </div>
           <div class="text-muted">
             El sistema detectará automáticamente los campos.
@@ -45,7 +48,8 @@
       <div class="col-md-3 mb-2">
         <div class="small">
           <div class="fw-semibold mb-1">
-            3️⃣ Configure los campos
+            <i class="bi bi-sliders me-2"></i>
+            Configure los campos
           </div>
           <div class="text-muted">
             Seleccione si son campos libres o datos de la base.
@@ -56,7 +60,8 @@
       <div class="col-md-3 mb-2">
         <div class="small">
           <div class="fw-semibold mb-1">
-            4️⃣ Guarde la plantilla
+            <i class="bi bi-save me-2"></i>
+            Guarde la plantilla
           </div>
           <div class="text-muted">
             La plantilla quedará lista para generar documentos.
@@ -141,7 +146,8 @@
               class="btn btn-primary"
               (click)="analizarDocumento(); $event.stopPropagation()"
             >
-              🔍 Analizar Documento
+              <i class="bi bi-search me-2"></i>
+              Analizar Documento
             </button>
 
             <button
@@ -149,7 +155,8 @@
               (click)="subirPlantilla(); $event.stopPropagation()"
               [disabled]="totalCampos === 0"
             >
-              ☁️ Guardar Plantilla
+              <i class="bi bi-cloud-upload me-2"></i>
+              Guardar Plantilla
             </button>
 
           </div>

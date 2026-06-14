@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -47,7 +48,11 @@ export class ListaPlantillasComponent implements OnInit {
 
     } catch (error) {
       console.error(error);
-      alert('Error cargando plantillas');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error cargando las plantillas'
+      });
     }
   }
 
@@ -303,9 +308,11 @@ export class ListaPlantillasComponent implements OnInit {
 
     console.error(error);
 
-    alert(
-      'Error cargando vista previa'
-    );
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Ha ocurrido un error cargando la vista previa'
+    });
 
   }
 
@@ -317,13 +324,25 @@ export class ListaPlantillasComponent implements OnInit {
         this.plantillaEditando.id,
         this.camposDetectados
       );
-      alert('Plantilla actualizada');
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Plantilla actualizada correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
       this.modalEditar = false;
       await this.cargarPlantillas();
       this.cd.detectChanges();
     } catch (error) {
       console.error(error);
-      alert('Error actualizando');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ocurrio un error al actualizar la plantilla'
+      });
     }
   }
 
