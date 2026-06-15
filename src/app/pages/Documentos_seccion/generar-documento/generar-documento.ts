@@ -56,7 +56,6 @@ export class GenerarDocumentoComponent implements OnInit {
 
     this.contextoClinico =
       history.state?.contextoClinico;
-    console.log(this.contextoClinico);
     await this.cargarDatos();
     await this.cargarContexto();
     this.cd.detectChanges();
@@ -71,7 +70,6 @@ export class GenerarDocumentoComponent implements OnInit {
           p.id ===
           this.contextoClinico.paciente_id
         );
-        console.log('paciente seleccionada',this.pacienteSeleccionado);
     }
 
     if (this.contextoClinico?.atencion_medica_id) {
@@ -84,7 +82,6 @@ export class GenerarDocumentoComponent implements OnInit {
             a.id ===
             this.contextoClinico.atencion_medica_id
         );
-      console.log('atencion seleccionada',this.atencionSeleccionada);
     }
   }
 
@@ -131,9 +128,8 @@ export class GenerarDocumentoComponent implements OnInit {
   }
 
   async seleccionarPaciente(){
-    console.log(2)
+
     this.cargarAtenciones();
-    console.log(1)
     this.seleccionarPlantilla();
     this.cd.detectChanges();
   }
@@ -362,13 +358,11 @@ export class GenerarDocumentoComponent implements OnInit {
 
   seleccionarAtencion() {
     if (!this.atencionSeleccionada) {
-      console.log(4)
       return;
     }
-    console.log(3)
+
     const cita =
       this.atencionSeleccionada.citas_medicas;
-    console.log(cita);
 
     this.actualizarCamposAtencion();
     this.cd.detectChanges();

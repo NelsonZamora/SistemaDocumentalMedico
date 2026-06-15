@@ -146,67 +146,6 @@ implements OnInit {
 
         });
 
-    // const resultado =
-    //   await Swal.fire({
-
-    //     title:
-    //       'Cerrar sesiones',
-
-    //     text:
-    //       `¿Desea cerrar todas las sesiones activas de ${usuario.nombre_completo}?`,
-
-    //     icon: 'warning',
-
-    //     showCancelButton: true,
-
-    //     confirmButtonText:
-    //       'Sí, cerrar',
-
-    //     cancelButtonText:
-    //       'Cancelar'
-    //   });
-
-    // if (!resultado.isConfirmed)
-    //   return;
-
-    // try {
-    //   console.log(usuario.id);
-
-    //   await this.usuariosService
-    //     .cerrarSesiones(
-    //       usuario.id
-    //     );
-
-    //   await Swal.fire({
-
-    //     icon: 'success',
-
-    //     title:
-    //       'Sesiones cerradas',
-
-    //     text:
-    //       'Todas las sesiones activas fueron finalizadas.'
-
-    //   });
-
-    // } catch (error) {
-
-    //   console.error(error);
-
-    //   await Swal.fire({
-
-    //     icon: 'error',
-
-    //     title:
-    //       'Error',
-
-    //     text:
-    //       'No fue posible cerrar las sesiones.'
-
-    //   });
-
-    // }
-
   }
 
   toggleMenu(id: string) {
@@ -272,14 +211,14 @@ implements OnInit {
   async cambiarRol(
     usuario: any
   ) {
-    console.log(1);
+
     await this.usuariosService
       .cambiarRol(
         usuario.id,
         usuario.rol
       );
       this.cd.detectChanges();
-      console.log(2);
+
   }
 
 }

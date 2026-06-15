@@ -74,12 +74,10 @@ export class PacientesService {
     return fileName;
   }
 
-  
-
   async getFotoUrl(path: string) {
     const { data, error } = await this.supabase.storage
       .from('pacientes')
-      .createSignedUrl(path, 60 * 60); // 1 hora
+      .createSignedUrl(path, 60 * 60);
 
     if (error) throw error;
 
@@ -88,22 +86,21 @@ export class PacientesService {
   }
 
   async eliminarFoto(path: string) {
-
-  const { error } = await this.supabase.storage
-    .from('pacientes')
-    .remove([path]);
-
-  if (error) throw error;
-}
-
-  async actualizarPaciente(id: number, paciente: any) {
-
-    const { error } = await this.supabase
+    const { error } = await this.supabase.storage
       .from('pacientes')
-      .update(paciente)
-      .eq('id', id);
+      .remove([path]);
 
     if (error) throw error;
   }
+
+    async actualizarPaciente(id: number, paciente: any) {
+
+      const { error } = await this.supabase
+        .from('pacientes')
+        .update(paciente)
+        .eq('id', id);
+
+      if (error) throw error;
+    }
 
 }

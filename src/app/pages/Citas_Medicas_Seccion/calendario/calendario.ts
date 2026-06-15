@@ -11,7 +11,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 
 import { CalendarOptions } from '@fullcalendar/core';
 
-import { CalendarioService } from '../../services/calendario';
+import { CalendarioService } from '../../../services/calendario';
 
 @Component({
   selector: 'app-calendario',
@@ -47,8 +47,10 @@ export class CalendarioComponent implements OnInit {
   paciente_id = '';
   medico_id = '';
 
-  hora_inicio = '08:00';
-  hora_fin = '08:30';
+  hora_inicio = '';
+  hora_fin = '';
+
+  fechaMinima = '';
 
   motivo = '';
 
@@ -70,6 +72,12 @@ export class CalendarioComponent implements OnInit {
       left: 'prev,next today',
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',  
+      meridiem: false
     },
 
     buttonText: {
@@ -181,6 +189,47 @@ export class CalendarioComponent implements OnInit {
     this.cd.detectChanges();
   }
 
+  abrirNuevaCita() {
+
+    const ahora = new Date();
+
+    this.fechaSeleccionada =
+      ahora.toISOString().split('T')[0];
+
+    this.hora_inicio =
+      ahora.toTimeString().substring(0,5);
+
+    const fin = new Date();
+    fin.setMinutes(fin.getMinutes() + 30);
+
+    this.hora_fin =
+      fin.toTimeString().substring(0,5);
+
+    this.mostrarModal = true;
+
+  }
+
+  get horaMinima(): string {
+
+  const hoy =
+    new Date()
+    .toISOString()
+    .split('T')[0];
+
+  if (
+    this.fechaSeleccionada === hoy
+  ) {
+
+    return new Date()
+      .toTimeString()
+      .substring(0, 5);
+
+  }
+
+  return '00:00';
+
+}
+
   async guardarSignosVitales() {
     await this.calendarioService
       .guardarSignosVitales({
@@ -274,6 +323,25 @@ export class CalendarioComponent implements OnInit {
 
       };
 
+      const ahora = new Date();
+
+      const fechaHoraCita =
+        new Date(
+          `${this.fechaSeleccionada}T${this.hora_inicio}`
+        );
+
+      if (fechaHoraCita < ahora) {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Fecha inválida',
+          text: 'No puede registrar citas medicas en fechas u horas previas a la actual.'
+        });
+
+        return;
+
+      }
+
       if (this.citaSeleccionada) {
 
         await this.calendarioService.actualizarCita(
@@ -314,10 +382,6 @@ export class CalendarioComponent implements OnInit {
     this.paciente_id = '';
 
     this.medico_id = '';
-
-    this.hora_inicio = '08:00';
-
-    this.hora_fin = '08:30';
 
     this.motivo = '';
     this.cd.detectChanges();

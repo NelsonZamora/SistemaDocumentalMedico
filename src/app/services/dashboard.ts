@@ -22,9 +22,6 @@ export class DashboardService {
       new Date()
         .toISOString()
         .split('T')[0];
-
-    // Pacientes atendidos hoy
-
     const {
       count: pacientesHoy
     } = await supabase
@@ -37,8 +34,6 @@ export class DashboardService {
       .eq('fecha', hoy)
       .eq('estado', 'atendida');
 
-    // Documentos emitidos
-
     const {
       count: documentosEmitidos
     } = await supabase
@@ -48,8 +43,6 @@ export class DashboardService {
         head: true
       })
       .eq('creado_por', medicoId);
-
-    // Pendientes
 
     const {
       count: pendientes
@@ -62,8 +55,6 @@ export class DashboardService {
       .eq('medico_id', medicoId)
       .eq('fecha', hoy)
       .eq('estado', 'programada');
-
-    // Próxima cita
 
     const horaActual =
       new Date()
@@ -88,8 +79,6 @@ export class DashboardService {
       .order('hora_inicio')
       .limit(1)
       .maybeSingle();
-
-    // Pacientes recientes
 
     const {
       data: pacientesRecientes

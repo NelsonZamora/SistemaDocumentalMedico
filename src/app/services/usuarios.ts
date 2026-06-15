@@ -29,13 +29,9 @@ export class UsuariosService {
         environment.supabaseKey,
         {
           auth: {
-
             persistSession: false,
-
             autoRefreshToken: false,
-
             detectSessionInUrl: false,
-
             storageKey:
               `registro-${crypto.randomUUID()}`
           }
@@ -133,8 +129,6 @@ export class UsuariosService {
       })
       .eq('id', id);
       
-      console.log(id);
-      console.log(3);
     if (error) throw error;
   }
 

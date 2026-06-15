@@ -302,8 +302,34 @@
           </div>
 
           <div class="alert alert-primary py-3 small shadow-sm mx-2" style="border-radius: 10px; border-left: 5px solid #0d6efd;">
-            <i class="bi bi-shield-check me-2"></i>
-            Todos los datos proporcionados serán tratados según la normativa de protección de datos.
+            <div class="d-flex justify-content-between align-items-center gap-3">
+
+              <div>
+
+                <i class="bi bi-shield-check me-2"></i>
+
+                Declaro que el paciente ha sido informado sobre el tratamiento de sus datos personales y autoriza su registro y almacenamiento en el sistema conforme a la normativa vigente de protección de datos.
+
+              </div>
+
+              <div class="form-check flex-shrink-0">
+
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="aceptaProteccionDatos"
+                  [(ngModel)]="aceptaProteccionDatos"
+                  style="
+                    width: 1.8rem;
+                    height: 1.8rem;
+                    cursor: pointer;
+                  "
+                >
+
+              </div>
+
+            </div>
+
           </div>
 
           <button class="btn btn-outline-secondary w-100 mt-4" (click)="cerrarModal()">
@@ -363,7 +389,7 @@
           </div>
 
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
-            <button class="btn btn-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()" style="border-radius: 10px;">
+            <button class="btn btn-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()" style="border-radius: 10px;" [disabled]="!aceptaProteccionDatos">
               <i class="bi bi-save2 me-2"></i> 
               Registrar Paciente
             </button>
@@ -654,7 +680,8 @@
               <div>
 
                 <h5 class="text-primary mb-1">
-                  📄 Historial de citas del paciente
+                  <i class="bi bi-file-earmark-medical me-2"></i>
+                  Historial de citas del paciente
                 </h5>
 
                 <p class="text-muted small mb-0">
@@ -675,9 +702,9 @@
 
                     <tr>
                       <th>Fecha</th>
-                      <th>Estado</th>
-                      <th>Medico asignado</th>
                       <th>Motivo de consulta</th>
+                      <th>Medico asignado</th>
+                      <th>Estado</th>
                     </tr>
 
                   </thead>
@@ -700,6 +727,22 @@
                         </td>
 
                         <td>
+                          
+                          {{
+                            historial.motivo
+                          }}
+
+                        </td>
+
+                        <td>
+
+                          {{
+                            historial.medico_id
+                          }}
+
+                        </td>
+
+                        <td>
 
                           <span
                             class="badge"
@@ -714,22 +757,6 @@
                             {{ historial.estado }}
 
                           </span>
-
-                        </td>
-
-                        <td>
-
-                          {{
-                            historial.medico_id
-                          }}
-
-                        </td>
-
-                        <td>
-                          
-                          {{
-                            historial.motivo
-                          }}
 
                         </td>
 

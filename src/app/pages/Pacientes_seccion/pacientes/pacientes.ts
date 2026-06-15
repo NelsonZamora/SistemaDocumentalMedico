@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PacientesService } from '../../services/pacientes';
-import { AuthService } from '../../services/auth';
+import { PacientesService } from '../../../services/pacientes';
+import { AuthService } from '../../../services/auth';
 import { ChangeDetectorRef } from '@angular/core';
 import Swal from 'sweetalert2';
 
@@ -23,6 +23,7 @@ export class PacientesComponent implements OnInit {
   pacienteSeleccionado: any = null;
   mostrarModalVer = false;
   mostrarModalEditar = false;
+  aceptaProteccionDatos = false;
 
   seccionActiva: string = 'datos';
   documentosPaciente: any[] = [];
@@ -54,7 +55,43 @@ export class PacientesComponent implements OnInit {
   }
 
   onFileSelected(event: any) {
-    this.archivo = event.target.files[0];
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    const MAX_SIZE = 1024 * 1024; // 1 MB
+
+    if (file.size > MAX_SIZE) {
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Imagen demasiado grande',
+        text: 'La imagen no debe superar 1 MB.'
+      });
+
+      event.target.value = '';
+      return;
+
+    }
+
+    if (
+      file.type !== 'image/jpeg' &&
+      file.type !== 'image/png'
+    ) {
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Formato no válido',
+        text: 'Solo se permiten imágenes JPG o PNG.'
+      });
+
+      event.target.value = '';
+      return;
+
+    }
+
+    this.archivo = file;
+
   }
 
   cerrarModalExito() {
@@ -263,7 +300,6 @@ export class PacientesComponent implements OnInit {
       await this.pacientesService.getPacienteHistorial(
         this.pacienteSeleccionado.id
       );
-    console.log(this.historialPaciente);
       this.cd.detectChanges();
   }
   mostrarDatosPaciente() {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AtencionMedicaService } from '../../services/atencion-medica';
+import { AtencionMedicaService } from '../../../services/atencion-medica';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -58,12 +58,10 @@ implements OnInit {
   async seleccionarCita(cita: any) {
 
     this.citaSeleccionada = cita;
-    console.log(cita.id);
     this.signos =
       await this.atencionMedicaService
       .getSignos(cita.id);
 
-    console.log(this.signos);
     this.cd.detectChanges();
   }
 

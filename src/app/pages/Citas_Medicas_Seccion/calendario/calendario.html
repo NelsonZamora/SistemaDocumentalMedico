@@ -22,7 +22,7 @@
 
         <button
           class="btn btn-primary"
-          (click)="mostrarModal = true" 
+          (click)="abrirNuevaCita()"
         >
           <i class="bi bi-plus-circle me-2"></i>
           Nueva cita
@@ -260,6 +260,7 @@
                 type="date"
                 class="form-control"
                 [(ngModel)]="fechaSeleccionada"
+                [min]="fechaMinima"
               >
 
             </div>
@@ -275,6 +276,7 @@
                 type="time"
                 class="form-control"
                 [(ngModel)]="hora_inicio"
+                [min]="horaMinima"
               >
 
             </div>

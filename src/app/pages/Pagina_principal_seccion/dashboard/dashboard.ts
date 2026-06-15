@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth';
+import { AuthService } from '../../../services/auth';
 import { Router } from '@angular/router';
-import { DashboardService } from '../../services/dashboard';
+import { DashboardService } from '../../../services/dashboard';
 import { OnInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -29,7 +29,6 @@ export class DashboardComponent implements OnInit{
   role = localStorage.getItem('userRole');
 
   async ngOnInit() {
-
     await this.cargarDashboard();
     this.cd.detectChanges();
   }
@@ -44,7 +43,6 @@ export class DashboardComponent implements OnInit{
   const resumen =
     await this.dashboardService
       .obtenerResumen();
-      console.log(resumen);
 
 
   this.pacientesHoy =
