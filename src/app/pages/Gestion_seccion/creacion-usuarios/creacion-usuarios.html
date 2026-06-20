@@ -105,12 +105,7 @@
               <span class="text-danger">*</span>
             </label>
 
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Ej: Juan Carlos Bodoque"
-              [(ngModel)]="nombre_completo"
-            >
+            <input type="text" class="form-control" placeholder="Ej: Juan Carlos Bodoque" [(ngModel)]="nombre_completo">
 
             <small class="text-muted">
               Ingrese nombres y apellidos del usuario.
@@ -125,12 +120,7 @@
               <span class="text-danger">*</span>
             </label>
 
-            <input
-              type="email"
-              class="form-control"
-              placeholder="usuario@correo.com"
-              [(ngModel)]="email"
-            >
+            <input type="email" class="form-control" placeholder="usuario@correo.com" [(ngModel)]="email">
 
             <small class="text-muted">
               Este correo será utilizado para iniciar sesión.
@@ -145,12 +135,8 @@
               <span class="text-danger">*</span>
             </label>
 
-            <input
-              type="password"
-              class="form-control"
-              placeholder="Ingrese una contraseña segura"
-              [(ngModel)]="password"
-            >
+            <input type="password" class="form-control" placeholder="Ingrese una contraseña segura"
+              [(ngModel)]="password">
 
             <small class="text-muted">
               Recomendado: mínimo 6 caracteres.
@@ -164,21 +150,18 @@
               Tipo de usuario
             </label>
 
-            <select
-              class="form-select"
-              [(ngModel)]="rol"
-            >
+            <select class="form-select" [(ngModel)]="rol">
 
               <option value="medico">
-                 Médico
+                Médico
               </option>
 
               <option value="admin">
-                 Administrador
+                Administrador
               </option>
 
               <option value="auxiliar">
-                 Auxiliar
+                Auxiliar
               </option>
 
             </select>
@@ -198,38 +181,30 @@
 
           </div>
 
-          <button
-            class="btn btn-primary w-100 py-2 shadow-sm"
-            [disabled]="creando"
-            (click)="crearUsuario()"
-          >
+          <button class="btn btn-primary w-100 py-2 shadow-sm" [disabled]="creando" (click)="crearUsuario()">
 
             @if (!creando) {
 
-              <span>
-                <i class="bi bi-person-plus-fill me-2"></i>
-                Crear usuario
-              </span>
+            <span>
+              <i class="bi bi-person-plus-fill me-2"></i>
+              Crear usuario
+            </span>
 
             }
 
             @if (creando) {
 
-              <span>
-                <span
-                  class="spinner-border spinner-border-sm me-2"
-                ></span>
+            <span>
+              <span class="spinner-border spinner-border-sm me-2"></span>
 
-                Creando usuario...
-              </span>
+              Creando usuario...
+            </span>
 
             }
 
           </button>
 
-          <div
-            class="alert alert-light border mt-4 small mb-0"
-          >
+          <div class="alert alert-light border mt-4 small mb-0">
 
             <div class="d-flex">
 
@@ -238,7 +213,8 @@
               </div>
 
               <div>
-                Los usuarios creados podrán acceder inmediatamente al sistema utilizando el correo y contraseña registrados.
+                Los usuarios creados podrán acceder inmediatamente al sistema utilizando el correo y contraseña
+                registrados.
               </div>
 
             </div>
@@ -257,9 +233,7 @@
 
         <div class="card-body p-4">
 
-          <div
-            class="d-flex justify-content-between align-items-center mb-4"
-          >
+          <div class="d-flex justify-content-between align-items-center mb-4">
 
             <div>
 
@@ -274,9 +248,7 @@
 
             </div>
 
-            <span
-              class="badge bg-light text-dark border px-3 py-2"
-            >
+            <span class="badge bg-light text-dark border px-3 py-2">
               Total:
               {{ usuarios.length }}
               usuario(s)
@@ -286,136 +258,126 @@
 
           @if (cargando) {
 
-            <div class="text-center py-5">
+          <div class="text-center py-5">
 
-              <div
-                class="spinner-border text-primary"
-              ></div>
+            <div class="spinner-border text-primary"></div>
 
-              <p class="text-muted mt-3 mb-0">
-                Cargando usuarios...
-              </p>
+            <p class="text-muted mt-3 mb-0">
+              Cargando usuarios...
+            </p>
 
-            </div>
+          </div>
 
           }
 
           @if (!cargando) {
 
-            <div class="table-responsive">
+          <div class="table-responsive">
 
-              <table class="table align-middle table-hover">
+            <table class="table align-middle table-hover">
 
-                <thead class="table-light">
+              <thead class="table-light">
 
-                  <tr>
-                    <th>Usuario</th>
-                    <th>Rol</th>
-                    <th>Fecha de registro</th>
-                  </tr>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Rol</th>
+                  <th>Fecha de registro</th>
+                </tr>
 
-                </thead>
+              </thead>
 
-                <tbody>
+              <tbody>
 
-                  @for (
-                    usuario of usuarios;
-                    track usuario.id
-                  ) {
+                @for (
+                usuario of usuarios;
+                track usuario.id
+                ) {
 
-                    <tr>
+                <tr>
 
-                      <td>
+                  <td>
 
-                        <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
 
-                          <div
-                            class="rounded-circle bg-light border d-flex align-items-center justify-content-center me-3"
-                            style="width: 45px; height: 45px;"
-                          >
+                      <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center me-3"
+                        style="width: 45px; height: 45px;">
 
-                            <i
-                              class="bi bi-person-fill text-primary"
-                            ></i>
+                        <i class="bi bi-person-fill text-primary"></i>
 
-                          </div>
+                      </div>
 
-                          <div>
+                      <div>
 
-                            <div class="fw-semibold">
+                        <div class="fw-semibold">
 
-                              {{ usuario.nombre_completo }}
-
-                            </div>
-
-                            <small class="text-muted">
-                              Usuario del sistema
-                            </small>
-
-                          </div>
+                          {{ usuario.nombre_completo }}
 
                         </div>
 
-                      </td>
+                        <small class="text-muted">
+                          Usuario del sistema
+                        </small>
 
-                      <td>
+                      </div>
 
-                        <span
-                          class="badge px-3 py-2"
-                          [class.bg-primary]="
+                    </div>
+
+                  </td>
+
+                  <td>
+
+                    <span class="badge px-3 py-2" [class.bg-primary]="
                             usuario.rol === 'admin'
-                          "
-                          [class.bg-success]="
+                          " [class.bg-success]="
                             usuario.rol === 'medico' || usuario.rol === 'auxiliar'
-                          "
-                        >
+                          ">
 
-                          @if (
-                            usuario.rol === 'admin'
-                          ) {
+                      @if (
+                      usuario.rol === 'admin'
+                      ) {
 
-                             Administrador
+                      Administrador
 
-                          }
+                      }
 
-                          @if (
-                            usuario.rol === 'medico'
-                          ) {
+                      @if (
+                      usuario.rol === 'medico'
+                      ) {
 
-                             Médico
+                      Médico
 
-                          }
+                      }
 
-                          @if (
-                            usuario.rol === 'auxiliar'
-                          ) {
+                      @if (
+                      usuario.rol === 'auxiliar'
+                      ) {
 
-                             Auxiliar
+                      Auxiliar
 
-                          }
+                      }
 
-                        </span>
+                    </span>
 
-                      </td>
+                  </td>
 
-                      <td>
+                  <td>
 
-                        {{
-                          usuario.actualizado_at
-                          | date:'short'
-                        }}
+                    {{
+                    usuario.actualizado_at
+                    | date:'short'
+                    }}
 
-                      </td>
+                  </td>
 
-                    </tr>
+                </tr>
 
-                  }
+                }
 
-                </tbody>
+              </tbody>
 
-              </table>
+            </table>
 
-            </div>
+          </div>
 
           }
 

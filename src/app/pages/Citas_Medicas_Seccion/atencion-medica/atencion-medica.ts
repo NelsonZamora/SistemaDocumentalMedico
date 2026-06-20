@@ -26,7 +26,7 @@ implements OnInit {
 
   signos: any = null;
 
-  sintomas = '';
+  motivo_consulta = '';
   enfermedad_actual = '';
   examen_fisico = '';
   diagnostico = '';
@@ -79,8 +79,8 @@ implements OnInit {
         medico_id:
           this.citaSeleccionada.medico_id,
 
-        sintomas:
-          this.sintomas,
+        motivo_consulta:
+          this.motivo_consulta,
 
         enfermedad_actual:
           this.enfermedad_actual,

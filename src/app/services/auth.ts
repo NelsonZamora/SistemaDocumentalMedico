@@ -24,7 +24,6 @@ export class AuthService {
     });
 
     if (error) throw error;
-
     const {
       data: perfil,
       error: perfilError
@@ -37,24 +36,16 @@ export class AuthService {
     if (perfilError) throw perfilError;
 
     if (!perfil.activo) {
-
       await this.supabase.auth.signOut();
-
       await Swal.fire({
-
         icon: 'error',
-
         title: 'Usuario bloqueado',
-
         html: `
           Su cuenta se encuentra actualmente deshabilitada por un administrador.<br><br>
           Si considera que se trata de un error, comuníquese con el administrador del sistema para solicitar asistencia.
         `,
-
         confirmButtonText: 'Aceptar'
-
       });
-
       throw new Error(
         'Usuario bloqueado'
       );

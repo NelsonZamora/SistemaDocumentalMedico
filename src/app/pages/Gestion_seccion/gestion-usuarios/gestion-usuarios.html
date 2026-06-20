@@ -1,7 +1,5 @@
 <div class="container-fluid mt-4">
-  <div
-    class="card border-0 shadow-sm mb-4"
-  >
+  <div class="card border-0 shadow-sm mb-4">
     <div class="card-body">
       <h3>
         <i class="bi bi-people me-2"></i>
@@ -62,27 +60,17 @@
 
   </div>
 
-  <div
-    class="card border-0 shadow-sm"
-  >
+  <div class="card border-0 shadow-sm">
     <div class="card-body">
       @if (cargando) {
-        <div class="text-center">
-          <div
-            class="spinner-border"
-          ></div>
-        </div>
+      <div class="text-center">
+        <div class="spinner-border"></div>
+      </div>
       }
       @if (!cargando) {
-      <div
-        class="table-responsive"
-      >
-        <table
-          class="table table-hover align-middle"
-        >
-          <thead
-            class="table-light"
-          >
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
             <tr>
               <th>
                 Usuario
@@ -103,64 +91,45 @@
           </thead>
           <tbody>
             @for (
-              usuario of usuarios;
-              track usuario.id
+            usuario of usuarios;
+            track usuario.id
             ) {
             <tr>
               <td>
-                <div
-                  class="fw-bold"
-                >
+                <div class="fw-bold">
                   {{
-                    usuario.nombre_completo
+                  usuario.nombre_completo
                   }}
                 </div>
               </td>
               <td>
-                <select
-                  class="form-select form-select-sm"
-                  [(ngModel)]="
+                <select class="form-select form-select-sm" [(ngModel)]="
                     usuario.rol
-                  "
-                  (change)="
+                  " (change)="
                     cambiarRol(
                       usuario
                     )
-                  "
-                >
-                  <option
-                    value="admin"
-                  >
+                  ">
+                  <option value="admin">
                     Administrador
                   </option>
-                  <option
-                    value="medico"
-                  >
+                  <option value="medico">
                     Médico
                   </option>
-                  <option
-                    value="auxiliar"
-                  >
+                  <option value="auxiliar">
                     Auxiliar
                   </option>
                 </select>
               </td>
               <td>
-                <div
-                  class="form-check form-switch"
-                >
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    [(ngModel)]="
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="
                       usuario.activo
-                    "
-                    (change)="
+                    " (change)="
                       cambiarEstado(
                         usuario
                       )
-                    "
-                  >
+                    ">
                 </div>
               </td>
               <td>
@@ -169,13 +138,10 @@
               <td>
                 <div class="position-relative">
 
-                <button
-                    class="btn btn-outline-primary btn-sm"
-                    (click)="abrirAcciones(usuario)"
-                >
+                  <button class="btn btn-outline-primary btn-sm" (click)="abrirAcciones(usuario)">
                     <i class="bi bi-gear me-1"></i>
                     Gestionar
-                </button>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -190,59 +156,46 @@
 
 @if (mostrarModalAcciones) {
 
-<div class="modal fade show d-block" style=" background: rgba(0,0,0,.55); backdrop-filter: blur(3px);" >
+<div class="modal fade show d-block" style=" background: rgba(0,0,0,.55); backdrop-filter: blur(3px);">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
-      <div class="modal-header bg-primary text-white" >
+      <div class="modal-header bg-primary text-white">
 
         <h5 class="modal-title">
-          <i class="bi bi-sliders me-2"></i> 
+          <i class="bi bi-sliders me-2"></i>
           Gestión de Usuario
         </h5>
 
-        <button
-          class="btn-close btn-close-white"
-          (click)="cerrarModalAcciones()"
-        >
+        <button class="btn-close btn-close-white" (click)="cerrarModalAcciones()">
         </button>
 
       </div>
 
       <div class="modal-body">
 
-        <div
-          class="text-center mb-4"
-        >
+        <div class="text-center mb-4">
 
           <h5 class="mb-1">
 
             {{
-              usuarioSeleccionado?.nombre_completo
+            usuarioSeleccionado?.nombre_completo
             }}
 
           </h5>
 
-          <span
-            class="badge bg-secondary"
-          >
+          <span class="badge bg-secondary">
 
             {{
-              usuarioSeleccionado?.rol
+            usuarioSeleccionado?.rol
             }}
 
           </span>
 
         </div>
 
-        <div
-          class="d-grid gap-2"
-        >
+        <div class="d-grid gap-2">
 
-          <button
-            type="button"
-            class="btn btn-warning text-start"
-            (click)="resetearPassword(usuarioSeleccionado)"
-          >
+          <button type="button" class="btn btn-warning text-start" (click)="resetearPassword(usuarioSeleccionado)">
             <i class="bi bi-key me-2"></i>
             Resetear contraseña
           </button>
@@ -250,23 +203,17 @@
 
           @if (usuarioSeleccionado?.activo) {
 
-            <button
-              class="btn btn-danger text-start"
-              (click)="bloquearUsuario(usuarioSeleccionado)"
-            >
-              <i class="bi bi-ban me-2"></i>
-              Bloquear usuario
-            </button>
+          <button class="btn btn-danger text-start" (click)="bloquearUsuario(usuarioSeleccionado)">
+            <i class="bi bi-ban me-2"></i>
+            Bloquear usuario
+          </button>
 
           } @else {
 
-            <button
-              class="btn btn-success text-start"
-              (click)="activarUsuario(usuarioSeleccionado)"
-            >
-              <i class="bi bi-check-circle me-2"></i>
-              Activar usuario
-            </button>
+          <button class="btn btn-success text-start" (click)="activarUsuario(usuarioSeleccionado)">
+            <i class="bi bi-check-circle me-2"></i>
+            Activar usuario
+          </button>
 
           }
 
@@ -276,10 +223,7 @@
 
       <div class="modal-footer">
 
-        <button
-          class="btn btn-secondary"
-          (click)="cerrarModalAcciones()"
-        >
+        <button class="btn btn-secondary" (click)="cerrarModalAcciones()">
           Cerrar
         </button>
 

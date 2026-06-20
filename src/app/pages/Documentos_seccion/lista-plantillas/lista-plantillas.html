@@ -21,7 +21,7 @@
 
     <h6 class="fw-bold mb-3">
       <i class="bi bi-signpost-split me-2">¿Cómo editar una plantilla?</i>
-      
+
     </h6>
 
     <div class="row">
@@ -83,146 +83,141 @@
 
   @if (cargando) {
 
-    <div class="text-center mt-5">
+  <div class="text-center mt-5">
 
-      <div class="spinner-border text-primary"></div>
+    <div class="spinner-border text-primary"></div>
 
-      <p class="mt-2">
-        Cargando plantillas...
-      </p>
+    <p class="mt-2">
+      Cargando plantillas...
+    </p>
 
-    </div>
+  </div>
 
   }
 
   @if (!cargando && plantillas.length > 0) {
 
-    <div class="card shadow-sm border-0">
+  <div class="card shadow-sm border-0">
 
-      <div class="card-header bg-white border-0 py-3">
+    <div class="card-header bg-white border-0 py-3">
 
-        <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex justify-content-between align-items-center">
 
-          <div>
+        <div>
 
-            <h5 class="mb-1">
-              <i class="bi bi-collection me-2"></i>
-              Plantillas registradas
-            </h5>
+          <h5 class="mb-1">
+            <i class="bi bi-collection me-2"></i>
+            Plantillas registradas
+          </h5>
 
-            <small class="text-muted">
-              Seleccione una plantilla para editar su configuración
-            </small>
-
-          </div>
-
+          <small class="text-muted">
+            Seleccione una plantilla para editar su configuración
+          </small>
 
         </div>
 
-      </div>
-
-      <div class="table-responsive">
-
-        <table class="table align-middle mb-0">
-
-          <thead class="table-light">
-
-            <tr>
-
-              <th>Nombre</th>
-
-              <th>Total Campos</th>
-
-              <th>Archivo</th>
-
-              <th>Fecha de Creación</th>
-
-              <th class="text-end">
-                Acciones
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            @for (plantilla of plantillas; track plantilla.id) {
-
-              <tr>
-
-                <td>
-
-                  <div class="fw-semibold">
-
-                    {{ plantilla.nombre_plantilla }}
-
-                  </div>
-
-                </td>
-
-                <td>
-
-                  <span class="badge bg-primary">
-
-                    {{ plantilla.total_campos }}
-
-                  </span>
-
-                </td>
-
-                <td>
-
-                  <span
-                    class="text-truncate d-inline-block archivo-text"
-                  >
-
-                    {{ plantilla.archivo_url_path }}
-
-                  </span>
-
-                </td>
-
-                <td>
-
-                  {{ plantilla.creado_at | date:'short' }}
-
-                </td>
-
-                <td class="text-end">
-
-                  <button
-                    class="btn btn-outline-primary btn-sm"
-                    (click)="abrirEditar(plantilla); $event.stopPropagation()"
-                  >
-                    <i class="bi bi-pencil-square me-2"></i>
-                    Editar
-
-                  </button>
-
-                </td>
-
-              </tr>
-
-            }
-
-          </tbody>
-
-        </table>
 
       </div>
 
     </div>
+
+    <div class="table-responsive">
+
+      <table class="table align-middle mb-0">
+
+        <thead class="table-light">
+
+          <tr>
+
+            <th>Nombre</th>
+
+            <th>Total Campos</th>
+
+            <th>Archivo</th>
+
+            <th>Fecha de Creación</th>
+
+            <th class="text-end">
+              Acciones
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (plantilla of plantillas; track plantilla.id) {
+
+          <tr>
+
+            <td>
+
+              <div class="fw-semibold">
+
+                {{ plantilla.nombre_plantilla }}
+
+              </div>
+
+            </td>
+
+            <td>
+
+              <span class="badge bg-primary">
+
+                {{ plantilla.total_campos }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              <span class="text-truncate d-inline-block archivo-text">
+
+                {{ plantilla.archivo_url_path }}
+
+              </span>
+
+            </td>
+
+            <td>
+
+              {{ plantilla.creado_at | date:'short' }}
+
+            </td>
+
+            <td class="text-end">
+
+              <button class="btn btn-outline-primary btn-sm" (click)="abrirEditar(plantilla); $event.stopPropagation()">
+                <i class="bi bi-pencil-square me-2"></i>
+                Editar
+
+              </button>
+
+            </td>
+
+          </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
 
   }
 
   @if (!cargando && plantillas.length === 0) {
 
-    <div class="alert alert-secondary shadow-sm border-0">
+  <div class="alert alert-secondary shadow-sm border-0">
 
-      No existen plantillas registradas.
+    No existen plantillas registradas.
 
-    </div>
+  </div>
 
   }
 
@@ -251,10 +246,7 @@
 
         </div>
 
-        <button
-          class="btn-close"
-          (click)="cerrarModal()"
-        ></button>
+        <button class="btn-close" (click)="cerrarModal()"></button>
 
       </div>
 
@@ -318,7 +310,7 @@
                 <div>
 
                   <h5 class="mb-1">
-                     <i class="bi bi-tags me-2"></i>
+                    <i class="bi bi-tags me-2"></i>
                     Campos detectados
                   </h5>
 
@@ -334,110 +326,96 @@
 
                 @for (campo of camposDetectados; track campo.nombre) {
 
-                  <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3">
 
-                    <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                  <div class="border rounded-3 p-3 h-100 bg-light-subtle">
 
-                      <div class="fw-bold mb-2 text-primary">
+                    <div class="fw-bold mb-2 text-primary">
 
-                        <i class="bi bi-tag me-2"></i>
-                        {{ campo.nombre }}
-
-                      </div>
-
-                      <label class="form-label small fw-semibold">
-                        Tipo de campo
-                      </label>
-
-                      <select
-                        class="form-select form-select-sm mb-3"
-                        [(ngModel)]="campo.origen"
-                        (change)="cambiarOrigen(campo)"
-                      >
-
-                        <option value="libre">
-                          Escribir manualmente
-                        </option>
-
-                        <option value="bd">
-                          Informacion del paciente
-                        </option>
-
-                      </select>
-
-                      @if (campo.origen === 'bd') {
-
-                        <label class="form-label small fw-semibold">
-                          Tabla
-                        </label>
-
-                        <select
-                          class="form-select form-select-sm mb-2"
-                          [(ngModel)]="campo.tabla"
-                          (change)="cargarColumnas(campo)"
-                        >
-
-                          <option value="">
-                            Seleccionar tabla
-                          </option>
-
-                          @for (t of tablasDisponibles; track t) {
-
-                            <option [value]="t">
-                              {{ t }}
-                            </option>
-
-                          }
-
-                        </select>
-
-                        <label class="form-label small fw-semibold">
-                          Columna
-                        </label>
-
-                        <select
-                          class="form-select form-select-sm"
-                          [(ngModel)]="campo.columna"
-                        >
-
-                          <option value="">
-                            Seleccionar columna
-                          </option>
-
-                          @for (
-                            col of columnasPorTabla[campo.tabla] || [];
-                            track col
-                          ) {
-
-                            <option [value]="col">
-                              {{ col }}
-                            </option>
-
-                          }
-
-                        </select>
-
-                      }
-
-                      @if (campo.origen === 'libre') {
-
-                        <label class="form-label small fw-semibold">
-                          Valor de ejemplo
-                        </label>
-
-                        <input
-                          type="text"
-                          class="form-control form-control-sm mt-1"
-                          placeholder="Ingrese un ejemplo"
-                          [(ngModel)]="valoresCampos[campo.nombre]"
-                          (input)="actualizarPreview()"
-                        />
-
-                      }
+                      <i class="bi bi-tag me-2"></i>
+                      {{ campo.nombre }}
 
                     </div>
 
+                    <label class="form-label small fw-semibold">
+                      Tipo de campo
+                    </label>
+
+                    <select class="form-select form-select-sm mb-3" [(ngModel)]="campo.origen"
+                      (change)="cambiarOrigen(campo)">
+
+                      <option value="libre">
+                        Escribir manualmente
+                      </option>
+
+                      <option value="bd">
+                        Informacion del paciente
+                      </option>
+
+                    </select>
+
+                    @if (campo.origen === 'bd') {
+
+                    <label class="form-label small fw-semibold">
+                      Tabla
+                    </label>
+
+                    <select class="form-select form-select-sm mb-2" [(ngModel)]="campo.tabla"
+                      (change)="cargarColumnas(campo)">
+
+                      <option value="">
+                        Seleccionar tabla
+                      </option>
+
+                      @for (t of tablasDisponibles; track t) {
+
+                      <option [value]="t">
+                        {{ t }}
+                      </option>
+
+                      }
+
+                    </select>
+
+                    <label class="form-label small fw-semibold">
+                      Columna
+                    </label>
+
+                    <select class="form-select form-select-sm" [(ngModel)]="campo.columna">
+
+                      <option value="">
+                        Seleccionar columna
+                      </option>
+
+                      @for (
+                      col of columnasPorTabla[campo.tabla] || [];
+                      track col
+                      ) {
+
+                      <option [value]="col">
+                        {{ col }}
+                      </option>
+
+                      }
+
+                    </select>
+
+                    }
+
+                    @if (campo.origen === 'libre') {
+
+                    <label class="form-label small fw-semibold">
+                      Valor de ejemplo
+                    </label>
+
+                    <input type="text" class="form-control form-control-sm mt-1" placeholder="Ingrese un ejemplo"
+                      [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
+
+                    }
+
                   </div>
+
+                </div>
 
                 }
 
@@ -466,10 +444,7 @@
 
               <div class="preview-container border rounded-3 bg-white p-4">
 
-                <div
-                  class="documento"
-                  [innerHTML]="previewHtml"
-                ></div>
+                <div class="documento" [innerHTML]="previewHtml"></div>
 
               </div>
 
@@ -483,19 +458,13 @@
 
       <div class="modal-footer bg-light">
 
-        <button
-          class="btn btn-secondary"
-          (click)="cerrarModal()"
-        >
+        <button class="btn btn-secondary" (click)="cerrarModal()">
 
           Cancelar
 
         </button>
 
-        <button
-          class="btn btn-primary"
-          (click)="guardarCambios()"
-        >
+        <button class="btn btn-primary" (click)="guardarCambios()">
           <i class="bi bi-floppy me-2"></i>
           Guardar cambios
 

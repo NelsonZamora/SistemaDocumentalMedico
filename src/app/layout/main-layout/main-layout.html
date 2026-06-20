@@ -78,7 +78,8 @@
           Documentos
         </div>
 
-        <a
+        @if(role === 'admin'){
+          <a
           class="nav-link"
           routerLink="/plantillas"
           routerLinkActive="active-link"
@@ -96,6 +97,8 @@
           <i class="bi bi-file-earmark-text me-2"></i>
           Plantillas guardadas
         </a>
+        }
+        
 
         <a
           class="nav-link"
@@ -137,7 +140,7 @@
         
       }
 
-      <li class="nav-item mt-3">
+      <!-- <li class="nav-item mt-3">
         <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
           Ajustes
         </div>
@@ -151,7 +154,7 @@
           <i class="bi bi-gear me-2"></i>
           Configuracion de la cuenta
         </a>
-      </li>
+      </li> -->
 
       <li class="nav-item mt-4">
         <button class="btn btn-danger w-100" (click)="logout()">

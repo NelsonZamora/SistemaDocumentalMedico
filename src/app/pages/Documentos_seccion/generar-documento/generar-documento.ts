@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import ExcelJS from 'exceljs';
+
 import Swal from 'sweetalert2';
 
 import { PlantillasService } from '../../../services/plantillas';
@@ -160,9 +161,6 @@ export class GenerarDocumentoComponent implements OnInit {
       const arrayBuffer =
         await archivo.arrayBuffer();
 
-      // =========================
-      // DETECTAR TIPO
-      // =========================
 
       const extension =
         this.plantillaSeleccionada
@@ -173,9 +171,6 @@ export class GenerarDocumentoComponent implements OnInit {
 
       this.tipoArchivo = extension || '';
 
-      // =========================
-      // WORD
-      // =========================
 
       if (extension === 'docx') {
 
@@ -207,9 +202,6 @@ export class GenerarDocumentoComponent implements OnInit {
         this.previewHtmlOriginal = html;
       }
 
-      // =========================
-      // EXCEL
-      // =========================
 
       else if (
         extension === 'xlsx' ||
@@ -226,7 +218,6 @@ export class GenerarDocumentoComponent implements OnInit {
             workbook.SheetNames[0]
           ];
 
-        // Limpiar filas vacías
         const range = XLSX.utils.decode_range(
           firstSheet['!ref']!
         );
@@ -317,10 +308,6 @@ export class GenerarDocumentoComponent implements OnInit {
         this.previewHtmlOriginal = html;
       }
 
-      // =========================
-      // CARGAR DATOS
-      // =========================
-
       this.valoresCampos = {};
 
       for (const campo of this.camposPlantilla) {
@@ -379,8 +366,8 @@ export class GenerarDocumentoComponent implements OnInit {
     const signos =
       atencion.signos_vitales;
 
-    this.valoresCampos['sintomas'] =
-      atencion.sintomas || '';
+    this.valoresCampos['motivo_consulta'] =
+      atencion.motivo_consulta || '';
 
     this.valoresCampos['enfermedad actual'] =
       atencion.enfermedad_actual || '';
@@ -469,10 +456,6 @@ export class GenerarDocumentoComponent implements OnInit {
 
       const nombreArchivo =
         `documento-${Date.now()}`;
-
-      // =========================
-      // WORD
-      // =========================
 
       if (extension === 'docx') {
 
@@ -563,9 +546,6 @@ export class GenerarDocumentoComponent implements OnInit {
         );
       }
 
-      // =========================
-      // EXCEL
-      // =========================
 
       else if (
         extension === 'xlsx' ||

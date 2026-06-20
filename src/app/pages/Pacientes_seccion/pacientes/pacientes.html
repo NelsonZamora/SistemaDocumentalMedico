@@ -9,14 +9,12 @@
       </h2>
 
       <p class="text-muted mb-0">
-        Desde esta sección puede registrar, buscar, visualizar y actualizar la información clínica básica de los pacientes.
+        Desde esta sección puede registrar, buscar, visualizar y actualizar la información clínica básica de los
+        pacientes.
       </p>
     </div>
 
-    <button
-      class="btn btn-success shadow-sm px-4"
-      (click)="abrirModal()"
-    >
+    <button class="btn btn-success shadow-sm px-4" (click)="abrirModal()">
       <i class="bi bi-person-plus-fill me-2"></i>
       Añadir Paciente
     </button>
@@ -70,31 +68,20 @@
 
     <div class="col-md-7">
 
-      <div
-        class="input-group shadow-sm"
-        style="border-radius: 10px; overflow: hidden;"
-      >
+      <div class="input-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
 
         <span class="input-group-text bg-white border-end-0">
           <i class="bi bi-search text-muted"></i>
         </span>
 
-        <input
-          type="text"
-          class="form-control border-start-0 ps-0"
-          placeholder="Buscar por nombre, apellido o cédula..."
-          [(ngModel)]="textoBusqueda"
-          (input)="filtrar()"
-        >
+        <input type="text" class="form-control border-start-0 ps-0"
+          placeholder="Buscar por nombre, apellido o cédula..." [(ngModel)]="textoBusqueda" (input)="filtrar()">
 
         @if (textoBusqueda) {
 
-          <button
-            class="btn btn-outline-secondary border-start-0"
-            (click)="textoBusqueda = ''; filtrar()"
-          >
-            <i class="bi bi-x-lg"></i>
-          </button>
+        <button class="btn btn-outline-secondary border-start-0" (click)="textoBusqueda = ''; filtrar()">
+          <i class="bi bi-x-lg"></i>
+        </button>
 
         }
 
@@ -118,157 +105,140 @@
 
   @if (cargando) {
 
-    <div class="text-center mt-5">
+  <div class="text-center mt-5">
 
-      <div
-        class="spinner-border text-primary"
-        role="status"
-      ></div>
+    <div class="spinner-border text-primary" role="status"></div>
 
-      <p class="mt-2 text-muted">
-        Cargando pacientes...
-      </p>
+    <p class="mt-2 text-muted">
+      Cargando pacientes...
+    </p>
 
-    </div>
+  </div>
 
   }
 
   @if (!cargando && pacientes.length === 0) {
 
-    <div class="card border-0 shadow-sm p-5 text-center">
+  <div class="card border-0 shadow-sm p-5 text-center">
 
-      <div class="mb-3 fs-1">
-        👨‍⚕️
-      </div>
-
-      <h5 class="fw-bold">
-        No existen pacientes registrados
-      </h5>
-
-      <p class="text-muted">
-        Presione el botón 
-        <strong>“Añadir Paciente”</strong>
-        para registrar el primero.
-      </p>
-
-      <div>
-        <button
-          class="btn btn-success"
-          (click)="abrirModal()"
-        >
-          <i class="bi bi-person-plus-fill me-2"></i>
-          Añadir Paciente
-        </button>
-      </div>
-
+    <div class="mb-3 fs-1">
+      👨‍⚕️
     </div>
+
+    <h5 class="fw-bold">
+      No existen pacientes registrados
+    </h5>
+
+    <p class="text-muted">
+      Presione el botón
+      <strong>“Añadir Paciente”</strong>
+      para registrar el primero.
+    </p>
+
+    <div>
+      <button class="btn btn-success" (click)="abrirModal()">
+        <i class="bi bi-person-plus-fill me-2"></i>
+        Añadir Paciente
+      </button>
+    </div>
+
+  </div>
 
   }
 
   @if (tablaPaciente) {
 
-    <div class="card shadow-sm border-0">
+  <div class="card shadow-sm border-0">
 
-      <div class="card-body p-0">
+    <div class="card-body p-0">
 
-        <div class="table-responsive">
+      <div class="table-responsive">
 
-          <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0">
 
-            <thead class="table-light">
+          <thead class="table-light">
 
-              <tr>
-                <th>Paciente</th>
-                <th>Cédula</th>
-                <th>Correo</th>
-                <th class="text-center">Acciones</th>
-              </tr>
+            <tr>
+              <th>Paciente</th>
+              <th>Cédula</th>
+              <th>Correo</th>
+              <th class="text-center">Acciones</th>
+            </tr>
 
-            </thead>
+          </thead>
 
-            <tbody>
+          <tbody>
 
-              @for (p of pacientes; track p.id) {
+            @for (p of pacientes; track p.id) {
 
-                <tr>
+            <tr>
 
-                  <td>
+              <td>
 
-                    <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center">
 
-                      <div
-                        class="rounded-circle overflow-hidden me-3"
-                        style="width: 45px; height: 45px;"
-                      >
+                  <div class="rounded-circle overflow-hidden me-3" style="width: 45px; height: 45px;">
 
-                        <img
-                          [src]="p.foto_url || 'default-user.png'"
-                          class="w-100 h-100 object-fit-cover"
-                        />
+                    <img [src]="p.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover" />
 
-                      </div>
+                  </div>
 
-                      <div>
+                  <div>
 
-                        <div class="fw-semibold">
-                        {{ p.apellidos }} {{ p.nombres }} 
-                        </div>
-
-                        <small class="text-muted">
-                          Paciente registrado
-                        </small>
-
-                      </div>
-
+                    <div class="fw-semibold">
+                      {{ p.apellidos }} {{ p.nombres }}
                     </div>
 
-                  </td>
+                    <small class="text-muted">
+                      Paciente registrado
+                    </small>
 
-                  <td>
-                    {{ p.cedula }}
-                  </td>
+                  </div>
 
-                  <td>
-                    {{ p.correo }}
-                  </td>
+                </div>
 
-                  <td>
+              </td>
 
-                    <div class="d-flex justify-content-center gap-2">
+              <td>
+                {{ p.cedula }}
+              </td>
 
-                      <button
-                        class="btn btn-success btn-sm shadow-sm"
-                        (click)="verPaciente(p); $event.stopPropagation()"
-                      >
-                        <i class="bi bi-eye me-1"></i>
-                        Ver
-                      </button>
+              <td>
+                {{ p.correo }}
+              </td>
 
-                      <button
-                        class="btn btn-primary btn-sm shadow-sm"
-                        (click)="editarPaciente(p); $event.stopPropagation()"
-                      >
-                        <i class="bi bi-pencil-square me-1"></i>
-                        Editar
-                      </button>
+              <td>
 
-                    </div>
+                <div class="d-flex justify-content-center gap-2">
 
-                  </td>
+                  <button class="btn btn-success btn-sm shadow-sm" (click)="verPaciente(p); $event.stopPropagation()">
+                    <i class="bi bi-eye me-1"></i>
+                    Ver
+                  </button>
 
-                </tr>
+                  <button class="btn btn-primary btn-sm shadow-sm"
+                    (click)="editarPaciente(p); $event.stopPropagation()">
+                    <i class="bi bi-pencil-square me-1"></i>
+                    Editar
+                  </button>
 
-              }
+                </div>
 
-            </tbody>
+              </td>
 
-          </table>
+            </tr>
 
-        </div>
+            }
+
+          </tbody>
+
+        </table>
 
       </div>
 
     </div>
+
+  </div>
 
   }
 
@@ -278,53 +248,51 @@
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-      
+
       <div class="row g-0">
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
-            <div class="contenedor-foto mb-3 shadow-sm mx-auto" 
-                 style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
-              
+            <div class="contenedor-foto mb-3 shadow-sm mx-auto"
+              style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+
               @if (archivo) {
-                <i class="bi bi-file-earmark-image text-primary" style="font-size: 3rem;"></i>
+              <i class="bi bi-file-earmark-image text-primary" style="font-size: 3rem;"></i>
               } @else {
-                <img src="default-user.png" class="w-100 h-100 object-fit-cover" />
+              <img src="default-user.png" class="w-100 h-100 object-fit-cover" />
               }
             </div>
-            
+
             <h5 class="mb-3">Nueva Ficha</h5>
-            
+
             <div class="text-start">
               <label class="data-label text-center mb-2">Foto de perfil (opcional)</label>
               <input type="file" class="form-control form-control-sm" (change)="onFileSelected($event)">
+              <p class="text-muted small mt-2 text-center">Peso maximo permitido para la imagen 1MB</p>
               <p class="text-muted small mt-2 text-center">Formatos: JPG, PNG</p>
             </div>
           </div>
 
-          <div class="alert alert-primary py-3 small shadow-sm mx-2" style="border-radius: 10px; border-left: 5px solid #0d6efd;">
+          <div class="alert alert-primary py-3 small shadow-sm mx-2"
+            style="border-radius: 10px; border-left: 5px solid #0d6efd;">
             <div class="d-flex justify-content-between align-items-center gap-3">
 
               <div>
 
                 <i class="bi bi-shield-check me-2"></i>
 
-                Declaro que el paciente ha sido informado sobre el tratamiento de sus datos personales y autoriza su registro y almacenamiento en el sistema conforme a la normativa vigente de protección de datos.
+                Declaro que el paciente ha sido informado sobre el tratamiento de sus datos personales y autoriza su
+                registro y almacenamiento en el sistema conforme a la normativa vigente de protección de datos.
 
               </div>
 
               <div class="form-check flex-shrink-0">
 
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="aceptaProteccionDatos"
-                  [(ngModel)]="aceptaProteccionDatos"
-                  style="
+                <input class="form-check-input" type="checkbox" id="aceptaProteccionDatos"
+                  [(ngModel)]="aceptaProteccionDatos" style="
                     width: 1.8rem;
                     height: 1.8rem;
                     cursor: pointer;
-                  "
-                >
+                  ">
 
               </div>
 
@@ -338,13 +306,35 @@
         </div>
 
         <div class="col-md-8 p-5 bg-white">
-          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-            <h5 class="text-success m-0">
-              <i class="bi bi-person-plus-fill me-2"></i> Registro de nuevo paciente
-            </h5>
-            <span class="badge bg-success-subtle text-success border border-success-subtle">Nuevo Registro</span>
-          </div>
+          <ul class="nav nav-tabs mb-4">
 
+            <li class="nav-item">
+
+              <button class="nav-link" [class.active]="pestanaActiva === 'personal'"
+                (click)="pestanaActiva = 'personal'" type="button">
+
+                <i class="bi bi-person-vcard me-2"></i>
+                Información Personal
+
+              </button>
+
+            </li>
+
+            <li class="nav-item">
+
+              <button class="nav-link" [class.active]="pestanaActiva === 'medica'" (click)="pestanaActiva = 'medica'"
+                type="button">
+
+                <i class="bi bi-heart-pulse me-2"></i>
+                Información Médica
+
+              </button>
+
+            </li>
+
+          </ul>
+
+          @if(pestanaActiva === 'personal') {
           <div class="row g-3">
             <div class="col-md-12">
               <label class="data-label">Cédula / Pasaporte</label>
@@ -365,6 +355,24 @@
             <div class="col-md-6">
               <label class="data-label">Fecha de nacimiento</label>
               <input type="date" class="form-control" [(ngModel)]="form.fecha_nacimiento">
+
+              <div class="mt-3">
+
+                @let edad = calcularEdad(form.fecha_nacimiento);
+
+                <div class="border rounded px-3 py-2 bg-white">
+
+                  <div class=" fs-6">
+
+                    {{ edad.anios }} años,
+                    {{ edad.meses }} meses y
+                    {{ edad.dias }} días
+
+                  </div>
+
+                </div>
+
+              </div>
             </div>
             <div class="col-md-6">
               <label class="data-label">Género</label>
@@ -387,10 +395,60 @@
               <input type="tel" class="form-control" [(ngModel)]="form.telefono" placeholder="Ej: 0987654321">
             </div>
           </div>
+          }
 
+          @if (pestanaActiva === 'medica') {
+          <div class="row g-3">
+
+            <div class="col-12">
+
+              <label class="data-label">
+
+                <i class="bi bi-file-medical me-2"></i>
+                Antecedentes Personales
+
+              </label>
+
+              <textarea rows="4" class="form-control" [(ngModel)]="form.antecedente_personal"
+                placeholder="Describa enfermedades previas, cirugías, tratamientos, etc."></textarea>
+
+            </div>
+
+            <div class="col-12">
+
+              <label class="data-label">
+
+                <i class="bi bi-people-fill me-2"></i>
+                Antecedentes Familiares
+
+              </label>
+
+              <textarea rows="4" class="form-control" [(ngModel)]="form.antecedente_familiar"
+                placeholder="Describa enfermedades hereditarias o antecedentes familiares relevantes."></textarea>
+
+            </div>
+
+            <div class="col-12">
+
+              <label class="data-label">
+
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Alergias
+
+              </label>
+
+              <textarea rows="4" class="form-control" [(ngModel)]="form.antecedente_alergias"
+                placeholder="Medicamentos, alimentos o sustancias que produzcan alergias."></textarea>
+
+            </div>
+
+          </div>
+
+          }
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
-            <button class="btn btn-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()" style="border-radius: 10px;" [disabled]="!aceptaProteccionDatos">
-              <i class="bi bi-save2 me-2"></i> 
+            <button class="btn btn-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()"
+              style="border-radius: 10px;" [disabled]="!aceptaProteccionDatos">
+              <i class="bi bi-save2 me-2"></i>
               Registrar Paciente
             </button>
           </div>
@@ -403,41 +461,32 @@
 }
 
 @if (mostrarModalExito) {
-  <div 
-    class="modal fade show d-block" 
-    style="background: rgba(0,0,0,0.5);"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center p-3">
+<div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-3">
 
-        <div class="modal-body">
-          <h5 class="text-success mb-3">
-            ✅ Paciente registrado exitosamente
-          </h5>
+      <div class="modal-body">
+        <h5 class="text-success mb-3">
+          ✅ Paciente registrado exitosamente
+        </h5>
 
-          <button class="btn btn-primary" (click)="cerrarModalExito()">
-            Aceptar
-          </button>
-        </div>
-
+        <button class="btn btn-primary" (click)="cerrarModalExito()">
+          Aceptar
+        </button>
       </div>
+
     </div>
   </div>
+</div>
 }
 
 @if (mostrarModalVer) {
 
-<div 
-  class="modal fade show d-block"
-  style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);"
->
+<div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
 
   <div class="modal-dialog modal-xl modal-dialog-centered">
 
-    <div 
-      class="modal-content border-0 shadow-lg"
-      style="border-radius: 20px; overflow: hidden;"
-    >
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
 
       <div class="row g-0">
 
@@ -445,24 +494,18 @@
 
           <div class="profile-card p-4 mb-4">
 
-            <div
-              class="contenedor-foto mb-3 shadow-sm mx-auto"
-              style="
+            <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="
                 width: 150px;
                 height: 150px;
                 border-radius: 50%;
                 overflow: hidden;
                 border: 4px solid #fff;
-              "
-            >
+              ">
 
-              <img
-                [src]="
+              <img [src]="
                   pacienteSeleccionado.foto_url
                   || 'default-user.png'
-                "
-                class="w-100 h-100 object-fit-cover"
-              />
+                " class="w-100 h-100 object-fit-cover" />
 
             </div>
 
@@ -479,15 +522,10 @@
 
           </div>
 
-          <div
-            class="list-group list-group-flush text-start rounded-3 overflow-hidden"
-          >
+          <div class="list-group list-group-flush text-start rounded-3 overflow-hidden">
 
-            <div
-              class="list-group-item list-group-item-action p-3"
-              [class.menu-item-active]="vistaActual === 'datos'"
-              (click)="mostrarDatosPaciente()"
-            >
+            <div class="list-group-item list-group-item-action p-3" [class.menu-item-active]="vistaActual === 'datos'"
+              (click)="mostrarDatosPaciente()">
 
               <i class="bi bi-person-circle me-2"></i>
 
@@ -495,11 +533,8 @@
 
             </div>
 
-            <div
-              class="list-group-item list-group-item-action p-3"
-              [class.menu-item-active]="vistaActual === 'historial'"
-              (click)="mostrarHistorialVisitas()"
-            >
+            <div class="list-group-item list-group-item-action p-3"
+              [class.menu-item-active]="vistaActual === 'historial'" (click)="mostrarHistorialVisitas()">
 
               <i class="bi bi-clock-history me-2"></i>
 
@@ -507,11 +542,8 @@
 
             </div>
 
-            <div
-              class="list-group-item list-group-item-action p-3"
-              [class.menu-item-active]="vistaActual === 'documentos'"
-              (click)="verDocumentosPaciente()"
-            >
+            <div class="list-group-item list-group-item-action p-3"
+              [class.menu-item-active]="vistaActual === 'documentos'" (click)="verDocumentosPaciente()">
 
               <i class="bi bi-file-earmark-text me-2"></i>
 
@@ -521,10 +553,7 @@
 
           </div>
 
-          <button
-            class="btn btn-outline-secondary w-100 mt-5"
-            (click)="cerrarModalVer()"
-          >
+          <button class="btn btn-outline-secondary w-100 mt-5" (click)="cerrarModalVer()">
 
             <i class="bi bi-arrow-left me-2"></i>
 
@@ -538,414 +567,483 @@
 
           @if (vistaActual === 'datos') {
 
-            <h5 class="text-primary border-bottom pb-3 mb-4">
-              Datos de paciente
-            </h5>
+          <ul class="nav nav-tabs mb-4">
 
-            <div class="row g-4">
+            <li class="nav-item">
 
-              <div class="col-md-12">
+              <button class="nav-link" [class.active]="pestanaActiva === 'personal'"
+                (click)="pestanaActiva = 'personal'" type="button">
 
-                <label class="data-label">
-                  Nombre completo
-                </label>
+                <i class="bi bi-person-vcard me-2"></i>
+                Información Personal
 
-                <div class="data-value">
+              </button>
 
-                  {{ pacienteSeleccionado.apellidos }},
-                  {{ pacienteSeleccionado.nombres }}
+            </li>
 
-                </div>
+            <li class="nav-item">
 
-              </div>
+              <button class="nav-link" [class.active]="pestanaActiva === 'medica'" (click)="pestanaActiva = 'medica'"
+                type="button">
 
-              <hr class="my-2 opacity-25">
+                <i class="bi bi-heart-pulse me-2"></i>
+                Información Médica
 
-              <div class="col-md-6">
+              </button>
 
-                <label class="data-label">
-                  Fecha de nacimiento
-                </label>
+            </li>
 
-                <div class="data-value">
+          </ul>
 
-                  {{ pacienteSeleccionado.fecha_nacimiento }}
+          @if(pestanaActiva === 'personal') {
+          <div class="row g-4">
 
-                  <span class="text-muted small">
+            <div class="col-md-12">
 
-                    (
-                    {{
-                      calcularEdad(
-                        pacienteSeleccionado.fecha_nacimiento
-                      )
-                    }}
-                    años
-                    )
+              <label class="data-label">
+                Nombre completo
+              </label>
 
-                  </span>
+              <div class="data-value">
 
-                </div>
-
-              </div>
-
-              <div class="col-md-6">
-
-                <label class="data-label">
-                  Cédula / Pasaporte
-                </label>
-
-                <div class="data-value">
-                  {{ pacienteSeleccionado.cedula }}
-                </div>
-
-              </div>
-
-              <hr class="my-2 opacity-25">
-
-              <div class="col-md-6">
-
-                <label class="data-label">
-                  Correo electrónico
-                </label>
-
-                <div class="data-value text-primary">
-                  {{ pacienteSeleccionado.correo }}
-                </div>
-
-              </div>
-
-              <div class="col-md-6">
-
-                <label class="data-label">
-                  Teléfono
-                </label>
-
-                <div class="data-value">
-                  {{ pacienteSeleccionado.telefono }}
-                </div>
-
-              </div>
-
-              <hr class="my-2 opacity-25">
-
-              <div class="col-md-6">
-
-                <label class="data-label">
-                  Género
-                </label>
-
-                <div class="data-value">
-                  {{ pacienteSeleccionado.genero }}
-                </div>
+                {{ pacienteSeleccionado.apellidos }},
+                {{ pacienteSeleccionado.nombres }}
 
               </div>
 
             </div>
 
-            <div
-              class="mt-5 p-4 rounded-3 border bg-light text-center"
-            >
+            <hr class="my-2 opacity-25">
 
-              <label class="data-label mb-3">
+            <div class="col-md-6">
 
-                Documento de Identidad (Cédula)
+              <label class="data-label">
+                Fecha de nacimiento
+              </label>
+
+              <div class="data-value">
+
+                {{ pacienteSeleccionado.fecha_nacimiento }}
+
+                <span class="text-muted small">
+
+                  @let edad = calcularEdad(pacienteSeleccionado.fecha_nacimiento);
+
+                  <div class=" fs-6">
+                    (
+                    {{ edad.anios }} años,
+                    {{ edad.meses }} meses y
+                    {{ edad.dias }} días
+                    )
+                  </div>
+
+                </span>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+              <label class="data-label">
+                Cédula / Pasaporte
+              </label>
+
+              <div class="data-value">
+                {{ pacienteSeleccionado.cedula }}
+              </div>
+
+            </div>
+
+            <hr class="my-2 opacity-25">
+
+            <div class="col-md-6">
+
+              <label class="data-label">
+                Correo electrónico
+              </label>
+
+              <div class="data-value text-primary">
+                {{ pacienteSeleccionado.correo }}
+              </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+              <label class="data-label">
+                Teléfono
+              </label>
+
+              <div class="data-value">
+                {{ pacienteSeleccionado.telefono }}
+              </div>
+
+            </div>
+
+            <hr class="my-2 opacity-25">
+
+            <div class="col-md-6">
+
+              <label class="data-label">
+                Género
+              </label>
+
+              <div class="data-value">
+                {{ pacienteSeleccionado.genero }}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="mt-5 p-4 rounded-3 border bg-light text-center">
+
+            <label class="data-label mb-3">
+
+              Documento de Identidad (Cédula)
+
+            </label>
+
+            <div class="border rounded bg-white p-3 mx-auto" style="max-width: 300px;">
+
+              <i class="bi bi-card-heading text-muted" style="font-size: 3rem;"></i>
+
+              <p class="small text-muted mt-2 mb-0">
+                Vista previa no disponible
+              </p>
+
+            </div>
+
+          </div>
+          }
+
+          @if (pestanaActiva === 'medica') {
+          <div class="row g-4">
+
+            <div class="col-12">
+
+              <label class="data-label">
+
+                <i class="bi bi-file-medical me-2"></i>
+                Antecedentes Personales
 
               </label>
 
-              <div
-                class="border rounded bg-white p-3 mx-auto"
-                style="max-width: 300px;"
-              >
+              <div class="data-value">
 
-                <i
-                  class="bi bi-card-heading text-muted"
-                  style="font-size: 3rem;"
-                ></i>
-
-                <p class="small text-muted mt-2 mb-0">
-                  Vista previa no disponible
-                </p>
+                {{
+                pacienteSeleccionado.antecedente_personal
+                || 'No registrado'
+                }}
 
               </div>
 
             </div>
+
+            <hr class="my-2 opacity-25">
+
+            <div class="col-12">
+
+              <label class="data-label">
+
+                <i class="bi bi-people-fill me-2"></i>
+                Antecedentes Familiares
+
+              </label>
+
+              <div class="data-value">
+
+                {{
+                pacienteSeleccionado.antecedente_familiar
+                || 'No registrado'
+                }}
+
+              </div>
+
+            </div>
+
+            <hr class="my-2 opacity-25">
+
+            <div class="col-12">
+
+              <label class="data-label">
+
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Alergias
+
+              </label>
+
+              <div class="data-value">
+
+                {{
+                pacienteSeleccionado.antecedente_alergias
+                || 'No registradas'
+                }}
+
+              </div>
+
+            </div>
+
+            <hr class="my-2 opacity-25">
+
+          </div>
+          }
 
           }
 
           @if (vistaActual === 'historial') {
-            <div
-              class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"
-            >
+          <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
-              <div>
+            <div>
 
-                <h5 class="text-primary mb-1">
-                  <i class="bi bi-file-earmark-medical me-2"></i>
-                  Historial de citas del paciente
-                </h5>
+              <h5 class="text-primary mb-1">
+                <i class="bi bi-file-earmark-medical me-2"></i>
+                Historial de citas del paciente
+              </h5>
 
-                <p class="text-muted small mb-0">
-                  Historial de citas medicas realizadas
-                </p>
-
-              </div>
+              <p class="text-muted small mb-0">
+                Historial de citas medicas realizadas
+              </p>
 
             </div>
 
-            @if (historialPaciente.length > 0) {
+          </div>
 
-              <div class="table-responsive">
+          @if (historialPaciente.length > 0) {
 
-                <table class="table table-hover align-middle">
+          <div class="table-responsive">
 
-                  <thead class="table-light">
+            <table class="table table-hover align-middle">
 
-                    <tr>
-                      <th>Fecha</th>
-                      <th>Motivo de consulta</th>
-                      <th>Medico asignado</th>
-                      <th>Estado</th>
-                    </tr>
+              <thead class="table-light">
 
-                  </thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Motivo de consulta</th>
+                  <th>Medico asignado</th>
+                  <th>Estado</th>
+                </tr>
 
-                  <tbody>
+              </thead>
 
-                    @for (
-                      historial of historialPaciente;
-                      track historial.id
-                    ) {
+              <tbody>
 
-                      <tr>
+                @for (
+                historial of historialPaciente;
+                track historial.id
+                ) {
 
-                        <td>
+                <tr>
 
-                          {{
-                            historial.fecha
-                          }}
+                  <td>
 
-                        </td>
+                    {{
+                    historial.fecha
+                    }}
 
-                        <td>
-                          
-                          {{
-                            historial.motivo
-                          }}
+                  </td>
 
-                        </td>
+                  <td>
 
-                        <td>
+                    {{
+                    historial.motivo
+                    }}
 
-                          {{
-                            historial.medico_id
-                          }}
+                  </td>
 
-                        </td>
+                  <td>
 
-                        <td>
+                    {{
+                    historial.medico_id
+                    }}
 
-                          <span
-                            class="badge"
-                            [class.bg-success]="
+                  </td>
+
+                  <td>
+
+                    <span class="badge" [class.bg-success]="
                               historial.estado === 'atendida'
-                            "
-                            [class.bg-warning]="
+                            " [class.bg-warning]="
                               historial.estado === 'programada'
-                            "
-                          >
+                            ">
 
-                            {{ historial.estado }}
+                      {{ historial.estado }}
 
-                          </span>
+                    </span>
 
-                        </td>
+                  </td>
 
-                      </tr>
+                </tr>
 
-                    }
+                }
 
-                  </tbody>
+              </tbody>
 
-                </table>
+            </table>
 
-              </div>
+          </div>
 
-            } @else {
+          } @else {
 
-              <div class="text-center py-5">
+          <div class="text-center py-5">
 
-                <i
-                  class="bi bi-file-earmark-text text-muted"
-                  style="font-size: 4rem;"
-                ></i>
+            <i class="bi bi-file-earmark-text text-muted" style="font-size: 4rem;"></i>
 
-                <h5 class="mt-3 text-muted">
-                  No existen citas medicas previas
-                </h5>
+            <h5 class="mt-3 text-muted">
+              No existen citas medicas previas
+            </h5>
 
-                <p class="text-muted small">
+            <p class="text-muted small">
 
-                  Este paciente no se a realizado una atencion medica
-                  previa en el centro medico.
+              Este paciente no se a realizado una atencion medica
+              previa en el centro medico.
 
-                </p>
+            </p>
 
-              </div>
+          </div>
 
-            }
+          }
           }
 
           @if (vistaActual === 'documentos') {
 
-            <div
-              class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3"
-            >
+          <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
 
-              <div>
+            <div>
 
-                <h5 class="text-primary mb-1">
-                  📄 Documentos del paciente
-                </h5>
+              <h5 class="text-primary mb-1">
+                📄 Documentos del paciente
+              </h5>
 
-                <p class="text-muted small mb-0">
-                  Historial de documentos generados
-                </p>
-
-              </div>
-
-              <span class="badge bg-primary">
-
-                {{ documentosPaciente.length }}
-
-                documento(s)
-
-              </span>
+              <p class="text-muted small mb-0">
+                Historial de documentos generados
+              </p>
 
             </div>
 
-            @if (documentosPaciente.length > 0) {
+            <span class="badge bg-primary">
 
-              <div class="table-responsive">
+              {{ documentosPaciente.length }}
 
-                <table class="table table-hover align-middle">
+              documento(s)
 
-                  <thead class="table-light">
+            </span>
 
-                    <tr>
-                      <th>Plantilla</th>
-                      <th>Estado</th>
-                      <th>Fecha</th>
-                      <th>Archivo</th>
-                    </tr>
+          </div>
 
-                  </thead>
+          @if (documentosPaciente.length > 0) {
 
-                  <tbody>
+          <div class="table-responsive">
 
-                    @for (
-                      documento of documentosPaciente;
-                      track documento.id
+            <table class="table table-hover align-middle">
+
+              <thead class="table-light">
+
+                <tr>
+                  <th>Plantilla</th>
+                  <th>Estado</th>
+                  <th>Fecha</th>
+                  <th>Archivo</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                @for (
+                documento of documentosPaciente;
+                track documento.id
+                ) {
+
+                <tr>
+
+                  <td>
+
+                    {{
+                    documento.plantillas
+                    ?.nombre_plantilla
+                    }}
+
+                  </td>
+
+                  <td>
+
+                    <span class="badge" [class.bg-success]="
+                              documento.estado === 'finalizado'
+                            " [class.bg-warning]="
+                              documento.estado === 'borrador'
+                            ">
+
+                      {{ documento.estado }}
+
+                    </span>
+
+                  </td>
+
+                  <td>
+
+                    {{
+                    documento.creado_at
+                    | date:'short'
+                    }}
+
+                  </td>
+
+                  <td>
+
+                    @if (
+                    documento.archivo_final_path
                     ) {
 
-                      <tr>
+                    <button class="btn btn-outline-primary btn-sm">
 
-                        <td>
+                      <i class="bi bi-download me-1"></i>
 
-                          {{
-                            documento.plantillas
-                              ?.nombre_plantilla
-                          }}
+                      Descargar
 
-                        </td>
+                    </button>
 
-                        <td>
+                    } @else {
 
-                          <span
-                            class="badge"
-                            [class.bg-success]="
-                              documento.estado === 'finalizado'
-                            "
-                            [class.bg-warning]="
-                              documento.estado === 'borrador'
-                            "
-                          >
-
-                            {{ documento.estado }}
-
-                          </span>
-
-                        </td>
-
-                        <td>
-
-                          {{
-                            documento.creado_at
-                            | date:'short'
-                          }}
-
-                        </td>
-
-                        <td>
-
-                          @if (
-                            documento.archivo_final_path
-                          ) {
-
-                            <button
-                              class="btn btn-outline-primary btn-sm"
-                            >
-
-                              <i
-                                class="bi bi-download me-1"
-                              ></i>
-
-                              Descargar
-
-                            </button>
-
-                          } @else {
-
-                            <span class="text-muted small">
-                              Sin archivo
-                            </span>
-
-                          }
-
-                        </td>
-
-                      </tr>
+                    <span class="text-muted small">
+                      Sin archivo
+                    </span>
 
                     }
 
-                  </tbody>
+                  </td>
 
-                </table>
+                </tr>
 
-              </div>
+                }
 
-            } @else {
+              </tbody>
 
-              <div class="text-center py-5">
+            </table>
 
-                <i
-                  class="bi bi-file-earmark-text text-muted"
-                  style="font-size: 4rem;"
-                ></i>
+          </div>
 
-                <h5 class="mt-3 text-muted">
-                  No existen documentos
-                </h5>
+          } @else {
 
-                <p class="text-muted small">
+          <div class="text-center py-5">
 
-                  Este paciente todavía no tiene
-                  documentos generados.
+            <i class="bi bi-file-earmark-text text-muted" style="font-size: 4rem;"></i>
 
-                </p>
+            <h5 class="mt-3 text-muted">
+              No existen documentos
+            </h5>
 
-              </div>
+            <p class="text-muted small">
 
-            }
+              Este paciente todavía no tiene
+              documentos generados.
+
+            </p>
+
+          </div>
+
+          }
 
           }
 
@@ -966,19 +1064,17 @@
 <div class="modal fade show d-block" style="background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);">
   <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
-      
+
       <div class="row g-0">
         <div class="col-md-4 modal-sidebar-menu p-4 text-center">
           <div class="profile-card p-4 mb-4">
-            <div class="contenedor-foto mb-3 shadow-sm mx-auto" style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa;">
-              <img 
-                [src]="pacienteSeleccionado.foto_url || 'default-user.png'" 
-                class="w-100 h-100 object-fit-cover"
-              />
+            <div class="contenedor-foto mb-3 shadow-sm mx-auto"
+              style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; background: #f8f9fa;">
+              <img [src]="pacienteSeleccionado.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover" />
             </div>
-            
+
             <h4 class="mb-1">{{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}</h4>
-            
+
             <div class="text-start">
               <label class="data-label text-center mb-2">Cambiar foto de perfil</label>
               <input type="file" class="form-control form-control-sm" (change)="onFileSelected($event)">
@@ -998,17 +1094,20 @@
         <div class="col-md-8 p-5 bg-white">
           <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
             <h5 class="text-primary m-0">Edición de datos</h5>
-            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">ID: {{pacienteSeleccionado.id}}</span>
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle">ID:
+              {{pacienteSeleccionado.id}}</span>
           </div>
 
           <div class="row g-3">
             <div class="col-md-6">
               <label class="data-label">Nombres</label>
-              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.nombres" placeholder="Ej: Lucía">
+              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.nombres"
+                placeholder="Ej: Lucía">
             </div>
             <div class="col-md-6">
               <label class="data-label">Apellidos</label>
-              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.apellidos" placeholder="Ej: Merino Díaz">
+              <input type="text" class="form-control" [(ngModel)]="pacienteSeleccionado.apellidos"
+                placeholder="Ej: Merino Díaz">
             </div>
             <div class="col-md-6">
               <label class="data-label">Cédula / DNI</label>
@@ -1017,6 +1116,23 @@
             <div class="col-md-6">
               <label class="data-label">Fecha de nacimiento</label>
               <input type="date" class="form-control" [(ngModel)]="pacienteSeleccionado.fecha_nacimiento">
+              <div class="mt-3">
+
+                @let edad = calcularEdad(pacienteSeleccionado.fecha_nacimiento);
+
+                <div class="border rounded px-3 py-2 bg-white">
+
+                  <div class=" fs-6">
+
+                    {{ edad.anios }} años,
+                    {{ edad.meses }} meses y
+                    {{ edad.dias }} días
+
+                  </div>
+
+                </div>
+
+              </div>
             </div>
             <div class="col-md-6">
               <label class="data-label">Correo electrónico</label>
@@ -1036,7 +1152,8 @@
             </div>
           </div>
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
-            <button class="btn btn-primary px-5 py-2 shadow-sm" (click)="actualizarPaciente()" style="border-radius: 10px;">
+            <button class="btn btn-primary px-5 py-2 shadow-sm" (click)="actualizarPaciente()"
+              style="border-radius: 10px;">
               <i class="bi bi-check-lg me-2"></i> Guardar cambios
             </button>
           </div>

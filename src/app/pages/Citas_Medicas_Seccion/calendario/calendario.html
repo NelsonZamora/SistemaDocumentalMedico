@@ -1,48 +1,30 @@
 <div class="container-fluid mt-4">
-
-
   <div class="card border-0 shadow-sm mb-3">
-
     <div class="card-body">
-
       <div class="d-flex justify-content-between align-items-center flex-wrap">
-
         <div>
-
           <h3 class="mb-1">
             <i class="bi bi-calendar3 me-2"></i>
             Agenda Médica
           </h3>
-
           <p class="text-muted mb-0">
             Gestión de citas médicas y seguimiento diario.
           </p>
-
         </div>
-
-        <button
-          class="btn btn-primary"
-          (click)="abrirNuevaCita()"
-        >
+        <button class="btn btn-primary" (click)="abrirNuevaCita()">
           <i class="bi bi-plus-circle me-2"></i>
           Nueva cita
         </button>
-
       </div>
-
     </div>
-
   </div>
 
-    <div class="alert alert-info border-0 shadow-sm mb-4">
-
+  <div class="alert alert-info border-0 shadow-sm mb-4">
     <h6 class="fw-bold mb-2">
       <i class="bi bi-info-circle me-2"></i>
       ¿Cómo utilizar esta sección?
     </h6>
-
     <div class="row">
-
       <div class="col-md-4 mb-2">
         <div class="d-flex">
           <div class="me-2 fs-5">
@@ -74,38 +56,24 @@
           </div>
           <div>
             <strong>Registrar signos vitales</strong><br>
-            Desde una cita existente puede acceder a la pestaña de signos vitales para registrar la información clínica inicial.
+            Desde una cita existente puede acceder a la pestaña de signos vitales para registrar la información clínica
+            inicial.
           </div>
         </div>
       </div>
 
     </div>
-
   </div>
-
   <div class="card border-0 shadow-sm">
-
     <div class="card-body p-2">
-
-      <full-calendar
-        [options]="calendarOptions">
+      <full-calendar [options]="calendarOptions">
       </full-calendar>
-
     </div>
-
   </div>
-
 </div>
 
 @if (mostrarModal) {
-
-<div
-  class="modal fade show d-block"
-  style="
-    background: rgba(0,0,0,.55);
-    backdrop-filter: blur(3px);
-  "
->
+<div class="modal fade show d-block" style="background: rgba(0,0,0,.55); backdrop-filter: blur(3px);">
 
   <div class="modal-dialog modal-lg modal-dialog-centered">
 
@@ -117,17 +85,14 @@
           <div class="d-flex justify-content-between align-items-center">
 
             <h5 class="modal-title mb-0">
-
               @if (!citaSeleccionada) {
-                <i class="bi bi-calendar3 me-2"></i>
-                Nueva Cita Médica
+              <i class="bi bi-calendar3 me-2"></i>
+              Nueva Cita Médica
               }
-
               @if (citaSeleccionada) {
-                <i class="bi bi-pencil-square"></i>
-                Editar Cita Médica
+              <i class="bi bi-pencil-square"></i>
+              Editar Cita Médica
               }
-
             </h5>
 
           </div>
@@ -135,331 +100,202 @@
           <ul class="nav nav-tabs mt-3">
 
             <li class="nav-item">
-
-              <button
-                class="nav-link"
-                [class.active]="pestanaActiva === 'cita'"
-                [class.text-white]="pestanaActiva !== 'cita'"
-                (click)="pestanaActiva='cita'"
-              >
+              <button class="nav-link" [class.active]="pestanaActiva === 'cita'"
+                [class.text-white]="pestanaActiva !== 'cita'" (click)="pestanaActiva='cita'">
                 <i class="bi bi-calendar3 me-2"></i>
                 Información de la cita
               </button>
-
             </li>
 
             @if (citaSeleccionada) {
-
-              <li class="nav-item">
-
-                <button
-                  class="nav-link"
-                  [class.active]="pestanaActiva === 'signos'"  
-                  [class.text-white]="pestanaActiva !== 'signos'"
-                  (click)="abrirSignosVitales()"
-                >
-                  <i class="bi bi-heart-pulse me-2"></i>
-                  Signos Vitales
-                </button>
-
-              </li>
-
+            <li class="nav-item">
+              <button class="nav-link" [class.active]="pestanaActiva === 'signos'"
+                [class.text-white]="pestanaActiva !== 'signos'" (click)="abrirSignosVitales()">
+                <i class="bi bi-heart-pulse me-2"></i>
+                Signos Vitales
+              </button>
+            </li>
             }
-
           </ul>
-
         </div>
 
-        <button
-          class="btn-close btn-close-white"
-          (click)="cerrarModal()"
-        >
+        <button class="btn-close btn-close-white" (click)="cerrarModal()">
         </button>
 
       </div>
 
       <div class="modal-body p-4">
-
         @if(pestanaActiva === 'cita'){
-          <div class="row">
-            <div class="col-md-6 mb-3">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-person-vcard me-2"></i>
+              Paciente
+            </label>
 
-              <label class="form-label fw-semibold">
-                <i class="bi bi-person-vcard me-2"></i>
-                Paciente
-              </label>
+            <select class="form-select" [(ngModel)]="paciente_id">
+              <option value="">
+                Seleccione un paciente
+              </option>
 
-              <select
-                class="form-select"
-                [(ngModel)]="paciente_id"
-              >
-
-                <option value="">
-                  Seleccione un paciente
-                </option>
-
-                @for (
-                  paciente of pacientes;
-                  track paciente.id
-                ) {
-
-                  <option [value]="paciente.id">
-
-                    {{ paciente.apellidos }},
-                    {{ paciente.nombres }}
-
-                  </option>
-
-                }
-
-              </select>
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label fw-semibold">
-                <i class="bi bi-person-badge me-2"></i>
-                Médico
-              </label>
-
-              <select
-                class="form-select"
-                [(ngModel)]="medico_id"
-              >
-
-                <option value="">
-                  Seleccione un médico
-                </option>
-
-                @for (
-                  medico of medicos;
-                  track medico.id
-                ) {
-
-                  <option [value]="medico.id">
-
-                    {{ medico.nombre_completo }}
-
-                  </option>
-
-                }
-
-              </select>
-
-            </div>
-
-            <div class="col-md-12 mb-3">
-
-              <label class="form-label fw-semibold">
-                <i class="bi bi-calendar-event me-2"></i>
-                Fecha
-              </label>
-
-              <input
-                type="date"
-                class="form-control"
-                [(ngModel)]="fechaSeleccionada"
-                [min]="fechaMinima"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label fw-semibold">
-                <i class="bi bi-clock me-2"></i>
-                Hora Inicio
-              </label>
-
-              <input
-                type="time"
-                class="form-control"
-                [(ngModel)]="hora_inicio"
-                [min]="horaMinima"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label fw-semibold">
-                <i class="bi bi-clock-history me-2"></i>
-                Hora Fin
-              </label>
-
-              <input
-                type="time"
-                class="form-control"
-                [(ngModel)]="hora_fin"
-              >
-
-            </div>
-
-            <div class="col-12 mb-3">
-
-              <label class="form-label fw-semibold">
-                <i class="bi bi-journal-medical me-2"></i>
-                Motivo de la consulta
-              </label>
-
-              <textarea
-                rows="3"
-                class="form-control"
-                [(ngModel)]="motivo"
-                placeholder="Describa el motivo de la cita..."
-              >
-              </textarea>
-
-            </div>
-
+              @for (
+              paciente of pacientes;
+              track paciente.id
+              ) {
+              <option [value]="paciente.id">
+                {{ paciente.apellidos }},
+                {{ paciente.nombres }}
+              </option>
+              }
+            </select>
           </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-person-badge me-2"></i>
+              Médico
+            </label>
+            <select class="form-select" [(ngModel)]="medico_id">
+              <option value="">
+                Seleccione un médico
+              </option>
+              @for (
+              medico of medicos;
+              track medico.id
+              ) {
+              <option [value]="medico.id">
+                {{ medico.nombre_completo }}
+              </option>
+              }
+            </select>
+          </div>
+
+          <div class="col-md-12 mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-calendar-event me-2"></i>
+              Fecha
+            </label>
+            <input type="date" class="form-control" [(ngModel)]="fechaSeleccionada" [min]="fechaMinima">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-clock me-2"></i>
+              Hora Inicio
+            </label>
+            <input type="time" class="form-control" [(ngModel)]="hora_inicio" [min]="horaMinima">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-clock-history me-2"></i>
+              Hora Fin
+            </label>
+            <input type="time" class="form-control" [(ngModel)]="hora_fin">
+          </div>
+
+          <div class="col-12 mb-3">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-journal-medical me-2"></i>
+              Motivo de la consulta
+            </label>
+            <textarea rows="3" class="form-control" [(ngModel)]="motivo" placeholder="Describa el motivo de la cita...">
+              </textarea>
+          </div>
+        </div>
         }
 
         @if (
-          pestanaActiva === 'signos' &&
-          citaSeleccionada
+        pestanaActiva === 'signos' &&
+        citaSeleccionada
         ) {
 
-          <div class="row">
+        <div class="row">
 
-            <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3">
 
-              <label class="form-label">
-                <i class="bi bi-heart me-2"></i>
-                Presión Arterial
-              </label>
+            <label class="form-label">
+              <i class="bi bi-heart me-2"></i>
+              Presión Arterial
+            </label>
 
-              <input
-                class="form-control"
-                [(ngModel)]="presion_arterial"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label">
-                <i class="bi bi-heart-pulse me-2"></i>
-                Frecuencia Cardíaca
-              </label>
-
-              <input
-                type="number"
-                class="form-control"
-                [(ngModel)]="frecuencia_cardiaca"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label">
-                <i class="bi bi-lungs me-2"></i>
-                Saturación
-              </label>
-
-              <input
-                type="number"
-                class="form-control"
-                [(ngModel)]="saturacion"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label">
-                <i class="bi bi-thermometer-half me-2"></i>
-                Temperatura
-              </label>
-
-              <input
-                type="number"
-                step="0.1"
-                class="form-control"
-                [(ngModel)]="temperatura"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label">
-                <i class="bi bi-speedometer2 me-2"></i>
-                Peso
-              </label>
-
-              <input
-                type="number"
-                step="0.1"
-                class="form-control"
-                [(ngModel)]="peso"
-              >
-
-            </div>
-
-            <div class="col-md-6 mb-3">
-
-              <label class="form-label">
-                <i class="bi bi-arrows-vertical"></i>
-                Talla
-              </label>
-
-              <input
-                type="number"
-                step="0.01"
-                class="form-control"
-                [(ngModel)]="talla"
-              >
-
-            </div>
-
+            <input class="form-control" [(ngModel)]="presion_arterial">
           </div>
 
+          <div class="col-md-6 mb-3">
+            <label class="form-label">
+              <i class="bi bi-heart-pulse me-2"></i>
+              Frecuencia Cardíaca
+            </label>
+
+            <input type="number" class="form-control" [(ngModel)]="frecuencia_cardiaca">
+          </div>
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              <i class="bi bi-lungs me-2"></i>
+              Saturación
+            </label>
+
+            <input type="number" class="form-control" [(ngModel)]="saturacion">
+          </div>
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              <i class="bi bi-thermometer-half me-2"></i>
+              Temperatura
+            </label>
+
+            <input type="number" step="0.1" class="form-control" [(ngModel)]="temperatura">
+          </div>
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              <i class="bi bi-speedometer2 me-2"></i>
+              Peso
+            </label>
+
+            <input type="number" step="0.1" class="form-control" [(ngModel)]="peso">
+          </div>
+
+          <div class="col-md-6 mb-3">
+
+            <label class="form-label">
+              <i class="bi bi-arrows-vertical"></i>
+              Talla
+            </label>
+
+            <input type="number" step="0.01" class="form-control" [(ngModel)]="talla">
+          </div>
+        </div>
         }
-        
 
       </div>
 
       <div class="modal-footer">
 
-        @if (citaSeleccionada) {
-
-
-        }
-
-        <button
-          class="btn btn-secondary"
-          (click)="cerrarModal()"
-        >
+        <button class="btn btn-secondary" (click)="cerrarModal()">
           Cancelar
         </button>
 
         @if (pestanaActiva === 'cita') {
 
-          <button
-            class="btn btn-primary"
-            (click)="guardarCita()"
-          >
-            <i class="bi bi-floppy me-2"></i>
-            Guardar cita
-          </button>
+        <button class="btn btn-primary" (click)="guardarCita()">
+          <i class="bi bi-floppy me-2"></i>
+          Guardar cita
+        </button>
 
         }
 
-        @if (
-          pestanaActiva === 'signos' &&
-          citaSeleccionada
-        ) {
+        @if ( pestanaActiva === 'signos' && citaSeleccionada ) {
 
-          <button
-            class="btn btn-success"
-            (click)="guardarSignosVitales()"
-          >
-            <i class="bi bi-heart-pulse me-2"></i>
-            Guardar signos
-          </button>
+        <button class="btn btn-success" (click)="guardarSignosVitales()">
+          <i class="bi bi-heart-pulse me-2"></i>
+          Guardar signos
+        </button>
 
         }
 

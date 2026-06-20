@@ -19,6 +19,11 @@ export class PacientesComponent implements OnInit {
   cargando = false;
   tablaPaciente = false;
   mostrarModalExito = false;
+
+  pestanaActiva = 'personal';
+  antecedentes_personales = '';
+  antecedentes_familiares = '';
+  antecedentes_alergias = '';
   
   pacienteSeleccionado: any = null;
   mostrarModalVer = false;
@@ -49,6 +54,7 @@ export class PacientesComponent implements OnInit {
   }
 
   cerrarModal() {
+    this.pestanaActiva = 'personal';
     this.mostrarModal = false;
     this.form = {};
     this.archivo = null;
@@ -100,23 +106,79 @@ export class PacientesComponent implements OnInit {
 
   cerrarModalVer() {
     this.mostrarModalVer = false;
+    this.pestanaActiva = 'personal';
   }
 
   cerrarModalEditar() {
     this.mostrarModalEditar = false;
   }
 
-  calcularEdad(fecha: string): number {
-  if (!fecha) return 0;
-  const hoy = new Date();
-  const cumple = new Date(fecha);
-  let edad = hoy.getFullYear() - cumple.getFullYear();
-  const m = hoy.getMonth() - cumple.getMonth();
-  if (m < 0 || (m === 0 && hoy.getDate() < cumple.getDate())) {
-    edad--;
+  // calcularEdad(fecha: string): number {
+  //   if (!fecha) return 0;
+  //   const hoy = new Date();
+  //   const cumple = new Date(fecha);
+  //   let edad = hoy.getFullYear() - cumple.getFullYear();
+  //   const m = hoy.getMonth() - cumple.getMonth();
+  //   if (m < 0 || (m === 0 && hoy.getDate() < cumple.getDate())) {
+  //     edad--;
+  //   }
+  //   return edad;
+  // }
+  calcularEdad(fecha: string) {
+    if (!fecha) {
+
+      return {
+        anios: 0,
+        meses: 0,
+        dias: 0
+      };
+
+    }
+
+    const nacimiento = new Date(fecha);
+    const hoy = new Date();
+
+    let anios =
+      hoy.getFullYear() -
+      nacimiento.getFullYear();
+
+    let meses =
+      hoy.getMonth() -
+      nacimiento.getMonth();
+
+    let dias =
+      hoy.getDate() -
+      nacimiento.getDate();
+
+    if (dias < 0) {
+
+      meses--;
+
+      const ultimoDiaMesAnterior =
+        new Date(
+          hoy.getFullYear(),
+          hoy.getMonth(),
+          0
+        ).getDate();
+
+      dias += ultimoDiaMesAnterior;
+
+    }
+
+    if (meses < 0) {
+
+      anios--;
+      meses += 12;
+
+    }
+
+    return {
+      anios,
+      meses,
+      dias
+    };
+
   }
-  return edad;
-}
 
   async guardar() {
       try {
