@@ -1,392 +1,246 @@
 <div class="container-fluid mt-4">
-
   <div class="mb-4">
-
     <h2 class="fw-bold mb-1">
       <i class="bi bi-people-fill me-2"></i>
       Administración de Usuarios
     </h2>
-
     <p class="text-muted mb-0">
       Desde esta sección puede crear nuevos usuarios para acceder al sistema médico y administrar sus permisos.
     </p>
-
   </div>
-
   <div class="alert alert-info border-0 shadow-sm mb-4">
-
     <h6 class="fw-bold mb-3">
       <i class="bi bi-info-circle me-2"></i>
       ¿Cómo funciona la gestión de usuarios?
     </h6>
-
     <div class="row">
-
       <div class="col-md-4 mb-2">
-
         <div class="d-flex">
-
           <div class="me-2 fs-5">
             <i class="bi bi-person-gear"></i>
           </div>
-
           <div>
             <strong>Crear usuario</strong><br>
             Complete los datos del profesional o administrador que utilizará el sistema.
           </div>
-
         </div>
-
       </div>
-
       <div class="col-md-4 mb-2">
-
         <div class="d-flex">
-
           <div class="me-2 fs-5">
             <i class="bi bi-shield-lock"></i>
           </div>
-
           <div>
             <strong>Asignar permisos</strong><br>
             Seleccione si el usuario tendrá acceso como médico o administrador.
           </div>
-
         </div>
-
       </div>
-
       <div class="col-md-4 mb-2">
-
         <div class="d-flex">
-
           <div class="me-2 fs-5">
             <i class="bi bi-diagram-3"></i>
           </div>
-
           <div>
             <strong>Consultar usuarios</strong><br>
             Revise la lista de usuarios actualmente registrados en el sistema.
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
   <div class="row g-4">
-
     <div class="col-lg-4">
-
       <div class="card shadow-sm border-0 h-100">
-
         <div class="card-body p-4">
-
           <div class="mb-4">
-
             <h4 class="fw-bold mb-1">
               <i class="bi bi-person-plus me-2"></i>
               Crear Usuario
             </h4>
-
             <p class="text-muted small mb-0">
               Ingrese la información del nuevo usuario del sistema.
             </p>
-
           </div>
-
           <div class="mb-3">
-
             <label class="form-label fw-semibold">
               Nombre completo
               <span class="text-danger">*</span>
             </label>
-
             <input type="text" class="form-control" placeholder="Ej: Juan Carlos Bodoque" [(ngModel)]="nombre_completo">
-
             <small class="text-muted">
               Ingrese nombres y apellidos del usuario.
             </small>
-
           </div>
-
           <div class="mb-3">
-
             <label class="form-label fw-semibold">
               Correo electrónico
               <span class="text-danger">*</span>
             </label>
-
             <input type="email" class="form-control" placeholder="usuario@correo.com" [(ngModel)]="email">
-
             <small class="text-muted">
               Este correo será utilizado para iniciar sesión.
             </small>
-
           </div>
-
           <div class="mb-3">
-
             <label class="form-label fw-semibold">
               Contraseña
               <span class="text-danger">*</span>
             </label>
-
             <input type="password" class="form-control" placeholder="Ingrese una contraseña segura"
               [(ngModel)]="password">
-
             <small class="text-muted">
               Recomendado: mínimo 6 caracteres.
             </small>
-
           </div>
-
           <div class="mb-4">
-
             <label class="form-label fw-semibold">
               Tipo de usuario
             </label>
-
             <select class="form-select" [(ngModel)]="rol">
-
               <option value="medico">
                 Médico
               </option>
-
               <option value="admin">
                 Administrador
               </option>
-
               <option value="auxiliar">
                 Auxiliar
               </option>
-
             </select>
-
             <small class="text-muted">
-
               <strong>Médico:</strong>
               acceso clínico y documentos.<br>
-
               <strong>Administrador:</strong>
               acceso completo al sistema.<br>
-
               <strong>Auxiliar:</strong>
               acceso clinico y al citas.
-
             </small>
-
           </div>
-
           <button class="btn btn-primary w-100 py-2 shadow-sm" [disabled]="creando" (click)="crearUsuario()">
-
             @if (!creando) {
-
             <span>
               <i class="bi bi-person-plus-fill me-2"></i>
               Crear usuario
             </span>
-
             }
-
             @if (creando) {
-
             <span>
               <span class="spinner-border spinner-border-sm me-2"></span>
-
               Creando usuario...
             </span>
-
             }
-
           </button>
-
           <div class="alert alert-light border mt-4 small mb-0">
-
             <div class="d-flex">
-
               <div class="me-2">
                 <i class="bi bi-shield-check"></i>
               </div>
-
               <div>
                 Los usuarios creados podrán acceder inmediatamente al sistema utilizando el correo y contraseña
                 registrados.
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
-
     <div class="col-lg-8">
-
       <div class="card shadow-sm border-0">
-
         <div class="card-body p-4">
-
           <div class="d-flex justify-content-between align-items-center mb-4">
-
             <div>
-
               <h4 class="fw-bold mb-1">
                 <i class="bi bi-people me-2"></i>
                 Usuarios registrados
               </h4>
-
               <p class="text-muted small mb-0">
                 Lista de usuarios con acceso al sistema médico.
               </p>
-
             </div>
-
             <span class="badge bg-light text-dark border px-3 py-2">
               Total:
               {{ usuarios.length }}
               usuario(s)
             </span>
-
           </div>
-
           @if (cargando) {
-
           <div class="text-center py-5">
-
             <div class="spinner-border text-primary"></div>
-
             <p class="text-muted mt-3 mb-0">
               Cargando usuarios...
             </p>
-
           </div>
-
           }
-
           @if (!cargando) {
-
           <div class="table-responsive">
-
             <table class="table align-middle table-hover">
-
               <thead class="table-light">
-
                 <tr>
                   <th>Usuario</th>
                   <th>Rol</th>
                   <th>Fecha de registro</th>
                 </tr>
-
               </thead>
-
               <tbody>
-
                 @for (
                 usuario of usuarios;
                 track usuario.id
                 ) {
-
                 <tr>
-
                   <td>
-
                     <div class="d-flex align-items-center">
-
                       <div class="rounded-circle bg-light border d-flex align-items-center justify-content-center me-3"
                         style="width: 45px; height: 45px;">
-
                         <i class="bi bi-person-fill text-primary"></i>
-
                       </div>
-
                       <div>
-
                         <div class="fw-semibold">
-
                           {{ usuario.nombre_completo }}
-
                         </div>
-
                         <small class="text-muted">
                           Usuario del sistema
                         </small>
-
                       </div>
-
                     </div>
-
                   </td>
-
                   <td>
-
                     <span class="badge px-3 py-2" [class.bg-primary]="
                             usuario.rol === 'admin'
                           " [class.bg-success]="
                             usuario.rol === 'medico' || usuario.rol === 'auxiliar'
                           ">
-
                       @if (
                       usuario.rol === 'admin'
                       ) {
-
                       Administrador
-
                       }
-
                       @if (
                       usuario.rol === 'medico'
                       ) {
-
                       Médico
-
                       }
-
                       @if (
                       usuario.rol === 'auxiliar'
                       ) {
-
                       Auxiliar
-
                       }
-
                     </span>
-
                   </td>
-
                   <td>
-
                     {{
                     usuario.actualizado_at
                     | date:'short'
                     }}
-
                   </td>
-
                 </tr>
-
                 }
-
               </tbody>
-
             </table>
-
           </div>
-
           }
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </div>
