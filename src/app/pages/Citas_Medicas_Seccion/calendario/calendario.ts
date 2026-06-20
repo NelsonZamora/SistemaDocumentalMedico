@@ -5,10 +5,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import Swal from 'sweetalert2';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
-
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-
 import { CalendarOptions } from '@fullcalendar/core';
 
 import { CalendarioService } from '../../../services/calendario';

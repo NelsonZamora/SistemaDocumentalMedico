@@ -48,7 +48,6 @@ implements OnInit {
   }
 
   async cargarPendientes() {
-
     this.citasPendientes =
       await this.atencionMedicaService
       .getPendientes();
@@ -56,7 +55,6 @@ implements OnInit {
   }
 
   async seleccionarCita(cita: any) {
-
     this.citaSeleccionada = cita;
     this.signos =
       await this.atencionMedicaService
