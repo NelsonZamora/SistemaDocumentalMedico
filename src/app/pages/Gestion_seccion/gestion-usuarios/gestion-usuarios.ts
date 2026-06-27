@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '../../../services/usuarios';
@@ -14,184 +14,98 @@ import Swal from 'sweetalert2';
 export class GestionUsuariosComponent
 implements OnInit {
 
-  usuarios: any[] = [];
+  usuarios = signal<any[]>([]);
+  cargando = signal<boolean>(true);
+  usuarioSeleccionado = signal<any>(null);
+  mostrarModalAcciones = signal<boolean>(false);
+  
   menuAbierto: string | null = null;
-  cargando = true;
-  usuarioSeleccionado: any = null;
-  mostrarModalAcciones = false;
 
   constructor(
-    private usuariosService: UsuariosService,
-    private cd: ChangeDetectorRef
+    private usuariosService: UsuariosService
   ) {}
 
   async ngOnInit() {
     await this.cargarUsuarios();
-    this.cd.detectChanges();
   }
 
   abrirAcciones(usuario: any) {
-    this.usuarioSeleccionado = usuario;
-    this.mostrarModalAcciones = true;
+    this.usuarioSeleccionado.set(usuario);
+    this.mostrarModalAcciones.set(true);
   }
 
   cerrarModalAcciones() {
-    this.mostrarModalAcciones = false;
-    this.usuarioSeleccionado = null;
+    this.mostrarModalAcciones.set(false);
+    this.usuarioSeleccionado.set(null);
   }
 
-  async resetearPassword(
-    usuario: any
-  ) {
+  async resetearPassword(usuario: any) {
+    const result = await Swal.fire({
+      title: 'Resetear contraseña',
+      text: `Nueva contraseña para ${usuario.nombre_completo}`,
+      input: 'password',
+      inputLabel: 'Nueva contraseña',
+      inputPlaceholder: 'Ingrese la nueva contraseña',
+      showCancelButton: true,
+      confirmButtonText: 'Actualizar',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (value) => {
+        if (!value) return 'Debe ingresar una contraseña';
+        if (value.length < 6) return 'La contraseña debe tener al menos 6 caracteres';
+        return null;
+      }
+    });
 
-    const result =
-      await Swal.fire({
-
-        title: 'Resetear contraseña',
-
-        text:
-          `Nueva contraseña para ${usuario.nombre_completo}`,
-
-        input: 'password',
-
-        inputLabel:
-          'Nueva contraseña',
-
-        inputPlaceholder:
-          'Ingrese la nueva contraseña',
-
-        showCancelButton: true,
-
-        confirmButtonText:
-          'Actualizar',
-
-        cancelButtonText:
-          'Cancelar',
-
-        inputValidator: (
-          value
-        ) => {
-
-          if (!value) {
-            return 'Debe ingresar una contraseña';
-          }
-
-          if (value.length < 6) {
-            return 'La contraseña debe tener al menos 6 caracteres';
-          }
-
-          return null;
-
-        }
-
-      });
-
-    if (!result.isConfirmed) {
-      return;
-    }
+    if (!result.isConfirmed) return;
 
     try {
-
-      await this.usuariosService
-        .resetearPassword(
-          usuario.id,
-          result.value
-        );
-
+      await this.usuariosService.resetearPassword(usuario.id, result.value);
       await Swal.fire({
         icon: 'success',
         title: 'Contraseña actualizada',
-        text:
-          'La contraseña fue modificada correctamente.'
+        text: 'La contraseña fue modificada correctamente.'
       });
-
     } catch (error) {
-
       console.error(error);
-
       await Swal.fire({
         icon: 'error',
         title: 'Error',
-        text:
-          'No se pudo actualizar la contraseña.'
+        text: 'No se pudo actualizar la contraseña.'
       });
-
     }
-
   }
 
-
   toggleMenu(id: string) {
-
-    this.menuAbierto =
-      this.menuAbierto === id
-        ? null
-        : id;
-
+    this.menuAbierto = this.menuAbierto === id ? null : id;
   }
 
   async cargarUsuarios() {
 
-    this.cargando = true;
+    this.cargando.set(true);
+    const lista = await this.usuariosService.getUsuarios();
+    this.usuarios.set(lista);
 
-    this.usuarios =
-      await this.usuariosService
-      .getUsuarios();
-
-    this.cargando = false;
+    this.cargando.set(false);
   }
 
-  async cambiarEstado(
-    usuario: any
-  ) {
-
-    await this.usuariosService
-      .cambiarEstado(
-        usuario.id,
-        usuario.activo
-      );
-
+  async cambiarEstado(usuario: any) {
+    await this.usuariosService.cambiarEstado(usuario.id, usuario.activo);
   }
 
-  async bloquearUsuario(
-    usuario: any
-  ) {
+  async bloquearUsuario(usuario: any) {
     usuario.activo = false;
     this.cerrarModalAcciones();
-    this.cd.detectChanges();
-    await this.usuariosService
-      .cambiarEstado(
-        usuario.id,
-        usuario.activo
-      );
-      
+    await this.usuariosService.cambiarEstado(usuario.id, usuario.activo);
   }
 
-  async activarUsuario(
-    usuario: any
-  ) {
+  async activarUsuario(usuario: any) {
     usuario.activo = true;
     this.cerrarModalAcciones();
-    this.cd.detectChanges();
-    await this.usuariosService
-      .cambiarEstado(
-        usuario.id,
-        usuario.activo
-      );
-      
+    await this.usuariosService.cambiarEstado(usuario.id, usuario.activo);
   }
 
-  async cambiarRol(
-    usuario: any
-  ) {
-
-    await this.usuariosService
-      .cambiarRol(
-        usuario.id,
-        usuario.rol
-      );
-      this.cd.detectChanges();
-
+  async cambiarRol(usuario: any) {
+    await this.usuariosService.cambiarRol(usuario.id, usuario.rol);
   }
 
 }

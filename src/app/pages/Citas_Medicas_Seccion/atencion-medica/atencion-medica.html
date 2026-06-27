@@ -47,17 +47,17 @@
 
                     </div>
 
-                    @if (citasPendientes.length === 0) {
+                    @if (citasPendientes().length === 0) {
                     <div class="alert alert-light text-center mb-0">
                         No existen citas pendientes para hoy.
                     </div>
                     }
 
                     @for (
-                    cita of citasPendientes;
+                    cita of citasPendientes();
                     track cita.id
                     ) {
-                    <div class="cita-card mb-3" [class.cita-seleccionada]="citaSeleccionada?.id === cita.id"
+                    <div class="cita-card mb-3" [class.cita-seleccionada]="citaSeleccionada()?.id === cita.id"
                         (click)="seleccionarCita(cita)">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -70,7 +70,7 @@
                                     {{ cita.hora_inicio.substring(0,5) }}
                                 </small>
                             </div>
-                            @if (citaSeleccionada?.id === cita.id) {
+                            @if (citaSeleccionada()?.id === cita.id) {
                             <span class="badge bg-success">
                                 Seleccionada
                             </span>
@@ -89,7 +89,7 @@
         </div>
         <div class="col-md-8">
 
-            @if (citaSeleccionada) {
+            @if (citaSeleccionada()) {
             <div class="row">
                 <div class="col-lg-4">
                     <div class="card shadow-sm border-0 mb-3">
@@ -101,24 +101,24 @@
                         </div>
                         <div class="card-body">
                             <h5 class="fw-bold mb-3">
-                                {{ citaSeleccionada.pacientes.nombres }}
-                                {{ citaSeleccionada.pacientes.apellidos }}
+                                {{ citaSeleccionada().pacientes.nombres }}
+                                {{ citaSeleccionada().pacientes.apellidos }}
                             </h5>
                             <div class="small text-muted">
                                 <div class="mb-2">
                                     <i class="bi bi-calendar-event me-1"></i>
                                     Fecha:
-                                    <strong>{{ citaSeleccionada.fecha }}</strong>
+                                    <strong>{{ citaSeleccionada().fecha }}</strong>
                                 </div>
                                 <div class="mb-2">
                                     <i class="bi bi-clock me-1"></i>
                                     Hora:
-                                    <strong>{{ citaSeleccionada.hora_inicio }}</strong>
+                                    <strong>{{ citaSeleccionada().hora_inicio }}</strong>
                                 </div>
                                 <div>
                                     <i class="bi bi-chat-left-text me-1"></i>
                                     Motivo:
-                                    <strong>{{ citaSeleccionada.motivo }}</strong>
+                                    <strong>{{ citaSeleccionada().motivo }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -138,13 +138,13 @@
                                         Presión Arterial
                                     </label>
                                     <input class="form-control bg-light"
-                                        [value]="signos?.presion_arterial || 'No registrado'" readonly>
+                                        [value]="signos()?.presion_arterial || 'No registrado'" readonly>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label text-muted small">
                                         Frecuencia Cardíaca
                                     </label>
-                                    <input class="form-control bg-light" [value]="signos?.frecuencia_cardiaca || '-'"
+                                    <input class="form-control bg-light" [value]="signos()?.frecuencia_cardiaca || '-'"
                                         readonly>
                                 </div>
                                 <div class="col-6">
@@ -152,7 +152,7 @@
                                         Saturación O₂
                                     </label>
                                     <input class="form-control bg-light"
-                                        [value]="signos?.saturacion ? signos.saturacion + '%' : '-'" readonly>
+                                        [value]="signos()?.saturacion ? signos().saturacion + '%' : '-'" readonly>
                                 </div>
 
                                 <div class="col-6">
@@ -160,14 +160,14 @@
                                         Temperatura
                                     </label>
                                     <input class="form-control bg-light"
-                                        [value]="signos?.temperatura ? signos.temperatura + ' °C' : '-'" readonly>
+                                        [value]="signos()?.temperatura ? signos().temperatura + ' °C' : '-'" readonly>
                                 </div>
                                 <div class="col-6">
                                     <label class="form-label text-muted small">
                                         Peso
                                     </label>
                                     <input class="form-control bg-light"
-                                        [value]="signos?.peso ? signos.peso + ' kg' : '-'" readonly>
+                                        [value]="signos()?.peso ? signos().peso + ' kg' : '-'" readonly>
                                 </div>
 
                                 <div class="col-6">
@@ -175,15 +175,15 @@
                                         Talla
                                     </label>
                                     <input class="form-control bg-light"
-                                        [value]="signos?.talla ? signos.talla + ' m' : '-'" readonly>
+                                        [value]="signos()?.talla ? signos().talla + ' m' : '-'" readonly>
                                 </div>
 
                             </div>
-                            @if (signos?.observaciones) {
+                            @if (signos()?.observaciones) {
                             <div class="alert alert-light border mt-3">
                                 <strong>Observaciones del auxiliar:</strong>
                                 <div class="mt-1">
-                                    {{ signos.observaciones }}
+                                    {{ signos().observaciones }}
                                 </div>
                             </div>
                             }

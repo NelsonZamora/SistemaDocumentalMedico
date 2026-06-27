@@ -54,12 +54,12 @@
   </div>
   <div class="card border-0 shadow-sm">
     <div class="card-body">
-      @if (cargando) {
+      @if (cargando()) {
       <div class="text-center">
         <div class="spinner-border"></div>
       </div>
       }
-      @if (!cargando) {
+      @if (!cargando()) {
       <div class="table-responsive">
         <table class="table table-hover align-middle">
           <thead class="table-light">
@@ -83,7 +83,7 @@
           </thead>
           <tbody>
             @for (
-            usuario of usuarios;
+            usuario of usuarios();
             track usuario.id
             ) {
             <tr>
@@ -144,7 +144,7 @@
     </div>
   </div>
 </div>
-@if (mostrarModalAcciones) {
+@if (mostrarModalAcciones()) {
 <div class="modal fade show d-block" style=" background: rgba(0,0,0,.55); backdrop-filter: blur(3px);">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
@@ -160,27 +160,27 @@
         <div class="text-center mb-4">
           <h5 class="mb-1">
             {{
-            usuarioSeleccionado?.nombre_completo
+            usuarioSeleccionado()?.nombre_completo
             }}
           </h5>
           <span class="badge bg-secondary">
             {{
-            usuarioSeleccionado?.rol
+            usuarioSeleccionado()?.rol
             }}
           </span>
         </div>
         <div class="d-grid gap-2">
-          <button type="button" class="btn btn-warning text-start" (click)="resetearPassword(usuarioSeleccionado)">
+          <button type="button" class="btn btn-warning text-start" (click)="resetearPassword(usuarioSeleccionado())">
             <i class="bi bi-key me-2"></i>
             Resetear contraseña
           </button>
-          @if (usuarioSeleccionado?.activo) {
-          <button class="btn btn-danger text-start" (click)="bloquearUsuario(usuarioSeleccionado)">
+          @if (usuarioSeleccionado()?.activo) {
+          <button class="btn btn-danger text-start" (click)="bloquearUsuario(usuarioSeleccionado())">
             <i class="bi bi-ban me-2"></i>
             Bloquear usuario
           </button>
           } @else {
-          <button class="btn btn-success text-start" (click)="activarUsuario(usuarioSeleccionado)">
+          <button class="btn btn-success text-start" (click)="activarUsuario(usuarioSeleccionado())">
             <i class="bi bi-check-circle me-2"></i>
             Activar usuario
           </button>

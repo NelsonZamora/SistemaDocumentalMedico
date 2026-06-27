@@ -73,7 +73,7 @@
               Pendientes
             </h6>
             <h3 class="fw-bold mb-0">
-              {{ pendientes }}
+              {{ pendientes() }}
             </h3>
           </div>
         </div>
@@ -241,7 +241,7 @@
               Pendientes
             </h6>
             <h3 class="fw-bold mb-0">
-              {{ pendientes }}
+              {{ pendientes() }}
             </h3>
           </div>
         </div>
@@ -335,7 +335,7 @@
               Pacientes Hoy
             </h6>
             <h3 class="fw-bold mb-0">
-              {{ pacientesHoy }}
+              {{ pacientesHoy() }}
             </h3>
           </div>
         </div>
@@ -352,7 +352,7 @@
               Documentos Emitidos
             </h6>
             <h3 class="fw-bold mb-0">
-              {{ documentosEmitidos }}
+              {{ documentosEmitidos() }}
             </h3>
           </div>
         </div>
@@ -369,7 +369,7 @@
               Pendientes
             </h6>
             <h3 class="fw-bold mb-0">
-              {{ pendientes }}
+              {{ pendientes() }}
             </h3>
           </div>
         </div>
@@ -386,7 +386,7 @@
               Próxima Cita de hoy
             </h6>
             <h3 class="fw-bold mb-0">
-              {{ proximaCita?.hora_inicio?.substring(0,5) || 'No hay cita pendiente' }}
+              {{ proximaCita()?.hora_inicio?.substring(0,5) || 'No hay cita pendiente' }}
             </h3>
           </div>
         </div>
@@ -434,7 +434,7 @@
                 </tr>
               </tbody> -->
             <tbody>
-              @if (pacientesRecientes.length === 0) {
+              @if (pacientesRecientes().length === 0) {
               <tr>
                 <td colspan="3" class="text-center text-muted py-4">
                   No hay pacientes recientemente atendidos.
@@ -442,7 +442,7 @@
               </tr>
               }
               @for (
-              cita of pacientesRecientes;
+              cita of pacientesRecientes();
               track cita.id
               ) {
               <tr>

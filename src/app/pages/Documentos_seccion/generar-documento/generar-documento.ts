@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
 
 import PizZip from 'pizzip';
 import Docxtemplater from 'docxtemplater';
@@ -26,315 +25,169 @@ import { AtencionMedicaService } from '../../../services/atencion-medica';
 })
 export class GenerarDocumentoComponent implements OnInit {
 
-  pacientes: any[] = [];
-  plantillas: any[] = [];
+  pacientes = signal<any[]>([]);
+  plantillas = signal<any[]>([]);
+  atenciones = signal<any[]>([]);
 
-  pacienteSeleccionado: any = null;
-  plantillaSeleccionada: any = null;
+  pacienteSeleccionado = signal<any>(null);
+  plantillaSeleccionada = signal<any>(null);
+  atencionSeleccionada = signal<any>(null);
 
-  camposPlantilla: any[] = [];
+  camposPlantilla = signal<any[]>([]);
+  
+  previewHtml = signal<string>('');
+  cargando = signal<boolean>(true);
+
   contextoClinico: any = null;
-
   valoresCampos: any = {};
-
-  atenciones: any[] = [];
-  atencionSeleccionada: any = null;
-
-  previewHtml = '';
   previewHtmlOriginal = '';
   tipoArchivo = '';
-
-  cargando = true;
 
   constructor(
     private plantillasService: PlantillasService,
     private pacientesService: PacientesService,
-    private generarDocumentoService: AtencionMedicaService,
-    private cd: ChangeDetectorRef
+    private generarDocumentoService: AtencionMedicaService
   ) {}
 
   async ngOnInit() {
-
-    this.contextoClinico =
-      history.state?.contextoClinico;
+    this.contextoClinico = history.state?.contextoClinico;
     await this.cargarDatos();
     await this.cargarContexto();
-    this.cd.detectChanges();
   }
 
   async cargarContexto() {
-
+    const pts = this.pacientes();
+    
     if (this.contextoClinico?.paciente_id) {
-      this.pacienteSeleccionado =
-        this.pacientes.find(
-          p =>
-          p.id ===
-          this.contextoClinico.paciente_id
-        );
+      const encontrado = pts.find(p => p.id === this.contextoClinico.paciente_id);
+      this.pacienteSeleccionado.set(encontrado || null);
     }
 
     if (this.contextoClinico?.atencion_medica_id) {
-    this.atenciones =
-          await this.generarDocumentoService.getAtencionesMedicas();
+      const dataAtenciones = await this.generarDocumentoService.getAtencionesMedicas();
+      this.atenciones.set(dataAtenciones);
 
-      this.atencionSeleccionada =
-        this.atenciones.find(
-          a =>
-            a.id ===
-            this.contextoClinico.atencion_medica_id
-        );
+      const encontrada = dataAtenciones.find(a => a.id === this.contextoClinico.atencion_medica_id);
+      this.atencionSeleccionada.set(encontrada || null);
     }
   }
 
   async cargarDatos() {
-
     try {
+      const pts = await this.pacientesService.getPacientes();
+      const plts = await this.plantillasService.getPlantillas();
 
-
-      this.pacientes =
-        await this.pacientesService.getPacientes();
-
-      this.plantillas =
-        await this.plantillasService.getPlantillas();
-
-      this.cargando = false;
-      this.cd.detectChanges();
-
+      this.pacientes.set(pts);
+      this.plantillas.set(plts);
+      this.cargando.set(false);
     } catch (error) {
-
       console.error(error);
-
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Ha ocurrido un error cargando la informacion'
+        text: 'Ha ocurrido un error cargando la información'
       });
-
     }
   }
 
   async cargarAtenciones() {
     try {
-
-      this.atenciones =
-        await this.generarDocumentoService
-          .getAtencionesMedicas();
-
+      const dataAtenciones = await this.generarDocumentoService.getAtencionesMedicasbyId(this.pacienteSeleccionado().id);
+      this.atenciones.set(dataAtenciones);
     } catch (error) {
-
       console.error(error);
-
     }
-
   }
 
-  async seleccionarPaciente(){
-
-    this.cargarAtenciones();
-    this.seleccionarPlantilla();
-    this.cd.detectChanges();
+  async seleccionarPaciente() {
+    await this.cargarAtenciones();
+    await this.seleccionarPlantilla();
   }
 
   async seleccionarPlantilla() {
-    this.cd.detectChanges();
-    
-    if (
-      !this.plantillaSeleccionada ||
-      !this.pacienteSeleccionado
-    ) return;
+    const plantillaActual = this.plantillaSeleccionada();
+    const pacienteActual = this.pacienteSeleccionado();
+
+    if (!plantillaActual || !pacienteActual) return;
 
     try {
+      const copiaCampos = structuredClone(plantillaActual.contenido_json.campos || []);
+      this.camposPlantilla.set(copiaCampos);
 
-      this.camposPlantilla =
-        structuredClone(
-          this.plantillaSeleccionada
-            .contenido_json.campos || []
-        );
+      const archivo = await this.plantillasService.descargarPlantilla(plantillaActual.archivo_url_path);
+      const arrayBuffer = await archivo.arrayBuffer();
 
-      const archivo =
-        await this.plantillasService
-          .descargarPlantilla(
-            this.plantillaSeleccionada
-              .archivo_url_path
-          );
-
-      const arrayBuffer =
-        await archivo.arrayBuffer();
-
-
-      const extension =
-        this.plantillaSeleccionada
-          .archivo_url_path
-          .split('.')
-          .pop()
-          ?.toLowerCase();
-
+      const extension = plantillaActual.archivo_url_path.split('.').pop()?.toLowerCase();
       this.tipoArchivo = extension || '';
 
-
       if (extension === 'docx') {
-
-        const htmlResult =
-          await mammoth.convertToHtml({
-            arrayBuffer
-          });
-
+        const htmlResult = await mammoth.convertToHtml({ arrayBuffer });
         let html = htmlResult.value;
 
-        html = html.replace(
-          /\{([^}]+)\}/g,
-          (_: string, campo: string) => {
-
-            const limpio =
-              campo.trim().toLowerCase();
-
-            return `
-              <span
-                class="campo-doc"
-                data-campo="${limpio}"
-              >
-                {${campo}}
-              </span>
-            `;
-          }
-        );
+        html = html.replace(/\{([^}]+)\}/g, (_: string, campo: string) => {
+          const limpio = campo.trim().toLowerCase();
+          return `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`;
+        });
 
         this.previewHtmlOriginal = html;
-      }
-
-
-      else if (
-        extension === 'xlsx' ||
-        extension === 'xls'
-      ) {
-
-        const workbook = XLSX.read(
-          arrayBuffer,
-          { type: 'array' }
-        );
-
-        const firstSheet =
-          workbook.Sheets[
-            workbook.SheetNames[0]
-          ];
-
-        const range = XLSX.utils.decode_range(
-          firstSheet['!ref']!
-        );
-
+      } 
+      else if (extension === 'xlsx' || extension === 'xls') {
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const range = XLSX.utils.decode_range(firstSheet['!ref']!);
         let ultimaFila = range.e.r;
 
-        for (
-          let R = range.e.r;
-          R >= range.s.r;
-          --R
-        ) {
-
+        for (let R = range.e.r; R >= range.s.r; --R) {
           let tieneContenido = false;
-
-          for (
-            let C = range.s.c;
-            C <= range.e.c;
-            ++C
-          ) {
-
-            const cellAddress =
-              XLSX.utils.encode_cell({
-                r: R,
-                c: C
-              });
-
-            const cell =
-              firstSheet[cellAddress];
-
-            if (
-              cell &&
-              cell.v !== undefined &&
-              cell.v !== ''
-            ) {
-
+          for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+            const cell = firstSheet[cellAddress];
+            if (cell && cell.v !== undefined && cell.v !== '') {
               tieneContenido = true;
               break;
             }
           }
-
           if (tieneContenido) {
             ultimaFila = R;
             break;
           }
         }
 
-        firstSheet['!ref'] =
-          XLSX.utils.encode_range({
-            s: range.s,
-            e: {
-              r: ultimaFila,
-              c: range.e.c
-            }
-          });
+        firstSheet['!ref'] = XLSX.utils.encode_range({
+          s: range.s,
+          e: { r: ultimaFila, c: range.e.c }
+        });
 
-        let html =
-          XLSX.utils.sheet_to_html(
-            firstSheet
-          );
-
+        let html = XLSX.utils.sheet_to_html(firstSheet);
         html = html
-          .replace(
-            /<caption>.*?<\/caption>/g,
-            ''
-          )
+          .replace(/<caption>.*?<\/caption>/g, '')
           .replace(/id="[^"]*"/g, '')
           .replace(/class="[^"]*"/g, '');
 
-        html = html.replace(
-          />([^<]*\{([^}]+)\}[^<]*)</g,
-          (match, contenido, campo) => {
-
-            const limpio =
-              campo.trim().toLowerCase();
-
-            const reemplazo =
-              contenido.replace(
-                `{${campo}}`,
-                `<span class="campo-doc" data-campo="${limpio}">
-                  {${campo}}
-                </span>`
-              );
-
-            return `>${reemplazo}<`;
-          }
-        );
+        html = html.replace(/>([^<]*\{([^}]+)\}[^<]*)</g, (match, contenido, campo) => {
+          const limpio = campo.trim().toLowerCase();
+          const reemplazo = contenido.replace(`{${campo}}`, 
+            `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`
+          );
+          return `>${reemplazo}<`;
+        });
 
         this.previewHtmlOriginal = html;
       }
 
       this.valoresCampos = {};
 
-      for (const campo of this.camposPlantilla) {
-
+      for (const campo of copiaCampos) {
         if (campo.origen === 'bd') {
-
-          this.valoresCampos[campo.nombre] =
-            this.pacienteSeleccionado[
-              campo.columna
-            ] || '';
-        }
-
-        else {
-
-          this.valoresCampos[campo.nombre] =
-            '';
+          this.valoresCampos[campo.nombre] = pacienteActual[campo.columna] || '';
+        } else {
+          this.valoresCampos[campo.nombre] = '';
         }
       }
 
       this.actualizarPreview();
-
-      this.cd.detectChanges();
-
     } catch (error) {
-
       console.error(error);
-
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -344,304 +197,128 @@ export class GenerarDocumentoComponent implements OnInit {
   }
 
   seleccionarAtencion() {
-    if (!this.atencionSeleccionada) {
-      return;
-    }
-
-    const cita =
-      this.atencionSeleccionada.citas_medicas;
-
+    if (!this.atencionSeleccionada()) return;
     this.actualizarCamposAtencion();
-    this.cd.detectChanges();
   }
 
   actualizarCamposAtencion() {
-    if (!this.atencionSeleccionada) {
-      return;
-    }
+    const atencion = this.atencionSeleccionada();
+    if (!atencion) return;
 
-    const atencion =
-      this.atencionSeleccionada;
+    const signos = atencion.signos_vitales;
 
-    const signos =
-      atencion.signos_vitales;
-
-    this.valoresCampos['motivo_consulta'] =
-      atencion.motivo_consulta || '';
-
-    this.valoresCampos['enfermedad actual'] =
-      atencion.enfermedad_actual || '';
-
-    this.valoresCampos['examen fisico'] =
-      atencion.examen_fisico || '';
-
-    this.valoresCampos['diagnostico'] =
-      atencion.diagnostico || '';
-
-    this.valoresCampos['tratamiento'] =
-      atencion.tratamiento || '';
-
-    this.valoresCampos['observaciones'] =
-      atencion.observaciones || '';
+    this.valoresCampos['motivo_consulta'] = atencion.motivo_consulta || '';
+    this.valoresCampos['enfermedad actual'] = atencion.enfermedad_actual || '';
+    this.valoresCampos['examen fisico'] = atencion.examen_fisico || '';
+    this.valoresCampos['diagnostico'] = atencion.diagnostico || '';
+    this.valoresCampos['tratamiento'] = atencion.tratamiento || '';
+    this.valoresCampos['observaciones'] = atencion.observaciones || '';
 
     if (signos) {
-
-      this.valoresCampos['presion arterial'] =
-        signos.presion_arterial || '';
-
-      this.valoresCampos['frecuencia cardiaca'] =
-        signos.frecuencia_cardiaca || '';
-
-      this.valoresCampos['saturacion'] =
-        signos.saturacion || '';
-
-      this.valoresCampos['temperatura'] =
-        signos.temperatura || '';
-
-      this.valoresCampos['peso'] =
-        signos.peso || '';
-
-      this.valoresCampos['talla'] =
-        signos.talla || '';
+      this.valoresCampos['presion arterial'] = signos.presion_arterial || '';
+      this.valoresCampos['frecuencia cardiaca'] = signos.frecuencia_cardiaca || '';
+      this.valoresCampos['saturacion'] = signos.saturacion || '';
+      this.valoresCampos['temperatura'] = signos.temperatura || '';
+      this.valoresCampos['peso'] = signos.peso || '';
+      this.valoresCampos['talla'] = signos.talla || '';
     }
 
     this.actualizarPreview();
   }
 
   actualizarPreview() {
-
     let html = this.previewHtmlOriginal;
 
-    for (const campo of this.camposPlantilla) {
+    for (const campo of this.camposPlantilla()) {
+      const nombreCampo = campo.nombre.trim();
+      const valor = this.valoresCampos[nombreCampo] || '';
+      const regex = new RegExp(`\\{\\s*${nombreCampo}\\s*\\}`, 'gi');
 
-      const nombreCampo =
-        campo.nombre.trim();
-
-      const valor =
-        this.valoresCampos[nombreCampo] || '';
-
-      const regex = new RegExp(
-        `\\{\\s*${nombreCampo}\\s*\\}`,
-        'gi'
-      );
-
-      html = html.replace(
-        regex,
-        valor || `{${nombreCampo}}`
-      );
-
+      html = html.replace(regex, valor || `{${nombreCampo}}`);
     }
 
-    this.previewHtml = html;
-
-    this.cd.detectChanges();
+    this.previewHtml.set(html); // Notifica instantáneamente a la vista
   }
 
   async generarDocumento() {
+    const plantillaActual = this.plantillaSeleccionada();
+    const pacienteActual = this.pacienteSeleccionado();
 
     try {
-
-      const archivo =
-        await this.plantillasService
-          .descargarPlantilla(
-            this.plantillaSeleccionada
-              .archivo_url_path
-          );
-
-      const arrayBuffer =
-        await archivo.arrayBuffer();
-
-      const extension =
-        this.tipoArchivo;
-
-      const nombreArchivo =
-        `documento-${Date.now()}`;
+      const archivo = await this.plantillasService.descargarPlantilla(plantillaActual.archivo_url_path);
+      const arrayBuffer = await archivo.arrayBuffer();
+      const extension = this.tipoArchivo;
+      const nombreArchivo = `documento-${Date.now()}`;
 
       if (extension === 'docx') {
-
-        const zip =
-          new PizZip(arrayBuffer);
-
-        const doc =
-          new Docxtemplater(zip, {
-
-            paragraphLoop: true,
-            linebreaks: true,
-
-            parser(tag: string) {
-
-              const limpio = tag
-                .trim()
-                .toLowerCase()
-                .replace(/\s+/g, '_');
-
-              return {
-
-                get(scope: any) {
-
-                  return scope[limpio];
-
-                }
-
-              };
-
-            }
-
-          });
+        const zip = new PizZip(arrayBuffer);
+        const doc = new Docxtemplater(zip, {
+          paragraphLoop: true,
+          linebreaks: true,
+          parser(tag: string) {
+            const limpio = tag.trim().toLowerCase().replace(/\s+/g, '_');
+            return { get(scope: any) { return scope[limpio]; } };
+          }
+        });
 
         const datosRender: any = {};
-
-        Object.keys(this.valoresCampos)
-          .forEach(key => {
-
-            const keyNormalizada = key
-              .trim()
-              .toLowerCase()
-              .replace(/\s+/g, '_');
-
-            datosRender[keyNormalizada] =
-              this.valoresCampos[key];
-
-          });
+        Object.keys(this.valoresCampos).forEach(key => {
+          const keyNormalizada = key.trim().toLowerCase().replace(/\s+/g, '_');
+          datosRender[keyNormalizada] = this.valoresCampos[key];
+        });
 
         doc.render(datosRender);
+        const output = doc.getZip().generate({
+          type: 'blob',
+          mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        });
 
-        const output =
-          doc.getZip().generate({
+        const ruta = await this.plantillasService.subirDocumentoGenerado(output, nombreArchivo, 'docx');
 
-            type: 'blob',
+        await this.plantillasService.registrarDocumento({
+          paciente_id: pacienteActual.id,
+          plantilla_id: plantillaActual.id,
+          contenido_final: this.valoresCampos,
+          archivo_final_path: ruta
+        });
 
-            mimeType:
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-
-          });
-
-        const ruta =
-          await this.plantillasService
-            .subirDocumentoGenerado(
-              output,
-              nombreArchivo,
-              'docx'
-            );
-
-        await this.plantillasService
-          .registrarDocumento({
-
-            paciente_id:
-              this.pacienteSeleccionado.id,
-
-            plantilla_id:
-              this.plantillaSeleccionada.id,
-
-            contenido_final:
-              this.valoresCampos,
-
-            archivo_final_path:
-              ruta
-          });
-
-        saveAs(
-          output,
-          `${nombreArchivo}.docx`
-        );
-      }
-
-
-      else if (
-        extension === 'xlsx' ||
-        extension === 'xls'
-      ) {
-
-        const workbook =
-          new ExcelJS.Workbook();
-
+        saveAs(output, `${nombreArchivo}.docx`);
+      } 
+      else if (extension === 'xlsx' || extension === 'xls') {
+        const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(arrayBuffer);
 
         workbook.worksheets.forEach(sheet => {
-
           sheet.eachRow(row => {
-
             row.eachCell(cell => {
-
-              if (
-                typeof cell.value === 'string'
-              ) {
-
-                let texto =
-                  cell.value;
-
-                Object.keys(
-                  this.valoresCampos
-                ).forEach(campo => {
-
-                  const valor =
-                    this.valoresCampos[campo] || '';
-
-                  const regex =
-                    new RegExp(
-                      `\\{\\s*${campo}\\s*\\}`,
-                      'gi'
-                    );
-
-                  texto =
-                    texto.replace(
-                      regex,
-                      valor
-                    );
+              if (typeof cell.value === 'string') {
+                let texto = cell.value;
+                Object.keys(this.valoresCampos).forEach(campo => {
+                  const valor = this.valoresCampos[campo] || '';
+                  const regex = new RegExp(`\\{\\s*${campo}\\s*\\}`, 'gi');
+                  texto = texto.replace(regex, valor);
                 });
-
                 cell.value = texto;
-
               }
-
             });
-
           });
-
         });
 
-        const buffer =
-          await workbook.xlsx.writeBuffer();
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
 
-        const blob =
-          new Blob(
-            [buffer],
-            {
-              type:
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            }
-          );
+        const ruta = await this.plantillasService.subirDocumentoGenerado(blob, nombreArchivo, 'xlsx');
 
-        const ruta =
-          await this.plantillasService
-            .subirDocumentoGenerado(
-              blob,
-              nombreArchivo,
-              'xlsx'
-            );
+        await this.plantillasService.registrarDocumento({
+          paciente_id: pacienteActual.id,
+          plantilla_id: plantillaActual.id,
+          contenido_final: this.valoresCampos,
+          archivo_final_path: ruta
+        });
 
-        await this.plantillasService
-          .registrarDocumento({
-
-            paciente_id:
-              this.pacienteSeleccionado.id,
-
-            plantilla_id:
-              this.plantillaSeleccionada.id,
-
-            contenido_final:
-              this.valoresCampos,
-
-            archivo_final_path:
-              ruta
-
-          });
-
-        saveAs(
-          blob,
-          `${nombreArchivo}.xlsx`
-        );
-
+        saveAs(blob, `${nombreArchivo}.xlsx`);
       }
 
       Swal.fire({
@@ -655,13 +332,11 @@ export class GenerarDocumentoComponent implements OnInit {
       });
 
     } catch (error) {
-
       console.error(error);
-
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Ha ocurrio un error generando el documento'
+        text: 'Ha ocurrido un error generando el documento'
       });
     }
   }

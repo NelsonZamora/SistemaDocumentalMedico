@@ -117,14 +117,14 @@
               acceso clinico y al citas.
             </small>
           </div>
-          <button class="btn btn-primary w-100 py-2 shadow-sm" [disabled]="creando" (click)="crearUsuario()">
-            @if (!creando) {
+          <button class="btn btn-primary w-100 py-2 shadow-sm" [disabled]="creando()" (click)="crearUsuario()">
+            @if (!creando()) {
             <span>
               <i class="bi bi-person-plus-fill me-2"></i>
               Crear usuario
             </span>
             }
-            @if (creando) {
+            @if (creando()) {
             <span>
               <span class="spinner-border spinner-border-sm me-2"></span>
               Creando usuario...
@@ -160,11 +160,11 @@
             </div>
             <span class="badge bg-light text-dark border px-3 py-2">
               Total:
-              {{ usuarios.length }}
+              {{ usuarios().length }}
               usuario(s)
             </span>
           </div>
-          @if (cargando) {
+          @if (cargando()) {
           <div class="text-center py-5">
             <div class="spinner-border text-primary"></div>
             <p class="text-muted mt-3 mb-0">
@@ -172,7 +172,7 @@
             </p>
           </div>
           }
-          @if (!cargando) {
+          @if (!cargando()) {
           <div class="table-responsive">
             <table class="table align-middle table-hover">
               <thead class="table-light">
@@ -184,7 +184,7 @@
               </thead>
               <tbody>
                 @for (
-                usuario of usuarios;
+                usuario of usuarios();
                 track usuario.id
                 ) {
                 <tr>

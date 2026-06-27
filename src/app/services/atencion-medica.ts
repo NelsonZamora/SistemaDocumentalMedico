@@ -90,6 +90,25 @@ export class AtencionMedicaService {
     return data;
   }
 
+  async getAtencionesMedicasbyId(pacienteId: string) {
+    const { data, error } = await this.supabase
+      .from('atenciones_medicas')
+      .select(`
+        *,
+        citas_medicas(
+          *,
+          pacientes(*),
+          perfiles(*)
+        ),
+        signos_vitales(*)
+      `)
+      .eq('paciente_id', pacienteId);
+
+    if (error) throw error;
+
+    return data;
+  }
+
   async getAtencionesMedicas() {
     const { data, error } = await this.supabase
       .from('atenciones_medicas')

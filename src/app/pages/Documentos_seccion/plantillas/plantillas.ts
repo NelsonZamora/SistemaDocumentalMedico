@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlantillasService } from '../../../services/plantillas';
@@ -16,19 +16,19 @@ import Swal from 'sweetalert2';
 })
 export class PlantillasComponent {
 
-  archivo: File | null = null;
-  camposDetectados: any[] = [];
-  totalCampos = 0;
-  nombreDocumento = '';
-  previewHtml: string = '';
+  camposDetectados = signal<any[]>([]);
+  totalCampos = signal<number>(0);
+  previewHtml = signal<string>('');
 
+  // Variables normales para flujos internos, binarios y formularios independientes
+  archivo: File | null = null;
+  nombreDocumento = '';
   columnasPorTabla: any = {};
   tablasDisponibles = ['pacientes'];
-
   previewHtmlOriginal: string = '';
-  valoresCampos: any = {}; 
+  valoresCampos: any = {};
 
-  constructor(private plantillasService: PlantillasService, private cd: ChangeDetectorRef) {}
+  constructor(private plantillasService: PlantillasService) {}
 
   onFileSelected(event: any) {
     this.archivo = event.target.files[0];
@@ -40,171 +40,117 @@ export class PlantillasComponent {
     const extension = this.archivo.name.split('.').pop()?.toLowerCase();
     const arrayBuffer = await this.archivo.arrayBuffer();
 
-      if (extension === 'docx') {
+    if (extension === 'docx') {
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      const texto = result.value;
 
-        const result = await mammoth.extractRawText({ arrayBuffer });
-        const texto = result.value;
+      const regex = /\{([^}]+)\}/g;
+      const matches = [...texto.matchAll(regex)];
 
-        const regex = /\{([^}]+)\}/g;
-        const matches = [...texto.matchAll(regex)];
+      const listadoCampos = [...new Set(matches.map(m => m[1].trim()))].map(c => ({
+        nombre: c.toLowerCase(),
+        tipo: 'text',
+        origen: 'libre',
+        tabla: '',
+        columna: ''
+      }));
 
-        this.camposDetectados = [...new Set(matches.map(m => m[1].trim()))]
-          .map(c => ({
-            nombre: c.toLowerCase(),
-            tipo: 'text',
-            origen: 'libre',
-            tabla: '',
-            columna: ''
-          }));
+      this.camposDetectados.set(listadoCampos);
+      this.totalCampos.set(listadoCampos.length);
 
-        this.totalCampos = this.camposDetectados.length;
+      const htmlResult = await mammoth.convertToHtml({ arrayBuffer });
+      let html = htmlResult.value;
 
-        const htmlResult = await mammoth.convertToHtml({ arrayBuffer });
+      html = html.replace(/\{([^}]+)\}/g, (_, campo) => {
+        const limpio = campo.trim().toLowerCase();
+        return `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`;
+      });
 
-        let html = htmlResult.value;
+      this.previewHtmlOriginal = html;
+      this.previewHtml.set(html);
+    } 
+    else if (extension === 'xlsx' || extension === 'xls') {
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        html = html.replace(/\{([^}]+)\}/g, (_, campo) => {
+      const sheetJson = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+      const regex = /\{([^}]+)\}/g;
+      const campos = new Set<string>();
 
-          const limpio = campo.trim().toLowerCase();
-
-          return `
-            <span class="campo-doc" data-campo="${limpio}">
-              {${campo}}
-            </span>
-          `;
-        });
-
-        this.previewHtmlOriginal = html;
-        this.previewHtml = html;
-      }
-
-      else if (extension === 'xlsx' || extension === 'xls') {
-
-        const workbook = XLSX.read(arrayBuffer, {
-          type: 'array'
-        });
-
-        const firstSheet =
-          workbook.Sheets[workbook.SheetNames[0]];
-
-
-        const sheetJson = XLSX.utils.sheet_to_json(
-          firstSheet,
-          { header: 1 }
-        );
-
-        const regex = /\{([^}]+)\}/g;
-
-        const campos = new Set<string>();
-
-        sheetJson.forEach((row: any) => {
-
-          row.forEach((cell: any) => {
-
-            if (!cell) return;
-
-            const texto = String(cell);
-
-            const matches = [...texto.matchAll(regex)];
-
-            matches.forEach(m => {
-              campos.add(
-                m[1].trim().toLowerCase()
-              );
-            });
+      sheetJson.forEach((row: any) => {
+        row.forEach((cell: any) => {
+          if (!cell) return;
+          const texto = String(cell);
+          const matches = [...texto.matchAll(regex)];
+          matches.forEach(m => {
+            campos.add(m[1].trim().toLowerCase());
           });
         });
+      });
 
-        this.camposDetectados = [...campos].map(c => ({
-          nombre: c,
-          tipo: 'text',
-          origen: 'libre',
-          tabla: '',
-          columna: ''
-        }));
+      const listadoExcel = [...campos].map(c => ({
+        nombre: c,
+        tipo: 'text',
+        origen: 'libre',
+        tabla: '',
+        columna: ''
+      }));
 
-        this.totalCampos =
-          this.camposDetectados.length;
+      this.camposDetectados.set(listadoExcel);
+      this.totalCampos.set(listadoExcel.length);
 
+      const range = XLSX.utils.decode_range(firstSheet['!ref']!);
+      let ultimaFila = range.e.r;
 
-        const range = XLSX.utils.decode_range(firstSheet['!ref']!);
-
-          let ultimaFila = range.e.r;
-
-          for (let R = range.e.r; R >= range.s.r; --R) {
-
-            let tieneContenido = false;
-
-            for (let C = range.s.c; C <= range.e.c; ++C) {
-
-              const cellAddress =
-                XLSX.utils.encode_cell({ r: R, c: C });
-
-              const cell = firstSheet[cellAddress];
-
-              if (cell && cell.v !== undefined && cell.v !== '') {
-                tieneContenido = true;
-                break;
-              }
-            }
-
-            if (tieneContenido) {
-              ultimaFila = R;
-              break;
-            }
+      for (let R = range.e.r; R >= range.s.r; --R) {
+        let tieneContenido = false;
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+          const cell = firstSheet[cellAddress];
+          if (cell && cell.v !== undefined && cell.v !== '') {
+            tieneContenido = true;
+            break;
           }
-
-          const nuevoRango = {
-            s: { r: range.s.r, c: range.s.c },
-            e: { r: ultimaFila, c: range.e.c }
-          };
-
-          firstSheet['!ref'] =
-            XLSX.utils.encode_range(nuevoRango);
-
-          let html = XLSX.utils.sheet_to_html(firstSheet);
-
-        html = html
-          .replace(/<caption>.*?<\/caption>/g, '')
-          .replace(/id="[^"]*"/g, '')
-          .replace(/class="[^"]*"/g, '');
-
-        html = html.replace(
-          /\{([^}]+)\}/g,
-          (_: string, campo: string) => {
-
-            const limpio =
-              campo.trim().toLowerCase();
-
-            return `
-              <span
-                class="campo-doc"
-                data-campo="${limpio}"
-              >
-                {${campo}}
-              </span>
-            `;
-          }
-        );
-
-        this.previewHtmlOriginal = html;
-        this.previewHtml = html;
+        }
+        if (tieneContenido) {
+          ultimaFila = R;
+          break;
+        }
       }
 
-    this.cd.detectChanges();
-}
+      const nuevoRango = {
+        s: { r: range.s.r, c: range.s.c },
+        e: { r: ultimaFila, c: range.e.c }
+      };
+
+      firstSheet['!ref'] = XLSX.utils.encode_range(nuevoRango);
+      let html = XLSX.utils.sheet_to_html(firstSheet);
+
+      html = html
+        .replace(/<caption>.*?<\/caption>/g, '')
+        .replace(/id="[^"]*"/g, '')
+        .replace(/class="[^"]*"/g, '');
+
+      html = html.replace(/\{([^}]+)\}/g, (_: string, campo: string) => {
+        const limpio = campo.trim().toLowerCase();
+        return `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`;
+      });
+
+      this.previewHtmlOriginal = html;
+      this.previewHtml.set(html);
+    }
+  }
 
   async subirPlantilla() {
     try { 
       if (!this.archivo) return;
-      const exten = this.archivo.name.split('.').pop()?.toLowerCase();
       const ruta = await this.plantillasService.subirDocumento(this.archivo);
 
       await this.plantillasService.guardarPlantilla({
         nombre: this.archivo.name,
         ruta_archivo: ruta,
-        campos: this.camposDetectados,
-        total_campos: this.totalCampos
+        campos: this.camposDetectados(), // Leemos el valor actual de la Signal ()
+        total_campos: this.totalCampos()  // Leemos el valor actual de la Signal ()
       });
 
       Swal.fire({
@@ -217,13 +163,13 @@ export class PlantillasComponent {
         timerProgressBar: true
       });
       
+      // Reseteamos de manera limpia todos los estados reactivos
       this.archivo = null;
-      this.camposDetectados = [];
-      this.totalCampos = 0;
-      this.previewHtml = '';
+      this.camposDetectados.set([]);
+      this.totalCampos.set(0);
+      this.previewHtml.set('');
       this.previewHtmlOriginal = '';
       this.valoresCampos = {};
-      this.cd.detectChanges();
     } catch (error: any) {
       Swal.fire({
         toast: true,
@@ -242,26 +188,18 @@ export class PlantillasComponent {
 
     Object.keys(this.valoresCampos).forEach(campo => {
       const valor = this.valoresCampos[campo];
+      const regex = new RegExp(`<span class="campo-doc" data-campo="${campo}">.*?<\\/span>`, 'g');
 
-      const regex = new RegExp(
-        `<span class="campo-doc" data-campo="${campo}">.*?<\\/span>`,
-        'g'
-      );
-
-      html = html.replace(
-        regex,
-        `<span class="campo-doc" data-campo="${campo}">
-          ${valor || `{${campo}}`}
-        </span>`
+      html = html.replace(regex, 
+        `<span class="campo-doc" data-campo="${campo}">${valor || `{${campo}}`}</span>`
       );
     });
 
-    this.previewHtml = html;
+    this.previewHtml.set(html);
   }
 
   async cargarColumnas(campo: any) {
     if (!campo.tabla) return;
-
     if (this.columnasPorTabla[campo.tabla]) return;
 
     try {

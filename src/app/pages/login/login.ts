@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal, NgZone } from '@angular/core';
 import { AuthService } from '../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -13,32 +12,36 @@ import { ChangeDetectorRef } from '@angular/core';
 })
 export class LoginComponent {
 
+  error = signal<string>('');
+  cargando = signal<boolean>(false);
+
   email = '';
   password = '';
-  error = '';
 
   constructor(
     private auth: AuthService,
     private router: Router,
-    private cd: ChangeDetectorRef
+    private zone: NgZone
   ) {}
 
   async onLogin() {
 
     try {
+
+      this.error.set('');
+      this.cargando.set(true);
       const result = await this.auth.login(this.email, this.password);
       const userId = result.user?.id;
       const profile = await this.auth.getUserProfile(userId!);
 
       localStorage.setItem('userRole', profile.rol);
 
-      
-
-      this.router.navigate(['/dashboard']);
-      this.cd.detectChanges();
+      this.zone.run(() => {
+        this.router.navigate(['/dashboard']);
+      });
     } catch (err: any) {
-      this.error = err.message;
+      this.error.set(err.message || 'Error al iniciar sesión');
+      this.cargando.set(false);
     }
-    this.cd.detectChanges();
   }
 }

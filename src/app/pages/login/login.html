@@ -36,12 +36,25 @@
                 placeholder="••••••••" required>
             </div>
           </div>
-          <div *ngIf="error" class="alert alert-danger py-2 small">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
-          </div>
+
+          @if(error()){
+            <div class="alert alert-danger py-2 small">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error() }}
+            </div>
+          }
+          
           <button class="btn btn-primary w-100 py-2 fw-bold shadow-sm mt-3" type="submit"
-            style="background-color: #17a2b8; border: none;">
-            Iniciar Sesion
+            style="background-color: #17a2b8; border: none;"
+            [disabled]="cargando()">
+            
+            @if (!cargando()) {
+              <span>Iniciar Sesión</span>
+            } @else {
+              <span>
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Autenticando...
+              </span>
+            }
           </button>
         </form>
       </div>

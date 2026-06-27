@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { AuthService } from '../../../services/auth';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../../services/dashboard';
@@ -16,21 +16,19 @@ export class DashboardComponent implements OnInit{
   constructor(
     private auth: AuthService,
     private router: Router,
-    private dashboardService: DashboardService,
-    private cd: ChangeDetectorRef
+    private dashboardService: DashboardService
   ) {}
 
-  pacientesHoy = 0;
-  documentosEmitidos = 0;
-  pendientes = 0;
-  proximaCita: any = null;
-  pacientesRecientes: any[] = [];
+  pacientesHoy = signal<number>(0);
+  documentosEmitidos = signal<number>(0);
+  pendientes = signal<number>(0);
+  proximaCita = signal<any>(null);
+  pacientesRecientes = signal<any[]>([]);
   
   role = localStorage.getItem('userRole');
 
   async ngOnInit() {
     await this.cargarDashboard();
-    this.cd.detectChanges();
   }
 
   async logout() {
@@ -39,26 +37,16 @@ export class DashboardComponent implements OnInit{
   }
 
   async cargarDashboard() {
+    try {
+      const resumen = await this.dashboardService.obtenerResumen();
 
-  const resumen =
-    await this.dashboardService
-      .obtenerResumen();
-
-
-  this.pacientesHoy =
-    resumen.pacientesHoy;
-
-  this.documentosEmitidos =
-    resumen.documentosEmitidos;
-
-  this.pendientes =
-    resumen.pendientes;
-
-  this.proximaCita =
-    resumen.proximaCita;
-
-  this.pacientesRecientes =
-    resumen.pacientesRecientes;
-  this.cd.detectChanges();
-}
+      this.pacientesHoy.set(resumen.pacientesHoy || 0);
+      this.documentosEmitidos.set(resumen.documentosEmitidos || 0);
+      this.pendientes.set(resumen.pendientes || 0);
+      this.proximaCita.set(resumen.proximaCita || null);
+      this.pacientesRecientes.set(resumen.pacientesRecientes || []);
+    } catch (error) {
+      console.error('Error al cargar métricas del dashboard:', error);
+    }
+  }
 }

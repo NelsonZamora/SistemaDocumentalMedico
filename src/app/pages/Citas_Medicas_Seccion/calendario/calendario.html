@@ -66,13 +66,13 @@
   </div>
   <div class="card border-0 shadow-sm">
     <div class="card-body p-2">
-      <full-calendar [options]="calendarOptions">
+      <full-calendar [options]="calendarOptions()">
       </full-calendar>
     </div>
   </div>
 </div>
 
-@if (mostrarModal) {
+@if (mostrarModal()) {
 <div class="modal fade show d-block" style="background: rgba(0,0,0,.55); backdrop-filter: blur(3px);">
 
   <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -85,11 +85,11 @@
           <div class="d-flex justify-content-between align-items-center">
 
             <h5 class="modal-title mb-0">
-              @if (!citaSeleccionada) {
+              @if (!citaSeleccionada()) {
               <i class="bi bi-calendar3 me-2"></i>
               Nueva Cita Médica
               }
-              @if (citaSeleccionada) {
+              @if (citaSeleccionada()) {
               <i class="bi bi-pencil-square"></i>
               Editar Cita Médica
               }
@@ -100,17 +100,17 @@
           <ul class="nav nav-tabs mt-3">
 
             <li class="nav-item">
-              <button class="nav-link" [class.active]="pestanaActiva === 'cita'"
-                [class.text-white]="pestanaActiva !== 'cita'" (click)="pestanaActiva='cita'">
+              <button class="nav-link" [class.active]="pestanaActiva() === 'cita'"
+                [class.text-white]="pestanaActiva() !== 'cita'" (click)="pestanaActiva.set('cita')">
                 <i class="bi bi-calendar3 me-2"></i>
                 Información de la cita
               </button>
             </li>
 
-            @if (citaSeleccionada) {
+            @if (citaSeleccionada()) {
             <li class="nav-item">
-              <button class="nav-link" [class.active]="pestanaActiva === 'signos'"
-                [class.text-white]="pestanaActiva !== 'signos'" (click)="abrirSignosVitales()">
+              <button class="nav-link" [class.active]="pestanaActiva() === 'signos'"
+                [class.text-white]="pestanaActiva() !== 'signos'" (click)="abrirSignosVitales()">
                 <i class="bi bi-heart-pulse me-2"></i>
                 Signos Vitales
               </button>
@@ -125,7 +125,7 @@
       </div>
 
       <div class="modal-body p-4">
-        @if(pestanaActiva === 'cita'){
+        @if(pestanaActiva() === 'cita'){
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label fw-semibold">
@@ -139,7 +139,7 @@
               </option>
 
               @for (
-              paciente of pacientes;
+              paciente of pacientes();
               track paciente.id
               ) {
               <option [value]="paciente.id">
@@ -160,7 +160,7 @@
                 Seleccione un médico
               </option>
               @for (
-              medico of medicos;
+              medico of medicos();
               track medico.id
               ) {
               <option [value]="medico.id">
@@ -206,8 +206,8 @@
         }
 
         @if (
-        pestanaActiva === 'signos' &&
-        citaSeleccionada
+        pestanaActiva() === 'signos' &&
+        citaSeleccionada()
         ) {
 
         <div class="row">
@@ -281,7 +281,7 @@
           Cancelar
         </button>
 
-        @if (pestanaActiva === 'cita') {
+        @if (pestanaActiva() === 'cita') {
 
         <button class="btn btn-primary" (click)="guardarCita()">
           <i class="bi bi-floppy me-2"></i>
@@ -290,7 +290,7 @@
 
         }
 
-        @if ( pestanaActiva === 'signos' && citaSeleccionada ) {
+        @if ( pestanaActiva() === 'signos' && citaSeleccionada() ) {
 
         <button class="btn btn-success" (click)="guardarSignosVitales()">
           <i class="bi bi-heart-pulse me-2"></i>

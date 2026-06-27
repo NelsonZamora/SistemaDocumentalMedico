@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlantillasService } from '../../../services/plantillas';
 import { ChangeDetectorRef } from '@angular/core';
@@ -18,18 +18,18 @@ import Swal from 'sweetalert2';
 })
 export class ListaPlantillasComponent implements OnInit {
 
-  plantillas: any[] = [];
-  cargando = true;
-  
-  modalEditar = false;
+  plantillas = signal<any[]>([]);
+  cargando = signal<boolean>(true);
+  modalEditar = signal<boolean>(false);
+  camposDetectados = signal<any[]>([]);
+  previewHtml = signal<string>('');
+
   plantillaEditando: any = null;
-  camposDetectados: any[] = [];
-  previewHtml = '';
-  previewHtmlOriginal = '';
   valoresCampos: any = {};
   columnasPorTabla: any = {};
   tablasDisponibles = ['pacientes'];
   camposOriginales: any[] = [];
+  previewHtmlOriginal = '';
 
   constructor(private plantillasService: PlantillasService, private cd: ChangeDetectorRef) {}
 
@@ -39,13 +39,10 @@ export class ListaPlantillasComponent implements OnInit {
 
   async cargarPlantillas() {
     try {
-
-      this.cargando = true;
-
-      this.plantillas = await this.plantillasService.getPlantillas();
-      this.cargando = false;
-      this.cd.detectChanges();
-
+      this.cargando.set(true);
+      const data = await this.plantillasService.getPlantillas();
+      this.plantillas.set(data);
+      this.cargando.set(false);
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -57,234 +54,100 @@ export class ListaPlantillasComponent implements OnInit {
   }
 
   async abrirEditar(plantilla: any) {
+    try {
+      this.plantillaEditando = plantilla;
 
-  try {
+      this.camposOriginales = structuredClone(plantilla.contenido_json.campos || []);
+      const copiaCampos = structuredClone(plantilla.contenido_json.campos || []);
+      this.camposDetectados.set(copiaCampos);
 
-    this.plantillaEditando = plantilla;
+      this.valoresCampos = {};
 
-    this.camposOriginales = structuredClone(
-      plantilla.contenido_json.campos || []
-    );
-
-    this.camposDetectados = structuredClone(
-      plantilla.contenido_json.campos || []
-    );
-
-    this.valoresCampos = {};
-
-    for (const campo of this.camposDetectados) {
-
-      if (
-        campo.origen === 'bd' &&
-        campo.tabla
-      ) {
-
-        await this.cargarColumnas(campo);
-
+      for (const campo of copiaCampos) {
+        if (campo.origen === 'bd' && campo.tabla) {
+          await this.cargarColumnas(campo);
+        }
       }
 
-    }
+      const archivo = await this.plantillasService.descargarPlantilla(plantilla.archivo_url_path);
+      const arrayBuffer = await archivo.arrayBuffer();
+      const extension = plantilla.archivo_url_path.split('.').pop()?.toLowerCase();
 
+      if (extension === 'docx') {
+        const htmlResult = await mammoth.convertToHtml({ arrayBuffer });
+        let html = htmlResult.value;
 
-    const archivo =
-      await this.plantillasService.descargarPlantilla(
-        plantilla.archivo_url_path
-      );
-
-    const arrayBuffer =
-      await archivo.arrayBuffer();
-
-    const extension =
-      plantilla.archivo_url_path
-        .split('.')
-        .pop()
-        ?.toLowerCase();
-
-
-    if (extension === 'docx') {
-
-      const htmlResult =
-        await mammoth.convertToHtml({
-          arrayBuffer
+        html = html.replace(/\{([^}]+)\}/g, (_: string, campo: string) => {
+          const limpio = campo.trim().toLowerCase();
+          return `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`;
         });
 
-      let html = htmlResult.value;
+        this.previewHtmlOriginal = html;
+      } 
+      else if (extension === 'xlsx' || extension === 'xls') {
+        const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const range = XLSX.utils.decode_range(firstSheet['!ref']!);
+        let ultimaFila = range.e.r;
 
-      html = html.replace(
-        /\{([^}]+)\}/g,
-        (_: string, campo: string) => {
-
-          const limpio =
-            campo.trim().toLowerCase();
-
-          return `
-            <span
-              class="campo-doc"
-              data-campo="${limpio}"
-            >
-              {${campo}}
-            </span>
-          `;
-        }
-      );
-
-      this.previewHtmlOriginal = html;
-
-    }
-
-    else if (
-      extension === 'xlsx' ||
-      extension === 'xls'
-    ) {
-
-      const workbook =
-        XLSX.read(arrayBuffer, {
-          type: 'array'
-        });
-
-      const firstSheet =
-        workbook.Sheets[
-          workbook.SheetNames[0]
-        ];
-
-      const range =
-        XLSX.utils.decode_range(
-          firstSheet['!ref']!
-        );
-
-      let ultimaFila =
-        range.e.r;
-
-      for (
-        let R = range.e.r;
-        R >= range.s.r;
-        --R
-      ) {
-
-        let tieneContenido = false;
-
-        for (
-          let C = range.s.c;
-          C <= range.e.c;
-          ++C
-        ) {
-
-          const addr =
-            XLSX.utils.encode_cell({
-              r: R,
-              c: C
-            });
-
-          const cell =
-            firstSheet[addr];
-
-          if (
-            cell &&
-            cell.v !== undefined &&
-            cell.v !== ''
-          ) {
-
-            tieneContenido = true;
+        for (let R = range.e.r; R >= range.s.r; --R) {
+          let tieneContenido = false;
+          for (let C = range.s.c; C <= range.e.c; ++C) {
+            const addr = XLSX.utils.encode_cell({ r: R, c: C });
+            const cell = firstSheet[addr];
+            if (cell && cell.v !== undefined && cell.v !== '') {
+              tieneContenido = true;
+              break;
+            }
+          }
+          if (tieneContenido) {
+            ultimaFila = R;
             break;
-
           }
-
         }
 
-        if (tieneContenido) {
-
-          ultimaFila = R;
-          break;
-
-        }
-
-      }
-
-      firstSheet['!ref'] =
-        XLSX.utils.encode_range({
-
-          s: {
-            r: range.s.r,
-            c: range.s.c
-          },
-
-          e: {
-            r: ultimaFila,
-            c: range.e.c
-          }
-
+        firstSheet['!ref'] = XLSX.utils.encode_range({
+          s: { r: range.s.r, c: range.s.c },
+          e: { r: ultimaFila, c: range.e.c }
         });
 
-      let html =
-        XLSX.utils.sheet_to_html(
-          firstSheet
-        );
-        
-      html = html
-        .replace(
-          /<caption>.*?<\/caption>/g,
-          ''
-        )
-        .replace(
-          /id="[^"]*"/g,
-          ''
-        )
-        .replace(
-          /class="[^"]*"/g,
-          ''
-        );
+        let html = XLSX.utils.sheet_to_html(firstSheet);
+        html = html
+          .replace(/<caption>.*?<\/caption>/g, '')
+          .replace(/id="[^"]*"/g, '')
+          .replace(/class="[^"]*"/g, '');
 
-      html = html.replace(
-        />([^<]*\{([^}]+)\}[^<]*)</g,
-        (match, contenido, campo) => {
-
-          const limpio =
-            campo.trim().toLowerCase();
-
-          const reemplazo =
-            contenido.replace(
-              `{${campo}}`,
-              `<span class="campo-doc" data-campo="${limpio}">
-                {${campo}}
-              </span>`
-            );
-
+        html = html.replace(/>([^<]*\{([^}]+)\}[^<]*)</g, (match, contenido, campo) => {
+          const limpio = campo.trim().toLowerCase();
+          const reemplazo = contenido.replace(`{${campo}}`,
+            `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`
+          );
           return `>${reemplazo}<`;
-        }
-      );
+        });
 
-      this.previewHtmlOriginal =
-        html;
+        this.previewHtmlOriginal = html;
+      }
 
+      this.previewHtml.set(this.previewHtmlOriginal);
+      this.modalEditar.set(true);
+
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Ha ocurrido un error cargando la vista previa'
+      });
     }
-
-    this.previewHtml =
-      this.previewHtmlOriginal;
-
-    this.modalEditar = true;
-
-    this.cd.detectChanges();
-
-  } catch (error) {
-
-    console.error(error);
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Ha ocurrido un error cargando la vista previa'
-    });
-
   }
-
-}
 
   async guardarCambios() {
     try {
       await this.plantillasService.actualizarPlantilla(
         this.plantillaEditando.id,
-        this.camposDetectados
+        this.camposDetectados() // Extraemos los datos reactivos
       );
+      
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -294,37 +157,29 @@ export class ListaPlantillasComponent implements OnInit {
         timer: 2500,
         timerProgressBar: true
       });
-      this.modalEditar = false;
+      
+      this.modalEditar.set(false);
       await this.cargarPlantillas();
-      this.cd.detectChanges();
     } catch (error) {
       console.error(error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Ocurrio un error al actualizar la plantilla'
+        text: 'Ocurrió un error al actualizar la plantilla'
       });
     }
   }
 
   async cargarColumnas(campo: any) {
-
     if (!campo.tabla) return;
-
     try {
-
-      const columnas =
-        await this.plantillasService.getColumnas(campo.tabla);
-
+      const columnas = await this.plantillasService.getColumnas(campo.tabla);
       this.columnasPorTabla = {
         ...this.columnasPorTabla,
         [campo.tabla]: columnas
       };
-      this.cd.detectChanges();
     } catch (error) {
-
       console.error(error);
-
     }
   }
 
@@ -332,35 +187,24 @@ export class ListaPlantillasComponent implements OnInit {
     let html = this.previewHtmlOriginal;
     Object.keys(this.valoresCampos).forEach(campo => {
       const valor = this.valoresCampos[campo];
-      const regex = new RegExp(
-        `<span class="campo-doc" data-campo="${campo}">.*?<\\/span>`,
-        'g'
-      );
-      html = html.replace(
-        regex,
-        `<span class="campo-doc" data-campo="${campo}">
-          ${valor || `{${campo}}`}
-        </span>`
+      const regex = new RegExp(`<span class="campo-doc" data-campo="${campo}">.*?<\\/span>`, 'g');
+      
+      html = html.replace(regex, 
+        `<span class="campo-doc" data-campo="${campo}">${valor || `{${campo}}`}</span>`
       );
     });
-    this.previewHtml = html;
-    this.cd.detectChanges();
+    this.previewHtml.set(html);
   }
 
   cambiarOrigen(campo: any) {
     if (campo.origen === 'libre') {
       campo.tabla = '';
       campo.columna = '';
-
     }
   }
 
   cerrarModal() {
-    this.camposDetectados = structuredClone(
-      this.camposOriginales
-    );
-    this.modalEditar = false;
-    this.cd.detectChanges();
+    this.camposDetectados.set(structuredClone(this.camposOriginales));
+    this.modalEditar.set(false);
   }
-
 }

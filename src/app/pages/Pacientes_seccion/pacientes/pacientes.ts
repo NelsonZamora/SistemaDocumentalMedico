@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PacientesService } from '../../../services/pacientes';
 import { AuthService } from '../../../services/auth';
-import { ChangeDetectorRef } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,25 +13,30 @@ import Swal from 'sweetalert2';
 })
 export class PacientesComponent implements OnInit {
 
-  pacientes: any[] = [];
-  mostrarModal = false;
-  cargando = false;
-  tablaPaciente = false;
-  mostrarModalExito = false;
+  pacientesOriginales: any[] = [];
+  pacientes = signal<any[]>([]); // Inicializa como un array vacío reactivo
+  documentosPaciente = signal<any[]>([]);
+  historialPaciente = signal<any[]>([]);
 
+  cargando = signal<boolean>(false);
+  tablaPaciente = signal<boolean>(false);
+  
+  mostrarModal = signal<boolean>(false);
+  mostrarModalVer = signal<boolean>(false);
+  mostrarModalEditar = signal<boolean>(false);
+  mostrarModalExito = signal<boolean>(false);
+
+
+  textoBusqueda: string = '';
   pestanaActiva = 'personal';
   antecedentes_personales = '';
   antecedentes_familiares = '';
   antecedentes_alergias = '';
   
   pacienteSeleccionado: any = null;
-  mostrarModalVer = false;
-  mostrarModalEditar = false;
   aceptaProteccionDatos = false;
 
   seccionActiva: string = 'datos';
-  documentosPaciente: any[] = [];
-  historialPaciente: any[] = [];
   vistaActual: 'datos' | 'documentos' | 'historial' = 'datos';
 
 
@@ -41,8 +45,7 @@ export class PacientesComponent implements OnInit {
 
   constructor(
     private pacientesService: PacientesService,
-    private authService: AuthService,
-    private cd: ChangeDetectorRef
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -50,12 +53,12 @@ export class PacientesComponent implements OnInit {
   }
 
   abrirModal() {
-    this.mostrarModal = true;
+    this.mostrarModal.set(true);
   }
 
   cerrarModal() {
     this.pestanaActiva = 'personal';
-    this.mostrarModal = false;
+    this.mostrarModal.set(false);
     this.form = {};
     this.archivo = null;
   }
@@ -101,29 +104,18 @@ export class PacientesComponent implements OnInit {
   }
 
   cerrarModalExito() {
-    this.mostrarModalExito = false;
+    this.mostrarModalExito.set(false);
   }
 
   cerrarModalVer() {
-    this.mostrarModalVer = false;
+    this.mostrarModalVer.set(false);
     this.pestanaActiva = 'personal';
   }
 
   cerrarModalEditar() {
-    this.mostrarModalEditar = false;
+    this.mostrarModalEditar.set(false);
   }
 
-  // calcularEdad(fecha: string): number {
-  //   if (!fecha) return 0;
-  //   const hoy = new Date();
-  //   const cumple = new Date(fecha);
-  //   let edad = hoy.getFullYear() - cumple.getFullYear();
-  //   const m = hoy.getMonth() - cumple.getMonth();
-  //   if (m < 0 || (m === 0 && hoy.getDate() < cumple.getDate())) {
-  //     edad--;
-  //   }
-  //   return edad;
-  // }
   calcularEdad(fecha: string) {
     if (!fecha) {
 
@@ -199,7 +191,7 @@ export class PacientesComponent implements OnInit {
         await this.pacientesService.crearPaciente(paciente);
     
         this.cerrarModal();
-        this.mostrarModalExito = true;
+        this.mostrarModalExito.set(true);
         this.cargarPacientes();
         Swal.fire({
           toast: true,
@@ -242,8 +234,7 @@ export class PacientesComponent implements OnInit {
       this.pacienteSeleccionado.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
     }
 
-    this.mostrarModalVer = true;
-    this.cd.detectChanges(); 
+    this.mostrarModalVer.set(true);
   }
 
   async editarPaciente(p: any) {
@@ -253,8 +244,7 @@ export class PacientesComponent implements OnInit {
       this.pacienteSeleccionado.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
     }
 
-    this.mostrarModalEditar = true;
-    this.cd.detectChanges();
+    this.mostrarModalEditar.set(true);
   }
 
     async actualizarPaciente() {
@@ -300,11 +290,12 @@ export class PacientesComponent implements OnInit {
     }
   }
 
-  pacientesOriginales: any[] = []; 
-  textoBusqueda: string = ''; 
 
   async cargarPacientes() {
-    this.cargando = true;
+    this.tablaPaciente.set(false);
+    this.cargando.set(true); // Modifica el valor de la Signal
+    this.pacientes.set([]);
+    
     try {
       const data = await this.pacientesService.getPacientes();
 
@@ -315,7 +306,9 @@ export class PacientesComponent implements OnInit {
       }
 
       this.pacientesOriginales = data;
-      this.pacientes = data;
+      
+      // Para asignar un nuevo valor a la lista de pacientes
+      this.pacientes.set(data);
       
       if (this.textoBusqueda) {
         this.filtrar();
@@ -324,46 +317,43 @@ export class PacientesComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
-    this.cargando = false;
-    this.tablaPaciente = true;  
-    this.cd.detectChanges();
+    
+    this.cargando.set(false);
+    this.tablaPaciente.set(true); // Actualiza la UI instantáneamente al salir del flujo async
   }
 
   filtrar() {
     const busqueda = this.textoBusqueda.toLowerCase().trim();
 
     if (!busqueda) {
-      this.pacientes = [...this.pacientesOriginales];
+      this.pacientes.set([...this.pacientesOriginales]);
     } else {
-      this.pacientes = this.pacientesOriginales.filter(p => 
+      const filtrados = this.pacientesOriginales.filter(p => 
         p.nombres?.toLowerCase().includes(busqueda) ||
         p.apellidos?.toLowerCase().includes(busqueda) ||
         p.cedula?.includes(busqueda)
       );
+      this.pacientes.set(filtrados); // Seteamos el resultado filtrado
     }
   }
 
   async verDocumentosPaciente() {
-    this.cd.detectChanges();
-    this.vistaActual = 'documentos';
+  this.vistaActual = 'documentos';
+  
+  this.documentosPaciente.set([]); 
+  const idPaciente = this.pacienteSeleccionado.id; 
 
-    this.documentosPaciente =
-      await this.pacientesService.getDocumentosPaciente(
-        this.pacienteSeleccionado.id
-      );
-      this.cd.detectChanges();
-  }
+  const docs = await this.pacientesService.getDocumentosPaciente(idPaciente);
+  this.documentosPaciente.set(docs);
+}
 
   async mostrarHistorialVisitas() {
-    this.cd.detectChanges();
-    this.vistaActual = 'historial';
+  this.vistaActual = 'historial';
+  
+  this.historialPaciente.set([]);
+  this.historialPaciente.set(await this.pacientesService.getPacienteHistorial(this.pacienteSeleccionado.id));
+}
 
-    this.historialPaciente =
-      await this.pacientesService.getPacienteHistorial(
-        this.pacienteSeleccionado.id
-      );
-      this.cd.detectChanges();
-  }
   mostrarDatosPaciente() {
     this.vistaActual = 'datos';
   }

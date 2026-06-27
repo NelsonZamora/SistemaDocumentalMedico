@@ -26,7 +26,6 @@ export const authGuard: CanActivateFn = async () => {
 
   const activo = await usuarios.isBlocked();
 
-  console.log("prueba cierre antes")
   if (!activo) {
     await auth.logout();
     await Swal.fire({
