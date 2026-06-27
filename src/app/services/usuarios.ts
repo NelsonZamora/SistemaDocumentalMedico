@@ -1,14 +1,5 @@
 import { Injectable } from '@angular/core';
-
-import {
-  createClient
-} from '@supabase/supabase-js';
-
-import { environment }
-from '../../environments/environment';
-
-import { AuthService }
-from './auth';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root'
@@ -16,73 +7,27 @@ from './auth';
 export class UsuariosService {
 
   private supabase;
-  private supabaseRegistro;
+
 
   constructor(
     private auth: AuthService
-  ) {
-    this.supabase =
-      this.auth.getClient();
-    this.supabaseRegistro =
-      createClient(
-        environment.supabaseUrl,
-        environment.supabaseKey,
-        {
-          auth: {
-            persistSession: false,
-            autoRefreshToken: false,
-            detectSessionInUrl: false,
-            storageKey:
-              `registro-${crypto.randomUUID()}`
-          }
-        }
-      );
-  }
+  ) { this.supabase = this.auth.getClient(); }
 
-  async crearUsuario(data: any) {
+  async crearUsuario(data:any){
     const {
-      data: authData,
-      error: authError
+      data: response,
+      error
     } =
-      await this.supabaseRegistro
-        .auth
-        .signUp({
+    await this.supabase.functions.invoke(
+      'crear-usuario',
+      { body: data }
+    );
 
-          email:
-            data.email,
-          password:
-            data.password
-        });
-    if (authError) {
-      throw authError;
+    if(error){
+      throw error;
     }
 
-    const userId =
-      authData.user?.id;
-    if (!userId) {
-      throw new Error(
-        'No se pudo crear usuario'
-      );
-    }
-
-    const {
-      error: perfilError
-    } =
-      await this.supabase
-        .from('perfiles')
-        .insert({
-          id:
-            userId,
-
-          nombre_completo:
-            data.nombre_completo,
-          rol:
-            data.rol
-        });
-
-    if (perfilError) {
-      throw perfilError;
-    }
+    return response;
   }
 
   async getUsuarios() {
@@ -153,24 +98,26 @@ export class UsuariosService {
     return data;
   }
 
-  async cerrarSesiones(
-    userId: string
-  ) {
+
+  async isBlocked(): Promise<boolean> {
 
     const {
-      data,
-      error
-    } = await this.supabase.functions.invoke(
-      'admin-signout',
-      {
-        body: {
-          userId
-        }
-      }
-    );
+      data: { user }
+    } = await this.supabase.auth.getUser();
 
-    if (error) throw error;
+    if (!user) return false;
+    
+    const { data, error } = await this.supabase
+        .from('perfiles')
+        .select('activo')
+        .eq('id', user.id)
+        .maybeSingle();
 
-    return data;
-  }
+    if (error) {
+      console.error(error);
+      return false;
+    }
+
+    return data?.activo ?? false;
+}
 }

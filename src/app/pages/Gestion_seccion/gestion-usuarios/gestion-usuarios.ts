@@ -120,31 +120,6 @@ implements OnInit {
 
   }
 
-  async cerrarSesiones(
-    usuario: any
-  ) {
-
-    await Swal.fire({
-
-        title:
-          'Deshabilitado',
-
-        text:
-          `Deshabilitado`,
-
-        icon: 'warning',
-
-        showCancelButton: true,
-
-        confirmButtonText:
-          'Sí, cerrar',
-
-        cancelButtonText:
-          'Cancelar'
-
-        });
-
-  }
 
   toggleMenu(id: string) {
 
