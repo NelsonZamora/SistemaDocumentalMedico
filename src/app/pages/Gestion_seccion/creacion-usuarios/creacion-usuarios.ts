@@ -35,37 +35,24 @@ implements OnInit {
   ) {}
 
   async ngOnInit() {
-
     await this.cargarUsuarios();
-
   }
 
   async cargarUsuarios() {
-
     try {
-
       this.cargando = true;
-
       this.usuarios =
         await this.usuariosService
           .getUsuarios();
-
       this.cargando = false;
       this.cd.detectChanges();
-
     } catch (error) {
-
       console.error(error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Ha ocurrido un error cargando los usuarios'
       });
-
-    } finally {
-
-      
-
     }
 
   }

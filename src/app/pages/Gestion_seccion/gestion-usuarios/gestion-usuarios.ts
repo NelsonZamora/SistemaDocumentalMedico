@@ -26,10 +26,8 @@ implements OnInit {
   ) {}
 
   async ngOnInit() {
-
     await this.cargarUsuarios();
     this.cd.detectChanges();
-
   }
 
   abrirAcciones(usuario: any) {

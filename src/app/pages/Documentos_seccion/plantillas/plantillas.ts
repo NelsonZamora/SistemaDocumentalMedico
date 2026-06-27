@@ -40,12 +40,6 @@ export class PlantillasComponent {
     const extension = this.archivo.name.split('.').pop()?.toLowerCase();
     const arrayBuffer = await this.archivo.arrayBuffer();
 
-    // let texto = '';
-    // let html = '';
-
-      // =========================
-      // WORD
-      // =========================
       if (extension === 'docx') {
 
         const result = await mammoth.extractRawText({ arrayBuffer });
@@ -83,9 +77,7 @@ export class PlantillasComponent {
         this.previewHtmlOriginal = html;
         this.previewHtml = html;
       }
-      // =========================
-      // EXCEL
-      // =========================
+
       else if (extension === 'xlsx' || extension === 'xls') {
 
         const workbook = XLSX.read(arrayBuffer, {
@@ -95,9 +87,6 @@ export class PlantillasComponent {
         const firstSheet =
           workbook.Sheets[workbook.SheetNames[0]];
 
-        // =========================
-        // EXTRAER CAMPOS
-        // =========================
 
         const sheetJson = XLSX.utils.sheet_to_json(
           firstSheet,
@@ -137,13 +126,9 @@ export class PlantillasComponent {
         this.totalCampos =
           this.camposDetectados.length;
 
-        // =========================
-        // HTML REAL DE EXCEL
-        // =========================
 
         const range = XLSX.utils.decode_range(firstSheet['!ref']!);
 
-          // Buscar última fila con contenido real
           let ultimaFila = range.e.r;
 
           for (let R = range.e.r; R >= range.s.r; --R) {
@@ -169,7 +154,6 @@ export class PlantillasComponent {
             }
           }
 
-          // Crear rango limpio
           const nuevoRango = {
             s: { r: range.s.r, c: range.s.c },
             e: { r: ultimaFila, c: range.e.c }
@@ -178,17 +162,12 @@ export class PlantillasComponent {
           firstSheet['!ref'] =
             XLSX.utils.encode_range(nuevoRango);
 
-          // Generar HTML limpio
           let html = XLSX.utils.sheet_to_html(firstSheet);
-
-        // Eliminar basura de SheetJS
 
         html = html
           .replace(/<caption>.*?<\/caption>/g, '')
           .replace(/id="[^"]*"/g, '')
           .replace(/class="[^"]*"/g, '');
-
-        // Reemplazar campos
 
         html = html.replace(
           /\{([^}]+)\}/g,
@@ -219,7 +198,6 @@ export class PlantillasComponent {
     try { 
       if (!this.archivo) return;
       const exten = this.archivo.name.split('.').pop()?.toLowerCase();
-      // const ruta = await this.plantillasService.subirDocumento(this.archivo, exten);
       const ruta = await this.plantillasService.subirDocumento(this.archivo);
 
       await this.plantillasService.guardarPlantilla({

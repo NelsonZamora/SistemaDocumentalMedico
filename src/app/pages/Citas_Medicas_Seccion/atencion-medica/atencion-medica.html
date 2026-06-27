@@ -2,14 +2,38 @@
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
             <h3 class="mb-1">
-                🩺 Atención Médica
+            <i class="bi bi-heart-pulse me-2"></i>  
+                Atención Médica
             </h3>
             <p class="text-muted mb-0">
                 Pacientes pendientes de atención.
             </p>
         </div>
     </div>
-
+    <div class="alert alert-info border-0 shadow-sm mb-4">
+        <h6 class="fw-bold mb-2">
+            <i class="bi bi-info-circle me-2"></i>
+            ¿Cómo utilizar esta sección?
+        </h6>
+        <ol class="mb-0 ps-3">
+            <li>
+                Seleccione una cita pendiente de la lista ubicada en el panel izquierdo.
+            </li>
+            <li>
+                Revise la información del paciente y los signos vitales registrados previamente por el personal de enfermería.
+            </li>
+            <li>
+                Complete los campos de atención médica: motivo de consulta, enfermedad actual, examen físico, diagnóstico, tratamiento y observaciones.
+            </li>
+            <li>
+                Presione <strong>Guardar Atención</strong> para registrar la consulta médica en el expediente clínico del paciente.
+            </li>
+            <li>
+                Si requiere emitir documentación clínica, utilice la opción
+                <strong>Generar Documento</strong> certificados u otros documentos disponibles.
+            </li>
+        </ol>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <div class="card shadow-sm border-0">
@@ -17,7 +41,8 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
 
                         <h5 class="mb-0">
-                            📋 Citas pendientes de hoy
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Citas pendientes de hoy
                         </h5>
 
                     </div>
@@ -41,7 +66,8 @@
                                     {{ cita.pacientes.apellidos }}
                                 </div>
                                 <small class="text-muted">
-                                    🕒 {{ cita.hora_inicio.substring(0,5) }}
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ cita.hora_inicio.substring(0,5) }}
                                 </small>
                             </div>
                             @if (citaSeleccionada?.id === cita.id) {
@@ -69,7 +95,8 @@
                     <div class="card shadow-sm border-0 mb-3">
                         <div class="card-header bg-primary text-white">
                             <h5 class="mb-0">
-                                👤 Información del Paciente
+                                <i class="bi bi-person-vcard me-2"></i>
+                                Información del Paciente
                             </h5>
                         </div>
                         <div class="card-body">
@@ -79,15 +106,18 @@
                             </h5>
                             <div class="small text-muted">
                                 <div class="mb-2">
-                                    📅 Fecha:
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    Fecha:
                                     <strong>{{ citaSeleccionada.fecha }}</strong>
                                 </div>
                                 <div class="mb-2">
-                                    🕒 Hora:
+                                    <i class="bi bi-clock me-1"></i>
+                                    Hora:
                                     <strong>{{ citaSeleccionada.hora_inicio }}</strong>
                                 </div>
                                 <div>
-                                    📝 Motivo:
+                                    <i class="bi bi-chat-left-text me-1"></i>
+                                    Motivo:
                                     <strong>{{ citaSeleccionada.motivo }}</strong>
                                 </div>
                             </div>
@@ -97,7 +127,8 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0">
-                                🩺 Signos Vitales
+                                <i class="bi bi-heart-pulse me-2"></i>
+                                Signos Vitales
                             </h5>
                         </div>
                         <div class="card-body">
@@ -164,7 +195,8 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-warning">
                             <h5 class="mb-0">
-                                👨‍⚕️ Registro de Atención Médica
+                                <i class="bi bi-person-badge me-2"></i>
+                                Registro de Atención Médica
                             </h5>
                         </div>
                         <div class="card-body">
@@ -208,10 +240,12 @@
                         <div class="card-footer bg-white">
                             <div class="d-flex justify-content-end gap-2">
                                 <button class="btn btn-primary" (click)="irAGenerarDocumento()">
-                                    📄 Generar Documento
+                                    <i class="bi bi-file-earmark-text me-2"></i>
+                                    Generar Documento
                                 </button>
                                 <button class="btn btn-success" (click)="guardarAtencion()">
-                                    💾 Guardar Atención
+                                    <i class="bi bi-floppy me-2"></i>
+                                    Guardar Atención
                                 </button>
                             </div>
                         </div>

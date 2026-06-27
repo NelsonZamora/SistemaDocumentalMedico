@@ -56,31 +56,6 @@ export class ListaPlantillasComponent implements OnInit {
     }
   }
 
-  // async abrirEditar(plantilla: any) {
-
-  //   this.plantillaEditando = plantilla;
-  //   this.camposOriginales = structuredClone(
-  //     plantilla.contenido_json.campos || []
-  //   );
-  //   this.camposDetectados = structuredClone(
-  //     plantilla.contenido_json.campos || []
-  //   );
-  //   this.previewHtml =
-  //     plantilla.preview_html || '';
-  //   this.previewHtmlOriginal =
-  //     plantilla.preview_html || '';
-  //   for (const campo of this.camposDetectados) {
-  //     if (
-  //       campo.origen === 'bd' &&
-  //       campo.tabla
-  //     ) {
-  //       await this.cargarColumnas(campo);
-  //     }
-  //   }
-  //   this.modalEditar = true;
-  //   this.cd.detectChanges();
-  // }
-
   async abrirEditar(plantilla: any) {
 
   try {
@@ -97,10 +72,6 @@ export class ListaPlantillasComponent implements OnInit {
 
     this.valoresCampos = {};
 
-    // =========================
-    // CARGAR COLUMNAS
-    // =========================
-
     for (const campo of this.camposDetectados) {
 
       if (
@@ -114,9 +85,6 @@ export class ListaPlantillasComponent implements OnInit {
 
     }
 
-    // =========================
-    // DESCARGAR PLANTILLA
-    // =========================
 
     const archivo =
       await this.plantillasService.descargarPlantilla(
@@ -132,9 +100,6 @@ export class ListaPlantillasComponent implements OnInit {
         .pop()
         ?.toLowerCase();
 
-    // =========================
-    // WORD
-    // =========================
 
     if (extension === 'docx') {
 
@@ -166,10 +131,6 @@ export class ListaPlantillasComponent implements OnInit {
       this.previewHtmlOriginal = html;
 
     }
-
-    // =========================
-    // EXCEL
-    // =========================
 
     else if (
       extension === 'xlsx' ||
