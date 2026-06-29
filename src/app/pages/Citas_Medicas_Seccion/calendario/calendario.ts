@@ -58,12 +58,11 @@ export class CalendarioComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      // right: 'dayGridMonth'
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     eventTimeFormat: {
       hour: '2-digit',
-      minute: '2-digit',  
+      minute: '2-digit',
       meridiem: false
     },
     buttonText: {
@@ -79,7 +78,7 @@ export class CalendarioComponent implements OnInit {
 
   constructor(
     private calendarioService: CalendarioService
-  ) {}
+  ) { }
 
   async ngOnInit() {
 
@@ -91,7 +90,7 @@ export class CalendarioComponent implements OnInit {
   async cargarCatalogos() {
     const pts = await this.calendarioService.getPacientes();
     const mds = await this.calendarioService.getMedicos();
-    
+
     this.pacientes.set(pts);
     this.medicos.set(mds);
   }
@@ -187,7 +186,7 @@ export class CalendarioComponent implements OnInit {
 
   onEventClick(info: any) {
     this.pestanaActiva.set('cita');
-    
+
     const extendedProps = info.event.extendedProps;
     this.citaSeleccionada.set(extendedProps);
 
@@ -235,7 +234,16 @@ export class CalendarioComponent implements OnInit {
 
       this.cerrarModal();
       await this.cargarCitas();
-      
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Exito en crear la cita medica',
+        text: 'La cita medica a sido creada y agendada exitosamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
     } catch (error) {
       console.error(error);
       Swal.fire({

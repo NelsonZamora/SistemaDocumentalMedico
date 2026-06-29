@@ -145,7 +145,7 @@ export class ListaPlantillasComponent implements OnInit {
     try {
       await this.plantillasService.actualizarPlantilla(
         this.plantillaEditando.id,
-        this.camposDetectados() // Extraemos los datos reactivos
+        this.camposDetectados()
       );
       
       Swal.fire({

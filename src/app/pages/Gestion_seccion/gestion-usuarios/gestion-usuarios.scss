@@ -1,0 +1,15 @@
+.tabla-usuarios{
+    table-layout: fixed;
+    width: 100%;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td{
+    vertical-align: middle;
+}
+
+.rol-badge{
+    width: 80px;
+    flex-shrink: 0;
+    font-size: .85rem;
+}

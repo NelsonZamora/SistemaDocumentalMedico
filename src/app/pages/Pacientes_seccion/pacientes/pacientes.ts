@@ -20,11 +20,10 @@ export class PacientesComponent implements OnInit {
 
   cargando = signal<boolean>(false);
   tablaPaciente = signal<boolean>(false);
-  
+
   mostrarModal = signal<boolean>(false);
   mostrarModalVer = signal<boolean>(false);
   mostrarModalEditar = signal<boolean>(false);
-  mostrarModalExito = signal<boolean>(false);
 
 
   textoBusqueda: string = '';
@@ -32,7 +31,7 @@ export class PacientesComponent implements OnInit {
   antecedentes_personales = '';
   antecedentes_familiares = '';
   antecedentes_alergias = '';
-  
+
   pacienteSeleccionado: any = null;
   aceptaProteccionDatos = false;
 
@@ -46,7 +45,7 @@ export class PacientesComponent implements OnInit {
   constructor(
     private pacientesService: PacientesService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.cargarPacientes();
@@ -101,10 +100,6 @@ export class PacientesComponent implements OnInit {
 
     this.archivo = file;
 
-  }
-
-  cerrarModalExito() {
-    this.mostrarModalExito.set(false);
   }
 
   cerrarModalVer() {
@@ -173,58 +168,57 @@ export class PacientesComponent implements OnInit {
   }
 
   async guardar() {
-      try {
-        let urlFoto = null;
-   
-        if (this.archivo) {
-          urlFoto = await this.pacientesService.subirFoto(this.archivo);
-        }
+    try {
+      let urlFoto = null;
 
-        const userId = await this.authService.getUserId();
-      
-        const paciente = {
-          ...this.form,
-          foto_perfil: urlFoto,
-          creado_por: userId
-        };
+      if (this.archivo) {
+        urlFoto = await this.pacientesService.subirFoto(this.archivo);
+      }
 
-        await this.pacientesService.crearPaciente(paciente);
-    
-        this.cerrarModal();
-        this.mostrarModalExito.set(true);
-        this.cargarPacientes();
+      const userId = await this.authService.getUserId();
+
+      const paciente = {
+        ...this.form,
+        foto_perfil: urlFoto,
+        creado_por: userId
+      };
+
+      await this.pacientesService.crearPaciente(paciente);
+
+      this.cerrarModal();
+      this.cargarPacientes();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Paciente creado correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
+
+    } catch (error: any) {
+      if (error.message.includes('pacientes_cedula_key')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'La cedula ya se encuentra ingresada en un paciente'
+        });
+      } else {
         Swal.fire({
           toast: true,
           position: 'top-end',
-          icon: 'success',
-          title: 'Paciente creado correctamente',
+          icon: 'error',
+          title: error.message,
           showConfirmButton: false,
-          timer: 2500,
+          timer: 4000,
           timerProgressBar: true
         });
-    
-      } catch (error: any) {
-        if (error.message.includes('pacientes_cedula_key')) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'La cedula ya se encuentra ingresada en un paciente'
-          });
-        } else {
-          Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'error',
-            title: error.message,
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true
-          });
-        }
       }
-
-      
     }
+
+
+  }
 
   async verPaciente(p: any) {
     this.vistaActual = 'datos'
@@ -247,7 +241,7 @@ export class PacientesComponent implements OnInit {
     this.mostrarModalEditar.set(true);
   }
 
-    async actualizarPaciente() {
+  async actualizarPaciente() {
     try {
       let urlFoto = this.pacienteSeleccionado.foto_perfil;
 
@@ -274,18 +268,25 @@ export class PacientesComponent implements OnInit {
         }
       );
 
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Exito en la actualizacion',
+        text: 'Los datos del paciente han sido actualizados correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
+
       this.cerrarModalEditar();
       this.cargarPacientes();
 
     } catch (error: any) {
       Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'error',
-        title: error.message,
-        showConfirmButton: false,
-        timer: 4000,
-        timerProgressBar: true
+        icon: "error",
+        title: "Error en la actualizacion",
+        text: "Ha ocurrido un error al intentar actualizar los datos del paciente"
       });
     }
   }
@@ -295,7 +296,7 @@ export class PacientesComponent implements OnInit {
     this.tablaPaciente.set(false);
     this.cargando.set(true); // Modifica el valor de la Signal
     this.pacientes.set([]);
-    
+
     try {
       const data = await this.pacientesService.getPacientes();
 
@@ -306,10 +307,10 @@ export class PacientesComponent implements OnInit {
       }
 
       this.pacientesOriginales = data;
-      
+
       // Para asignar un nuevo valor a la lista de pacientes
       this.pacientes.set(data);
-      
+
       if (this.textoBusqueda) {
         this.filtrar();
       }
@@ -317,7 +318,7 @@ export class PacientesComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
-    
+
     this.cargando.set(false);
     this.tablaPaciente.set(true); // Actualiza la UI instantáneamente al salir del flujo async
   }
@@ -328,7 +329,7 @@ export class PacientesComponent implements OnInit {
     if (!busqueda) {
       this.pacientes.set([...this.pacientesOriginales]);
     } else {
-      const filtrados = this.pacientesOriginales.filter(p => 
+      const filtrados = this.pacientesOriginales.filter(p =>
         p.nombres?.toLowerCase().includes(busqueda) ||
         p.apellidos?.toLowerCase().includes(busqueda) ||
         p.cedula?.includes(busqueda)
@@ -338,21 +339,21 @@ export class PacientesComponent implements OnInit {
   }
 
   async verDocumentosPaciente() {
-  this.vistaActual = 'documentos';
-  
-  this.documentosPaciente.set([]); 
-  const idPaciente = this.pacienteSeleccionado.id; 
+    this.vistaActual = 'documentos';
 
-  const docs = await this.pacientesService.getDocumentosPaciente(idPaciente);
-  this.documentosPaciente.set(docs);
-}
+    this.documentosPaciente.set([]);
+    const idPaciente = this.pacienteSeleccionado.id;
+
+    const docs = await this.pacientesService.getDocumentosPaciente(idPaciente);
+    this.documentosPaciente.set(docs);
+  }
 
   async mostrarHistorialVisitas() {
-  this.vistaActual = 'historial';
-  
-  this.historialPaciente.set([]);
-  this.historialPaciente.set(await this.pacientesService.getPacienteHistorial(this.pacienteSeleccionado.id));
-}
+    this.vistaActual = 'historial';
+
+    this.historialPaciente.set([]);
+    this.historialPaciente.set(await this.pacientesService.getPacienteHistorial(this.pacienteSeleccionado.id));
+  }
 
   mostrarDatosPaciente() {
     this.vistaActual = 'datos';
