@@ -59,7 +59,7 @@
         <input type="text" class="form-control border-start-0 ps-0"
           placeholder="Buscar por nombre, apellido o cédula..." [(ngModel)]="textoBusqueda" (input)="filtrar()">
         @if (textoBusqueda) {
-        <button class="btn btn-outline-secondary border-start-0" (click)="textoBusqueda = ''; filtrar()">
+        <button class="btn btn-secondary border-start-0" (click)="textoBusqueda = ''; filtrar()">
           <i class="bi bi-x-lg"></i>
         </button>
         }
@@ -203,7 +203,7 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-outline-secondary w-100 mt-4" (click)="cerrarModal()">
+          <button class="btn btn-secondary w-100 mt-4" (click)="cerrarModal()">
             <i class="bi bi-x-lg me-2"></i> Cancelar
           </button>
         </div>
@@ -374,7 +374,7 @@
               Documentos
             </div>
           </div>
-          <button class="btn btn-outline-secondary w-100 mt-5" (click)="cerrarModalVer()">
+          <button class="btn btn-secondary w-100 mt-5" (click)="cerrarModalVer()">
             <i class="bi bi-arrow-left me-2"></i>
             Salir
           </button>
@@ -599,10 +599,6 @@
                 Historial de documentos generados
               </p>
             </div>
-            <span class="badge bg-primary">
-              {{ documentosPaciente().length }}
-              documento(s)
-            </span>
           </div>
           @if (documentosPaciente().length > 0) {
           <div class="table-responsive">
@@ -646,7 +642,7 @@
                     @if (
                     documento.archivo_final_path
                     ) {
-                    <button class="btn btn-outline-primary btn-sm">
+                    <button class="btn btn-primary btn-sm">
                       <i class="bi bi-download me-1"></i>
                       Descargar
                     </button>
@@ -701,7 +697,7 @@
             <i class="bi bi-info-circle me-2"></i>
             Edite los campos necesarios y presione "Guardar cambios" para actualizar.
           </div>
-          <button class="btn btn-outline-secondary w-100 mt-4" (click)="cerrarModalEditar()">
+          <button class="btn btn-secondary w-100 mt-4" (click)="cerrarModalEditar()">
             Cancelar
           </button>
         </div>
