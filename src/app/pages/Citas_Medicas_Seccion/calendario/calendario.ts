@@ -7,6 +7,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarOptions } from '@fullcalendar/core';
+import timeGridPlugin from '@fullcalendar/timegrid';
 
 import { CalendarioService } from '../../../services/calendario';
 
@@ -46,7 +47,7 @@ export class CalendarioComponent implements OnInit {
   motivo = '';
 
   calendarOptions = signal<CalendarOptions>({
-    plugins: [dayGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
     initialView: 'dayGridMonth',
     locale: 'es',
     height: 'auto',
@@ -57,6 +58,7 @@ export class CalendarioComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
+      // right: 'dayGridMonth'
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     eventTimeFormat: {

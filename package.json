@@ -21,6 +21,7 @@
     "@fullcalendar/core": "^6.1.20",
     "@fullcalendar/daygrid": "^6.1.20",
     "@fullcalendar/interaction": "^6.1.20",
+    "@fullcalendar/timegrid": "^6.1.21",
     "@supabase/supabase-js": "^2.105.1",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",

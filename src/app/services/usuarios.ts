@@ -13,17 +13,17 @@ export class UsuariosService {
     private auth: AuthService
   ) { this.supabase = this.auth.getClient(); }
 
-  async crearUsuario(data:any){
+  async crearUsuario(data: any) {
     const {
       data: response,
       error
     } =
-    await this.supabase.functions.invoke(
-      'crear-usuario',
-      { body: data }
-    );
+      await this.supabase.functions.invoke(
+        'crear-usuario',
+        { body: data }
+      );
 
-    if(error){
+    if (error) {
       throw error;
     }
 
@@ -38,25 +38,25 @@ export class UsuariosService {
       await this.supabase
         .from('perfiles')
         .select('*')
-        ;
+      ;
     if (error) {
       throw error;
     }
     return data;
   }
 
-    async cambiarEstado(
+  async cambiarEstado(
     id: string,
     activo: boolean
   ) {
 
     const { error } =
       await this.supabase
-      .from('perfiles')
-      .update({
-        activo
-      })
-      .eq('id', id);
+        .from('perfiles')
+        .update({
+          activo
+        })
+        .eq('id', id);
 
     if (error) throw error;
   }
@@ -68,12 +68,12 @@ export class UsuariosService {
 
     const { error } =
       await this.supabase
-      .from('perfiles')
-      .update({
-        rol
-      })
-      .eq('id', id);
-      
+        .from('perfiles')
+        .update({
+          rol
+        })
+        .eq('id', id);
+
     if (error) throw error;
   }
 
@@ -106,12 +106,12 @@ export class UsuariosService {
     } = await this.supabase.auth.getUser();
 
     if (!user) return false;
-    
+
     const { data, error } = await this.supabase
-        .from('perfiles')
-        .select('activo')
-        .eq('id', user.id)
-        .maybeSingle();
+      .from('perfiles')
+      .select('activo')
+      .eq('id', user.id)
+      .maybeSingle();
 
     if (error) {
       console.error(error);
@@ -119,5 +119,32 @@ export class UsuariosService {
     }
 
     return data?.activo ?? false;
-}
+  }
+
+  async obtenerAuditoriaById(usuarioId: string) {
+
+    const { data, error } = await this.supabase
+      .from('auditoria')
+      .select('*')
+      .order('fecha_hora', { ascending: false })
+      .eq('usuario_id', usuarioId);
+
+    if (error) throw error;
+
+    return data ?? [];
+
+  }
+
+    async obtenerAuditoria() {
+
+    const { data, error } = await this.supabase
+      .from('auditoria')
+      .select('*')
+      .order('fecha_hora', { ascending: false });
+
+    if (error) throw error;
+
+    return data ?? [];
+
+  }
 }
