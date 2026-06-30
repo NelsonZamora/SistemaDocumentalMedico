@@ -1,53 +1,258 @@
-.preview-container {
-  max-height: 700px;
-  overflow: auto;
-  background: #e9ecef;
-  padding: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+// ==========================================================================
+// Variables del Sistema Documental Médico
+// ==========================================================================
+$primario: #2BB7C9;
+$primario-oscuro: #16374A;
+$secundario: #66D1DE;
+$secundario-oscuro: #1595A6;
+$secundario-claro: #E6F7FA;
+$btn-primario-hover: #239EAE;
+$btn-exito: #2DBE60;
+$fondo-principal: #F5FAFC;
+$fondo-secundario: #FFFFFF;
+$fondo-terciario: #EDF6F8;
+$borders: #E1E8EB;
+$texto-principal: #16374A;
+$texto-secundario: #4A6572;
+$texto-terciario: #7A8D99;
+$texto-claro: #FFFFFF;
+$texto-discreto: #A6B6BD;
+
+// ==========================================================================
+// Estructuras Base de la Página
+// ==========================================================================
+.generation-page {
+  background: $fondo-principal;
+  min-height: 100vh;
 }
 
-/* =========================
-   CONTENIDO DOCUMENTO
-========================= */
+.page-title {
+  color: $primario-oscuro;
+  font-weight: 700;
+  margin-bottom: .3rem;
+}
+
+.page-subtitle {
+  color: $texto-secundario;
+  font-size: 0.95rem;
+}
+
+.dashboard-card {
+  background: $fondo-secundario;
+  border-radius: 18px;
+  border: 1px solid $borders;
+  box-shadow: 0 8px 20px rgba(22, 55, 74, .06);
+}
+
+.custom-block-title {
+  color: $primario-oscuro;
+  font-weight: 600;
+}
+
+.text-accent {
+  color: $primario;
+}
+
+// Botones
+.btn-action-success {
+  background-color: $btn-exito;
+  color: $texto-claro;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #24a852;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(45, 190, 96, 0.3) !important;
+  }
+}
+
+// ==========================================================================
+// Tarjeta de Instrucciones (.info-card)
+// ==========================================================================
+.info-card {
+  background: $secundario-claro;
+  border-color: transparent;
+
+  .help-icon-lg {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: $fondo-secundario;
+    color: $primario;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    color: $primario-oscuro;
+    font-weight: 600;
+  }
+
+  .step-list {
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: $primario-oscuro;
+      font-weight: 500;
+
+      .step-number {
+        background: $primario;
+        color: white;
+        width: 20px;
+        height: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// ==========================================================================
+// Formularios y Selectores
+// ==========================================================================
+.custom-form-label {
+  color: $texto-secundario;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.custom-form-subtitle {
+  font-size: 0.8rem;
+  color: $texto-terciario;
+}
+
+.custom-input,
+.custom-select {
+  background-color: $fondo-principal;
+  border: 1px solid $borders;
+  color: $primario-oscuro;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+
+  &:focus {
+    background-color: $fondo-secundario;
+    border-color: $primario;
+    box-shadow: 0 0 0 3px rgba(43, 183, 201, 0.15);
+    outline: none;
+  }
+}
+
+.input-readonly {
+  background-color: $fondo-terciario;
+  color: $texto-secundario;
+  cursor: not-allowed;
+  border-color: $borders;
+
+  &:focus {
+    box-shadow: none;
+    border-color: $borders;
+  }
+}
+
+// Alert de info dentro del formulario
+.info-edit-banner {
+  background: rgba(43, 183, 201, 0.1);
+  border: none;
+  border-left: 4px solid $primario;
+  border-radius: 10px;
+  color: $primario-oscuro;
+}
+
+// ==========================================================================
+// Estados Vacíos y Badges
+// ==========================================================================
+.empty-state-box {
+  background: rgba(22, 55, 74, 0.02);
+  border: 2px dashed $borders;
+  box-shadow: none;
+
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: $fondo-terciario;
+    color: $texto-discreto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+}
+
+.status-live-badge {
+  background-color: $fondo-terciario;
+  color: $primario-oscuro;
+  border: 1px solid rgba(43, 183, 201, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.blink-anim {
+  animation: blink 2s infinite ease-in-out;
+}
+
+.spinner-border.text-accent {
+  color: $primario;
+}
+
+// ==========================================================================
+// Contenedor de Vista Previa (Consistente con Plantillas)
+// ==========================================================================
+.preview-container {
+  max-height: 600px;
+  overflow: auto;
+  background: #E1E8EB;
+  padding: 20px;
+  border: 1px solid $borders;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
+}
 
 .documento {
-
-  background: white;
-
-  // width: fit-content;
-  // min-width: 800px;
-  // max-width: none;
-
+  background: $fondo-secundario;
   width: auto;
   max-width: 100%;
-
   transform-origin: top center;
-
   zoom: 0.85;
-
   margin: auto;
-
-  padding: 30px;
-
-  border-radius: 8px;
-
-  box-shadow: 0 0 15px rgba(0,0,0,0.12);
-
-  line-height: 1.5;
-
+  padding: 35px;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(22, 55, 74, 0.08);
+  line-height: 1.6;
   position: relative;
-
-  /* 🔥 SOLO VISTA PREVIA */
   pointer-events: none;
   user-select: none;
-
-  /* =========================
-     IMÁGENES WORD
-  ========================= */
+  color: #333333;
 
   ::ng-deep img {
     max-width: 100% !important;
@@ -55,101 +260,81 @@
     display: inline-block;
   }
 
-  /* =========================
-     TABLAS EXCEL
-  ========================= */
-
   ::ng-deep table {
-
     border-collapse: collapse !important;
-
     width: 100% !important;
-
-    background: white;
-
+    background: $fondo-secundario;
     table-layout: auto;
-
     margin: auto;
   }
 
   ::ng-deep td,
   ::ng-deep th {
-
-    border: 1px solid #000 !important;
-
-    padding: 6px 8px !important;
-
+    border: 1px solid #2c3e50 !important;
+    padding: 8px 10px !important;
     vertical-align: middle;
-
-    font-size: 14px;
-
+    font-size: 13px;
     white-space: pre-wrap;
-
-    min-width: 50px;
-
-    height: 32px;
+    min-width: 45px;
   }
 
-  /* Mantener estilos inline del Excel */
   ::ng-deep td[style],
   ::ng-deep th[style] {
     white-space: pre-wrap;
   }
 
-  /* =========================
-     PÁRRAFOS WORD
-  ========================= */
-
   ::ng-deep p {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   ::ng-deep h1,
   ::ng-deep h2,
-  ::ng-deep h3,
-  ::ng-deep h4,
-  ::ng-deep h5,
-  ::ng-deep h6 {
-    margin-bottom: 12px;
+  ::ng-deep h3 {
+    margin-bottom: 14px;
     font-weight: 700;
+    color: $primario-oscuro;
   }
 }
 
-/* =========================
-   CAMPOS DINÁMICOS
-========================= */
-
-.campo-doc {
-
-  background: #fff3cd;
-
-  color: #856404;
-
-  padding: 2px 6px;
-
-  border-radius: 5px;
-
+// Etiquetas Dinámicas en Vista Previa
+::ng-deep .campo-doc {
+  background: rgba(43, 183, 201, 0.15) !important;
+  color: $primario-oscuro !important;
+  padding: 1px 5px;
+  border-radius: 4px;
   font-weight: 700;
-
-  border: 1px dashed #ffc107;
-
+  border: 1px dashed $primario !important;
   display: inline-block;
 }
 
-/* =========================
-   SCROLL BONITO
-========================= */
-
+// Scrollbars Modernizados
 .preview-container::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 .preview-container::-webkit-scrollbar-thumb {
-  background: #adb5bd;
+  background: $texto-discreto;
   border-radius: 10px;
 }
 
 .preview-container::-webkit-scrollbar-track {
-  background: #dee2e6;
+  background: $fondo-terciario;
+}
+
+// Animaciones
+.tab-animation {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

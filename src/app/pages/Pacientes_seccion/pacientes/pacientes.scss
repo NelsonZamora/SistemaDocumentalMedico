@@ -1,8 +1,710 @@
-table tbody tr {
-  transition: all 0.2s ease;
+// ==========================================================================
+// 1. PALETA CORPORATIVA Y VARIABLES DEL SISTEMA MÉDICO
+// ==========================================================================
+$primario: #2BB7C9;
+$primario-oscuro: #16374A;
+$secundario: #66D1DE;
+$secundario-oscuro: #1595A6;
+$secundario-claro: #E6F7FA;
+$btn-primario-hover: #239EAE;
+$btn-secundario-hover: #102D3B;
+$btn-exito: #2DBE60;
+$btn-danger: #E74C3C;
+$fondo-principal: #F5FAFC;
+$fondo-secundario: #FFFFFF;
+$fondo-terciario: #EDF6F8;
+$borders: #E1E8EB;
+$texto-principal: #16374A;
+$texto-secundario: #4A6572;
+$texto-terciario: #7A8D99;
+$texto-claro: #FFFFFF;
+$texto-discreto: #A6B6BD;
+// ==========================================================================
+// 2. BACKDROP, CONTENEDOR GENERAL Y ANIMACIONES DEL MODAL
+// ==========================================================================
+.custom-modal-backdrop {
+  background: rgba(22, 55, 74, 0.55); 
+  backdrop-filter: blur(4px);
 }
-
-table tbody tr:hover {
-  background-color: rgba(0, 123, 255, 0.1); // azul suave
-  transform: scale(1.01);
+.custom-modal-content {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(22, 55, 74, 0.2);
+  border: none;
+}
+.tab-animation {
+  animation: fadeIn 0.28s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+// ==========================================================================
+// 3. SIDEBAR IZQUIERDO (COMÚN PARA CREAR, VER Y EDITAR)
+// ==========================================================================
+.modal-sidebar-menu {
+  background: $primario-oscuro;
+  color: $texto-claro;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  .contenedor-foto {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(255, 255, 255, 0.15);
+    background: $fondo-principal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    .text-accent {
+      font-size: 3rem;
+      color: $primario;
+    }
+  }
+  .text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-weight: 600;
+  }
+  // File Uploader (Modal Crear / Editar)
+  .upload-box {
+    .data-label {
+      color: $secundario;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: block;
+    }
+    .form-control-sm {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: $texto-claro;
+      &:focus {
+        border-color: $primario;
+        box-shadow: none;
+      }
+    }
+    .upload-specs {
+      color: $texto-discreto;
+      font-size: 0.75rem;
+      margin-bottom: 2px;
+    }
+  }
+  // Badges de Estado e Información
+  .custom-status-badge {
+    background-color: rgba(45, 190, 96, 0.15);
+    color: #58d68d;
+    border: 1px solid rgba(45, 190, 96, 0.3);
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-weight: 500;
+    font-size: 0.78rem;
+    .small-dot {
+      font-size: 0.55rem;
+      vertical-align: middle;
+    }
+  }
+  // Banner LOPD (Modal Crear) & Banner Informativo (Modal Editar)
+  .data-protection-banner, .info-edit-banner {
+    background: rgba(43, 183, 201, 0.12);
+    border: none;
+    border-left: 4px solid $primario;
+    border-radius: 12px;
+    text-align: left;
+    padding: 1rem;
+    .text-banner-content, & {
+      color: $secundario-claro;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      i, .text-accent { color: $primario; font-size: 1rem; }
+    }
+    .custom-checkbox {
+      width: 1.6rem;
+      height: 1.6rem;
+      cursor: pointer;
+      border-color: $primario;
+      background-color: transparent;
+      &:checked {
+        background-color: $primario;
+        border-color: $primario;
+      }
+    }
+    .mt-0-5 { margin-top: 2px; }
+  }
+  // Lista de Navegación Vertical (Modal Ver Detalles)
+  .custom-sidebar-list {
+    background: transparent;
+    margin-top: 1.5rem;
+    .list-group-item {
+      background: transparent;
+      color: $texto-discreto;
+      border: none;
+      font-weight: 500;
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+      border-radius: 10px !important;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      i {
+        font-size: 1.1rem;
+        transition: color 0.2s;
+      }
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: $texto-claro;
+        i { color: $primario; }
+      }
+      &.menu-item-active {
+        background-color: $primario !important;
+        color: $primario-oscuro !important;
+        font-weight: 600;
+        i { color: $primario-oscuro !important; }
+      }
+    }
+  }
+}
+// ==========================================================================
+// 4. CUERPO DEL FORMULARIO Y CONTENIDO DINÁMICO (LADO DERECHO)
+// ==========================================================================
+.bg-white-content {
+  background-color: $fondo-secundario;
+  .header-edit-container {
+    border-color: $fondo-terciario !important;
+  }
+  // Títulos superiores de sección
+  .view-title {
+    color: $primario-oscuro;
+    font-weight: 700;
+    i { color: $primario; }
+  }
+  .view-subtitle {
+    color: $texto-terciario;
+    font-size: 0.85rem;
+  }
+  // Badge único del ID del paciente
+  .custom-id-badge {
+    background-color: $fondo-terciario;
+    color: $secundario-oscuro;
+    border: 1px solid rgba(43, 183, 201, 0.2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  // Pestañas Horizontales de Navegación (Tabs)
+  .custom-nav-tabs {
+    border-bottom: 2px solid $fondo-terciario;
+    .nav-link {
+      color: $texto-secundario;
+      font-weight: 600;
+      border: none;
+      padding: 10px 20px;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      transition: 0.2s;
+      i { color: $texto-discreto; }
+      &:hover {
+        color: $primario;
+        border-bottom-color: $secundario-claro;
+      }
+      &.active {
+        color: $primario;
+        border-bottom-color: $primario;
+        background: transparent;
+        i { color: $primario; }
+      }
+    }
+  }
+  // Etiquetas de los Formularios (Modo Edición y Lectura)
+  .custom-form-label {
+    color: $texto-secundario;
+    font-weight: 600;
+    font-size: 0.88rem;
+    margin-bottom: 6px;
+    // Variante de estilo adaptada al Modal de Lectura (Mayúsculas discretas)
+    &:not(.block-label) & {
+      color: $texto-terciario;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    &.block-label {
+      color: $primario-oscuro;
+      font-size: 0.95rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+  }
+  // Campos de Entrada Interactivos (Crear / Editar)
+  .custom-input, .custom-select, .custom-textarea {
+    background-color: $fondo-principal;
+    border: 1px solid $borders;
+    color: $primario-oscuro;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    &:focus:not([readonly]) {
+      background-color: $fondo-secundario;
+      border-color: $primario;
+      box-shadow: 0 0 0 3px rgba(43, 183, 201, 0.15);
+    }
+    &::placeholder {
+      color: $texto-discreto;
+    }
+  }
+  // Input bloqueado (Ej: Cédulas no editables)
+  .input-readonly {
+    background-color: $fondo-terciario;
+    color: $texto-terciario;
+    cursor: not-allowed;
+    border-color: $borders;
+  }
+  // Textarea de Alertas Críticas (Modal Registro)
+  .alert-textarea:focus {
+    border-color: $btn-danger;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+  }
+  // Visualización limpia de texto en modo Lectura (Ver Detalles)
+  .data-view-value {
+    color: $texto-principal;
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 2px 0;
+    &.email-highlight {
+      color: $secundario-oscuro;
+      text-decoration: underline;
+    }
+  }
+  // Visualización de la Edad Calculada
+  .age-display, .age-badge-inline {
+    background-color: $fondo-terciario;
+    border: 1px solid $borders !important;
+    color: $primario-oscuro;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    .text-primary-dark { color: $primario-oscuro; }
+    .text-accent { color: $primario; }
+  }
+  .age-badge-inline {
+    padding: 4px 10px;
+    font-size: 0.82rem;
+  }
+  // Cajas estáticas para texto clínico largo (Alergias, Antecedentes)
+  .medical-text-box {
+    background-color: $fondo-principal;
+    border: 1px solid $borders;
+    color: $texto-principal;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    min-height: 80px;
+    white-space: pre-line;
+    &.allergy-box {
+      background-color: rgba(231, 76, 60, 0.04);
+      border-color: rgba(231, 76, 60, 0.15);
+      color: #c0392b;
+      font-weight: 500;
+    }
+  }
+  // Previsualizador del Documento de Identidad
+  .preview-identity-container {
+    background-color: $fondo-principal;
+    border: 1px dashed $borders;
+    .identity-card-fallback {
+      max-width: 300px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      i { font-size: 3rem; }
+    }
+  }
+  // Tablas Clínicas (Historial de Consultas)
+  .custom-table-container {
+    border: 1px solid $borders;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .custom-medical-table {
+    margin-bottom: 0;
+    thead {
+      background-color: $fondo-terciario;
+      tr th {
+        color: $primario-oscuro;
+        font-weight: 600;
+        border-bottom: 2px solid $borders;
+        padding: 14px;
+        font-size: 0.88rem;
+      }
+    }
+    tbody tr {
+      transition: background-color 0.15s;
+      td {
+        padding: 14px;
+        color: $texto-secundario;
+        font-size: 0.9rem;
+        border-bottom: 1px solid $borders;
+      }
+      &:last-child td { border-bottom: none; }
+      &:hover { background-color: rgba(43, 183, 201, 0.03); }
+    }
+    // Estados internos de las filas de la tabla
+    .status-atendida {
+      background-color: rgba(45, 190, 96, 0.12);
+      color: $btn-exito;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    .status-programada {
+      background-color: rgba(243, 156, 18, 0.12);
+      color: #e67e22;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+  }
+  // Estados de contenido vacío (No registros)
+  .empty-state-box {
+    i { font-size: 4rem; color: $texto-discreto; display: block; }
+    h5 { color: $primario-oscuro; font-weight: 600; margin-top: 1rem; }
+    p { color: $texto-terciario; font-size: 0.88rem; }
+  }
+  .divisor-sutil {
+    border-color: $borders;
+    opacity: 0.6;
+  }
+}
+// ==========================================================================
+// 5. BOTONES Y ACCIONES CORPORATIVAS
+// ==========================================================================
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: $texto-claro;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  transition: background 0.2s;
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: $texto-claro;
+  }
+}
+.btn-action-success {
+  background-color: $btn-exito;
+  color: $texto-claro;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s;
+  &:hover:not(:disabled) {
+    background-color: #24a852;
+    transform: translateY(-1px);
+  }
+  &:disabled {
+    background-color: $texto-discreto;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+.btn-action-save {
+  background-color: $primario;
+  color: $primario-oscuro;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s;
+  &:hover {
+    background-color: $btn-primario-hover;
+    transform: translateY(-1px);
+  }
+}
+.btn-action-download {
+  background-color: $fondo-terciario;
+  color: $primario-oscuro;
+  border: 1px solid rgba(43, 183, 201, 0.2);
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 14px;
+  transition: all 0.2s;
+  &:hover {
+    background-color: $primario;
+    color: $primario-oscuro;
+    border-color: $primario;
+  }
+}
+//Paciente lista
+.patients-page {
+  background: #F5FAFC;
+  min-height: 100vh;
+}
+.page-title {
+  color: #16374A;
+  font-weight: 700;
+  margin-bottom: .3rem;
+}
+.page-subtitle {
+  color: #4A6572;
+  margin: 0;
+}
+.dashboard-card {
+  background: #FFFFFF;
+  border-radius: 18px;
+  border: 1px solid #E1E8EB;
+  box-shadow: 0 8px 20px rgba(22, 55, 74, .06);
+}
+.section-title {
+  color: #16374A;
+  font-weight: 600;
+}
+.btn-primary {
+  background: #2BB7C9;
+  border-color: #2BB7C9;
+}
+.btn-primary:hover {
+  background: #239EAE;
+  border-color: #239EAE;
+}
+.btn-outline-primary {
+  color: #2BB7C9;
+  border-color: #2BB7C9;
+}
+.btn-outline-primary:hover {
+  background: #2BB7C9;
+  color: white;
+}
+.info-card {
+  background: #E6F7FA;
+}
+.help-item {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+.help-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: white;
+  color: #2BB7C9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.help-item p {
+  margin-top: .4rem;
+  margin-bottom: 0;
+  color: #4A6572;
+  font-size: .93rem;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #E1E8EB;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.search-box i {
+  padding: 0 16px;
+  color: #A6B6BD;
+}
+.search-box input {
+  flex: 1;
+  border: none;
+  padding: .8rem;
+  outline: none;
+}
+.btn-clear {
+  border: none;
+  background: transparent;
+  padding: 0 16px;
+  color: #A6B6BD;
+}
+.search-help {
+  color: #7A8D99;
+}
+.patients-counter {
+  display: inline-block;
+  background: #E6F7FA;
+  color: #16374A;
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.patients-table thead {
+  background: #EDF6F8;
+}
+.patients-table th {
+  color: #16374A;
+  font-weight: 600;
+  border: none;
+}
+.patients-table td {
+  vertical-align: middle;
+  border-color: #E1E8EB;
+}
+.patients-table tbody tr {
+  transition: .2s;
+}
+.patients-table tbody tr:hover {
+  background: #F5FAFC;
+}
+.patient-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.patient-photo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #E6F7FA;
+}
+.patient-name {
+  color: #16374A;
+  font-weight: 600;
+}
+.patient-role {
+  color: #7A8D99;
+  font-size: .85rem;
+}
+.modal-overlay{
+    background: rgba(22,55,74,.55);
+    backdrop-filter: blur(6px);
+}
+.modal-custom{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 18px 50px rgba(22,55,74,.25);
+}
+.modal-sidebar{
+    background:#16374A;
+    color:white;
+    padding:2rem;
+}
+.photo-container{
+    width:160px;
+    height:160px;
+    margin:auto;
+    border-radius:50%;
+    overflow:hidden;
+    border:4px solid rgba(255,255,255,.25);
+    background:#EDF6F8;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.photo-container img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.photo-icon{
+    font-size:3.5rem;
+    color:#2BB7C9;
+}
+.sidebar-title{
+    margin-top:20px;
+    font-weight:700;
+}
+.sidebar-subtitle{
+    color:#D6E4EA;
+    font-size:.95rem;
+}
+.upload-box{
+    background:rgba(255,255,255,.08);
+    border-radius:14px;
+    padding:1rem;
+}
+.upload-box label{
+    color:white;
+}
+.upload-box small{
+    color:#D6E4EA;
+}
+.consent-card{
+    background:#1C4255;
+    border-radius:14px;
+    padding:1rem;
+    font-size:.9rem;
+}
+.consent-card i{
+    color:#2BB7C9;
+    font-size:1.5rem;
+}
+.modal-body-custom{
+    padding:2rem 2.5rem;
+    background:#FFFFFF;
+}
+.modal-header-custom{
+    margin-bottom:25px;
+}
+.modal-header-custom h3{
+    color:#16374A;
+    font-weight:700;
+}
+.modal-header-custom p{
+    color:#4A6572;
+    margin-bottom:0;
+}
+.custom-tabs{
+    border-bottom:1px solid #E1E8EB;
+}
+.custom-tabs .nav-link{
+    color:#4A6572;
+    border:none;
+    border-bottom:3px solid transparent;
+    border-radius:0;
+    font-weight:600;
+}
+.custom-tabs .nav-link.active{
+    color:#2BB7C9;
+    border-bottom-color:#2BB7C9;
+    background:transparent;
+}
+.data-label{
+    color:#16374A;
+    font-weight:600;
+    margin-bottom:.45rem;
+}
+.form-control,
+.form-select{
+    border:1px solid #E1E8EB;
+    border-radius:12px;
+    padding:.7rem .9rem;
+}
+.form-control:focus,
+.form-select:focus{
+    border-color:#2BB7C9;
+    box-shadow:0 0 0 .18rem rgba(43,183,201,.18);
+}
+textarea.form-control{
+    min-height:120px;
+}
+.form-footer{
+    margin-top:40px;
+    border-top:1px solid #E1E8EB;
+    padding-top:25px;
+    display:flex;
+    justify-content:flex-end;
+}
+.btn-primary{
+    background:#2BB7C9;
+    border-color:#2BB7C9;
+    border-radius:12px;
+    font-weight:600;
+}
+.btn-primary:hover{
+    background:#239EAE;
+    border-color:#239EAE;
+}
+.btn-outline-light{
+    border-radius:12px;
 }

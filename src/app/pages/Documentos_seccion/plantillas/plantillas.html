@@ -1,215 +1,183 @@
-<div class="container-fluid mt-4 mb-5">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="template-upload-page container-fluid py-4 mb-5">
+  <!-- Encabezado de Página -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
-      <h2 class="fw-bold mb-1">
+      <h2 class="page-title">
         <i class="bi bi-file-earmark-medical me-2"></i>
-        Subir Plantilla Medica
+        Subir Plantilla Médica
       </h2>
-      <p class="text-muted mb-0">
-        Cree plantillas dinámicas para generar documentos automáticamente.
+      <p class="page-subtitle">
+        Cree plantillas dinámicas para generar documentos automáticamente dentro del sistema.
       </p>
     </div>
   </div>
-  <div class="alert alert-info border-0 shadow-sm">
-    <h6 class="fw-bold mb-3">
-      ¿Cómo funciona?
+  <!-- Guía de Funcionamiento (.info-card unificada) -->
+  <div class="dashboard-card info-card p-4 mb-4">
+    <h5 class="section-title mb-4">
+      <i class="bi bi-question-circle me-2"></i>
+      ¿Cómo funciona el procesador de plantillas?
+    </h5>
+    <div class="row g-3">
+      <div class="col-xl-3 col-md-6">
+        <div class="help-item-minimal">
+          <div class="help-icon-sm">
+            <i class="bi bi-file-earmark-arrow-up"></i>
+          </div>
+          <div>
+            <strong class="d-block mb-1">1. Suba el documento</strong>
+            <span class="text-muted small">Seleccione un archivo estructurado en Word (.docx).</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="help-item-minimal">
+          <div class="help-icon-sm">
+            <i class="bi bi-search"></i>
+          </div>
+          <div>
+            <strong class="d-block mb-1">2. Analice el archivo</strong>
+            <span class="text-muted small">El motor buscará automáticamente las etiquetas dinámicas.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="help-item-minimal">
+          <div class="help-icon-sm">
+            <i class="bi bi-sliders"></i>
+          </div>
+          <div>
+            <strong class="d-block mb-1">3. Configure campos</strong>
+            <span class="text-muted small">Mapee si corresponden a texto libre o variables de la BD.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <div class="help-item-minimal">
+          <div class="help-icon-sm">
+            <i class="bi bi-save"></i>
+          </div>
+          <div>
+            <strong class="d-block mb-1">4. Guarde cambios</strong>
+            <span class="text-muted small">La plantilla quedará disponible para el uso clínico.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Panel Informativo de Etiquetas -->
+  <div class="dashboard-card p-4 mb-4 bg-white">
+    <h6 class="custom-block-title mb-3">
+      <i class="bi bi-braces text-accent me-2"></i> Ejemplos de formato reconocido
     </h6>
-    <div class="row">
-      <div class="col-md-3 mb-2">
-        <div class="small">
-          <div class="fw-semibold mb-1">
-            <i class="bi bi-file-earmark-arrow-up me-2"></i>
-            Suba el documento
-          </div>
-          <div class="text-muted">
-            Seleccione un archivo Word (.docx)
-          </div>
+    <div class="d-flex flex-wrap gap-2 mb-3">
+      <span class="badge template-tag-badge primary-tag">{{ '{ nombre }' }}</span>
+      <span class="badge template-tag-badge success-tag">{{ '{ apellido }' }}</span>
+      <span class="badge template-tag-badge warning-tag">{{ '{ campo_1 }' }}</span>
+      <span class="badge template-tag-badge info-tag">{{ '{ fecha_actual }' }}</span>
+      <span class="badge template-tag-badge dark-tag">{{ '{ nombre_completo }' }}</span>
+    </div>
+    <div class="small text-muted d-flex align-items-center gap-2">
+      <i class="bi bi-exclamation-circle text-primary"></i>
+      <span>Los marcadores de posición deben escribirse estrictamente entre llaves simples dentro del documento original.</span>
+    </div>
+  </div>
+  <!-- Zona de Carga de Archivos -->
+  <div class="dashboard-card p-4 mb-4">
+    <div class="row align-items-end g-3">
+      <div class="col-md-8">
+        <label class="custom-form-label">
+          <i class="bi bi-file-earmark-word text-accent me-2"></i> Documento Base (Word)
+        </label>
+        <input type="file" class="form-control custom-input" accept=".docx,.xlsx" (change)="onFileSelected($event)">
+        <div class="form-text text-muted small mt-1">
+          Formatos soportados por el motor de renderizado: <strong class="text-dark">.docx</strong> o <strong class="text-dark">.xlsx</strong>
         </div>
       </div>
-      <div class="col-md-3 mb-2">
-        <div class="small">
-          <div class="fw-semibold mb-1">
-            <i class="bi bi-search me-2"></i>
-            Analice la plantilla
-          </div>
-          <div class="text-muted">
-            El sistema detectará automáticamente los campos.
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-2">
-        <div class="small">
-          <div class="fw-semibold mb-1">
-            <i class="bi bi-sliders me-2"></i>
-            Configure los campos
-          </div>
-          <div class="text-muted">
-            Seleccione si son campos libres o datos de la base.
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-2">
-        <div class="small">
-          <div class="fw-semibold mb-1">
-            <i class="bi bi-save me-2"></i>
-            Guarde la plantilla
-          </div>
-          <div class="text-muted">
-            La plantilla quedará lista para generar documentos.
-          </div>
+      <div class="col-md-4">
+        <div class="d-flex flex-column flex-sm-row gap-2">
+          <button class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center" (click)="analizarDocumento(); $event.stopPropagation()">
+            <i class="bi bi-search me-2"></i> Analizar
+          </button>
+          <button class="btn btn-action-success w-100 py-2 d-flex align-items-center justify-content-center" (click)="subirPlantilla(); $event.stopPropagation()" [disabled]="totalCampos() === 0">
+            <i class="bi bi-cloud-upload me-2"></i> Guardar
+          </button>
         </div>
       </div>
     </div>
   </div>
-  <div class="card border-0 shadow-sm mb-4">
-    <div class="card-body">
-      <h6 class="fw-bold mb-3">
-        Ejemplos de campos reconocidos
-      </h6>
-      <div class="d-flex flex-wrap gap-2 mb-3">
-        <span class="badge bg-primary">
-          {{ '{ nombre }' }}
-        </span>
-        <span class="badge bg-success">
-          {{ '{ apellido }' }}
-        </span>
-        <span class="badge bg-warning text-dark">
-          {{ '{ campo 1 }' }}
-        </span>
-        <span class="badge bg-info text-dark">
-          {{ '{ fecha_actual }' }}
-        </span>
-        <span class="badge bg-dark">
-          {{ '{ nombre completo }' }}
-        </span>
-      </div>
-      <div class="small text-muted">
-        Los campos deben escribirse entre llaves dentro del documento de la plantilla.
-      </div>
-    </div>
-  </div>
-  <div class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-      <div class="row align-items-end">
-        <div class="col-md-8">
-          <label class="form-label fw-semibold">
-            Documento Word
-          </label>
-          <input type="file" class="form-control" accept=".docx,.xlsx" (change)="onFileSelected($event)">
-          <div class="form-text">
-            Formato permitido: .docx , .xlsx
-          </div>
-        </div>
-        <div class="col-md-4 mt-3 mt-md-0">
-          <div class="d-grid gap-2">
-            <button class="btn btn-primary" (click)="analizarDocumento(); $event.stopPropagation()">
-              <i class="bi bi-search me-2"></i>
-              Analizar Documento
-            </button>
-            <button class="btn btn-success" (click)="subirPlantilla(); $event.stopPropagation()"
-              [disabled]="totalCampos() === 0">
-              <i class="bi bi-cloud-upload me-2"></i>
-              Guardar Plantilla
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <!-- Banner de Error / Sin Hallazgos -->
   @if (archivo && totalCampos() === 0 && previewHtml()) {
-  <div class="alert alert-warning border-0 shadow-sm mt-4 p-4 text-center">
-    <div class="mb-2" style="font-size: 2rem;"></div>
-    <h5 class="fw-bold text-warning-emphasis">No se detectaron campos dinámicos</h5>
-    <p class="text-muted mb-0 mx-auto" style="max-width: 600px;">
-      El documento <strong>{{ archivo.name }}</strong> se leyó correctamente, pero no contiene etiquetas válidas estructuradas entre llaves (por ejemplo: &lbrace; nombre &rbrace; o &lbrace; campo &rbrace;). 
+  <div class="dashboard-card alert-warning-card p-4 text-center mb-4 tab-animation">
+    <div class="warning-icon-wrapper mb-3 mx-auto">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+    </div>
+    <h5 class="fw-bold text-dark-blue">No se detectaron campos dinámicos</h5>
+    <p class="text-muted mb-0 mx-auto max-w-600">
+      El documento <strong class="text-primary-dark">{{ archivo.name }}</strong> fue procesado con éxito, pero no contiene etiquetas válidas encerradas entre llaves.
     </p>
-    <div class="small text-muted mt-2">
-      Por favor, revise el documento original, añada los campos necesarios y vuelva a analizarlo.
+    <div class="small text-muted mt-3 pt-2 border-top-dashed">
+      Por favor, inserte marcadores como <code class="custom-code">{{ '{datos}' }}</code> en su archivo local, vuelva a cargarlo y pulse "Analizar".
     </div>
   </div>
   }
-
+  <!-- Área de Trabajo Dinámica (Mapeo y Vista Previa) -->
   @if (totalCampos() > 0) {
-  <div class="row mt-4">
-    <div class="col-md-6">
-      <div class="card p-3 shadow-sm border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+  <div class="row g-4 tab-animation">
+    <!-- Configuración de Variables Detectadas -->
+    <div class="col-lg-6">
+      <div class="dashboard-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
           <div>
-            <h5 class="mb-1">
-              ⚙️ Campos detectados
+            <h5 class="custom-block-title mb-1">
+              <i class="bi bi-gear-fill text-accent me-2"></i> Campos Detectados
             </h5>
-            <small class="text-muted">
-              Configure el comportamiento de cada campo
-            </small>
+            <small class="text-muted">Asocie las variables del documento al modelo de datos</small>
           </div>
-          <span class="badge bg-primary">
-            {{ totalCampos() }} campos
+          <span class="badge count-status-badge">
+            {{ totalCampos() }} detectados
           </span>
         </div>
-        <div class="row">
-          @for (
-          campo of camposDetectados();
-          let i = $index;
-          track campo.nombre
-          ) {
-          <div class="col-md-6 mb-3">
-            <div class="border rounded-3 p-3 h-100 bg-light-subtle">
-              <div class="fw-bold mb-2 text-primary">
-                🏷️ {{ campo.nombre }}
+        <div class="row g-3 scrollable-fields-containerpe">
+          @for (campo of camposDetectados(); let i = $index; track campo.nombre) {
+          <div class="col-md-6">
+            <div class="field-config-box p-3">
+              <div class="field-tag-header mb-3">
+                <i class="bi bi-tag-fill text-primary me-2"></i>
+                <span class="fw-bold text-truncate" title="{{ campo.nombre }}">{{ campo.nombre }}</span>
               </div>
-              <label class="form-label small fw-semibold">
-                Tipo de campo
-              </label>
-              <select class="form-select form-select-sm mb-3" [(ngModel)]="campo.origen">
-                <option value="" disabled selected>
-                  Seleccione origen
-                </option>
-                <option value="libre">
-                  ✍️ Campo libre
-                </option>
-                <option value="bd">
-                  🗄️ Base de datos
-                </option>
-              </select>
+              <div class="mb-2">
+                <label class="custom-form-label-sm">Origen del dato</label>
+                <select class="form-select custom-select-sm" [(ngModel)]="campo.origen">
+                  <option value="" disabled selected>Seleccione origen</option>
+                  <option value="libre">✍️ Entrada libre / Manual</option>
+                  <option value="bd">🗄️ Mapear Base de Datos</option>
+                </select>
+              </div>
               @if (campo.origen === 'bd') {
-              <label class="form-label small fw-semibold">
-                Tabla
-              </label>
-              <select class="form-select form-select-sm mb-2" [(ngModel)]="campo.tabla"
-                (change)="cargarColumnas(campo)">
-                <option value="">
-                  Seleccionar tabla
-                </option>
-                @for (t of tablasDisponibles; track t) {
-                <option [value]="t">
-                  {{ t }}
-                </option>
-                }
-              </select>
-              <label class="form-label small fw-semibold">
-                Columna
-              </label>
-              <select class="form-select form-select-sm" [(ngModel)]="campo.columna">
-                <option value="">
-                  Seleccionar columna
-                </option>
-                @for (
-                col of columnasPorTabla[campo.tabla] || [];
-                track col
-                ) {
-                <option [value]="col">
-                  {{ col }}
-                </option>
-                }
-              </select>
+              <div class="mb-2 tab-animation">
+                <label class="custom-form-label-sm">Tabla del sistema</label>
+                <select class="form-select custom-select-sm" [(ngModel)]="campo.tabla" (change)="cargarColumnas(campo)">
+                  <option value="">Seleccionar tabla</option>
+                  @for (t of tablasDisponibles; track t) {
+                  <option [value]="t">{{ t }}</option>
+                  }
+                </select>
+              </div>
+              <div class="mb-0 tab-animation">
+                <label class="custom-form-label-sm">Columna asignada</label>
+                <select class="form-select custom-select-sm" [(ngModel)]="campo.columna">
+                  <option value="">Seleccionar columna</option>
+                  @for (col of columnasPorTabla[campo.tabla] || []; track col) {
+                  <option [value]="col">{{ col }}</option>
+                  }
+                </select>
+              </div>
               }
               @if (campo.origen === 'libre') {
-              <label class="form-label small fw-semibold">
-                Valor de ejemplo
-              </label>
-              <input type="text" class="form-control form-control-sm" placeholder="Ingrese un ejemplo"
-                [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
+              <div class="mb-0 tab-animation">
+                <label class="custom-form-label-sm">Valor de simulación</label>
+                <input type="text" class="form-control custom-input-sm" placeholder="Ej: Juan Pérez" [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
+              </div>
               }
             </div>
           </div>
@@ -217,30 +185,23 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="card p-3 shadow-sm border-0 h-100">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div>
-            <h5 class="mb-1">
-              👁️ Vista previa
-            </h5>
-            <small class="text-muted">
-              Visualice cómo se verá el documento
-            </small>
-          </div>
-        </div>
+    <!-- Panel de Renderizado de Vista Previa -->
+    <div class="col-lg-6">
+      <div class="dashboard-card p-4 h-100">
+        <h5 class="custom-block-title mb-1">
+          <i class="bi bi-eye-fill text-accent me-2"></i> Vista Previa en Tiempo Real
+        </h5>
+        <small class="text-muted d-block mb-4">Aspecto visual del documento final autogenerado</small>
         @if (previewHtml()) {
-        <div class="preview-container border rounded-3 bg-white p-4">
+        <div class="preview-container shadow-inner">
           <div class="documento" [innerHTML]="previewHtml()"></div>
         </div>
         } @else {
-        <div class="text-center text-muted py-5">
-          <div class="mb-2" style="font-size: 3rem;">
-            📄
+        <div class="empty-preview-state d-flex flex-column align-items-center justify-content-center text-center">
+          <div class="empty-icon mb-3">
+            <i class="bi bi-file-earmark-richtext"></i>
           </div>
-          <div>
-            La vista previa aparecerá aquí
-          </div>
+          <div class="text-muted">El renderizado interactivo aparecerá en esta zona</div>
         </div>
         }
       </div>

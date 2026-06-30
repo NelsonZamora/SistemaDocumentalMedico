@@ -9,7 +9,8 @@ import Swal from 'sweetalert2';
   selector: 'app-pacientes',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './pacientes.html'
+  templateUrl: './pacientes.html',
+  styleUrl: './pacientes.scss',
 })
 export class PacientesComponent implements OnInit {
 

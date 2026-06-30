@@ -1,0 +1,235 @@
+// ==========================================================================
+// 1. PALETA CORPORATIVA Y VARIABLES DEL SISTEMA MÉDICO
+// ==========================================================================
+$primario: #2BB7C9;
+$primario-oscuro: #16374A;
+$secundario: #66D1DE;
+$secundario-oscuro: #1595A6;
+$secundario-claro: #E6F7FA;
+$btn-primario-hover: #239EAE;
+$btn-exito: #2DBE60;
+$fondo-principal: #F5FAFC;
+$fondo-secundario: #FFFFFF;
+$fondo-terciario: #EDF6F8;
+$borders: #E1E8EB;
+$texto-principal: #16374A;
+$texto-secundario: #4A6572;
+$texto-terciario: #7A8D99;
+$texto-claro: #FFFFFF;
+$texto-discreto: #A6B6BD;
+
+// ==========================================================================
+// 2. ESTRUCTURA BASE
+// ==========================================================================
+.user-creation-page {
+  background: $fondo-principal;
+  min-height: 100vh;
+}
+
+.page-title {
+  color: $primario-oscuro;
+  font-weight: 700;
+  margin-bottom: .3rem;
+}
+
+.page-subtitle {
+  color: $texto-secundario;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.text-accent { color: $primario; }
+.text-dark-blue { color: $primario-oscuro; }
+
+.dashboard-card {
+  background: $fondo-secundario;
+  border-radius: 18px;
+  border: 1px solid $borders;
+  box-shadow: 0 8px 20px rgba(22, 55, 74, .06);
+}
+
+.custom-block-title {
+  color: $primario-oscuro;
+  font-weight: 600;
+}
+
+// Botones Corporativos
+.btn-primary {
+  background: $primario;
+  border-color: $primario;
+  font-weight: 600;
+  transition: all 0.2s;
+  &:hover:not(:disabled) {
+    background: $btn-primario-hover;
+    border-color: $btn-primario-hover;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(43, 183, 201, 0.3) !important;
+  }
+}
+
+// ==========================================================================
+// 3. TARJETA DE AYUDA (.info-card)
+// ==========================================================================
+.info-card {
+  background: $secundario-claro;
+  border-color: transparent;
+  
+  .section-title {
+    color: $primario-oscuro;
+    font-weight: 600;
+  }
+}
+
+.help-item-minimal {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: $fondo-secundario;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(43, 183, 201, 0.15);
+  height: 100%;
+  
+  .help-icon-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(43, 183, 201, 0.1);
+    color: $primario;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  strong {
+    color: $primario-oscuro;
+    font-size: 0.88rem;
+  }
+}
+
+// ==========================================================================
+// 4. FORMULARIO DE CREACIÓN
+// ==========================================================================
+.custom-form-label {
+  color: $texto-secundario;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.custom-input, .custom-select {
+  background-color: $fondo-principal;
+  border: 1px solid $borders;
+  color: $primario-oscuro;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  transition: all 0.2s;
+  
+  &:focus {
+    background-color: $fondo-secundario;
+    border-color: $primario;
+    box-shadow: 0 0 0 3px rgba(43, 183, 201, 0.15);
+    outline: none;
+  }
+  
+  &::placeholder {
+    color: $texto-discreto;
+  }
+}
+
+.info-edit-banner {
+  background: rgba(43, 183, 201, 0.1);
+  border: none;
+  border-left: 4px solid $primario;
+  border-radius: 10px;
+  color: $primario-oscuro;
+  font-weight: 500;
+}
+
+// ==========================================================================
+// 5. LISTA LATERAL (Tabla y Avatares)
+// ==========================================================================
+.custom-table {
+  thead th {
+    background-color: $fondo-terciario;
+    color: $texto-secundario;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid $borders;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  
+  tbody td {
+    color: $texto-principal;
+    border-bottom: 1px solid $borders;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    vertical-align: middle;
+  }
+  
+  tbody tr {
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(43, 183, 201, 0.03);
+    }
+  }
+}
+
+.avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: rgba($primario, 0.15);
+  color: $primario;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  border: 1px solid rgba($primario, 0.3);
+  flex-shrink: 0;
+}
+
+.role-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.3px;
+  
+  &.admin { 
+    background: rgba(43, 183, 201, 0.15); 
+    color: $primario-oscuro; 
+    border-color: rgba(43, 183, 201, 0.3) !important; 
+  }
+  &.medico { 
+    background: #e8f5e9; 
+    color: #2e7d32; 
+    border-color: #c8e6c9 !important; 
+  }
+  &.auxiliar { 
+    background: #fff3e0; 
+    color: #ef6c00; 
+    border-color: #ffe0b2 !important; 
+  }
+}
+
+// Utilidad para asegurar que la columna derecha mantenga altura
+.flex-grow-1 {
+  min-height: 400px;
+}
+
+// Animaciones base
+.tab-animation {
+  animation: fadeIn 0.25s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

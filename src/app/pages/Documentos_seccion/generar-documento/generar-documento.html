@@ -1,177 +1,127 @@
-<div class="container-fluid mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="generation-page container-fluid py-4 mb-5">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
-      <h2 class="fw-bold mb-1">
+      <h2 class="page-title">
         <i class="bi bi-file-earmark-text me-2"></i>
         Generación de Documentos
       </h2>
-      <p class="text-muted mb-0">
+      <p class="page-subtitle">
         Seleccione un paciente y una plantilla para generar automáticamente un documento clínico.
       </p>
     </div>
   </div>
-  <div class="alert alert-info border-0 shadow-sm mb-4">
-    <div class="d-flex align-items-start">
-      <div class="me-3 fs-4">
+  <div class="dashboard-card info-card p-4 mb-4">
+    <div class="d-flex align-items-start gap-3">
+      <div class="help-icon-lg">
         <i class="bi bi-info-circle"></i>
       </div>
       <div>
-        <div class="fw-semibold mb-2">
+        <h6 class="section-title mb-3">
           ¿Cómo generar un documento?
+        </h6>
+        <div class="d-flex flex-wrap gap-3 small text-muted step-list">
+          <div class="step-item"><span class="step-number">1</span> Seleccione el paciente</div>
+          <div class="step-item"><span class="step-number">2</span> Elija la plantilla médica</div>
+          <div class="step-item"><span class="step-number">3</span> Revise la carga de datos</div>
+          <div class="step-item"><span class="step-number">4</span> Complete campos manuales</div>
+          <div class="step-item"><span class="step-number">5</span> Genere el documento final</div>
         </div>
-        <ol class="mb-0 small">
-          <li>
-            Seleccione el paciente al que pertenece el documento.
-          </li>
-          <li>
-            Seleccione la plantilla médica que desea utilizar.
-          </li>
-          <li>
-            Revise los campos cargados automáticamente desde la ficha del paciente.
-          </li>
-          <li>
-            Complete los campos manuales si es necesario.
-          </li>
-          <li>
-            Revise la vista previa y presione
-            <strong>“Generar documento”</strong>.
-          </li>
-        </ol>
       </div>
     </div>
   </div>
   @if (cargando()) {
-  <div class="text-center mt-5">
-    <div class="spinner-border text-primary"></div>
-    <p class="mt-3 text-muted">
-      Cargando pacientes y plantillas...
-    </p>
+  <div class="d-flex flex-column align-items-center justify-content-center py-5 tab-animation">
+    <div class="spinner-border text-accent mb-3" role="status"></div>
+    <h6 class="text-muted">Cargando pacientes y plantillas...</h6>
   </div>
   }
   @if (!cargando()) {
-  <div class="card shadow-sm border-0 mb-4">
-    <div class="card-body">
-      <div class="row g-4">
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-person-vcard me-2"></i>
-            Paciente
-          </label>
-          <p class="small text-muted mb-2">
-            Seleccione el paciente para cargar automáticamente su información clínica.
-          </p>
-          <select class="form-select shadow-sm" [(ngModel)]="pacienteSeleccionado" (change)="seleccionarPaciente()">
-            <option [ngValue]="null">
-              Seleccione un paciente
-            </option>
-            @for (paciente of pacientes(); track paciente.id) {
-            <option [ngValue]="paciente">
-              {{ paciente.nombres }}
-              {{ paciente.apellidos }}
-            </option>
-            }
-          </select>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-file-earmark-medical me-2"></i>
-            Plantilla médica
-          </label>
-          <p class="small text-muted mb-2">
-            Seleccione la plantilla que desea completar automáticamente.
-          </p>
-          <select class="form-select shadow-sm" [(ngModel)]="plantillaSeleccionada" (change)="seleccionarPlantilla()">
-            <option [ngValue]="null">
-              Seleccione una plantilla
-            </option>
-            @for (
-            plantilla of plantillas();
-            track plantilla.id
-            ) {
-            <option [ngValue]="plantilla">
-              {{ plantilla.nombre_plantilla }}
-            </option>
-            }
-          </select>
-        </div>
-        <div class="col-md-12">
-          <label class="form-label fw-semibold">
-            <i class="bi bi-clipboard2-pulse me-2"></i>
-            Atención médica
-          </label>
-          <p class="small text-muted mb-2">
-            Seleccione una atención médica previa para cargar automáticamente signos vitales y datos clínicos.
-          </p>
-          <select class="form-select shadow-sm" [(ngModel)]="atencionSeleccionada" (change)="seleccionarAtencion()">
-            <option [ngValue]="null">
-              Seleccione una atención médica
-            </option>
-            @for (
-            atencion of atenciones();
-            track atencion.id
-            ) {
-            <option [ngValue]="atencion">
-              {{
-              atencion.citas_medicas.pacientes.nombres
-              }}
-              {{
-              atencion.citas_medicas.pacientes.apellidos
-              }}
-              -
-              {{
-              atencion.citas_medicas.fecha
-              }}
-            </option>
-            }
-          </select>
-        </div>
+  <div class="dashboard-card p-4 mb-4 tab-animation">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <label class="custom-form-label">
+          <i class="bi bi-person-vcard text-accent me-2"></i> Paciente
+        </label>
+        <p class="custom-form-subtitle mb-2">
+          Seleccione el paciente para cargar automáticamente su información clínica.
+        </p>
+        <select class="form-select custom-select" [(ngModel)]="pacienteSeleccionado" (change)="seleccionarPaciente()">
+          <option [ngValue]="null" disabled selected>Seleccione un paciente</option>
+          @for (paciente of pacientes(); track paciente.id) {
+          <option [ngValue]="paciente">
+            {{ paciente.nombres }} {{ paciente.apellidos }}
+          </option>
+          }
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="custom-form-label">
+          <i class="bi bi-file-earmark-medical text-accent me-2"></i> Plantilla médica
+        </label>
+        <p class="custom-form-subtitle mb-2">
+          Seleccione la plantilla que desea completar automáticamente.
+        </p>
+        <select class="form-select custom-select" [(ngModel)]="plantillaSeleccionada" (change)="seleccionarPlantilla()">
+          <option [ngValue]="null" disabled selected>Seleccione una plantilla</option>
+          @for (plantilla of plantillas(); track plantilla.id) {
+          <option [ngValue]="plantilla">
+            {{ plantilla.nombre_plantilla }}
+          </option>
+          }
+        </select>
+      </div>
+      <div class="col-md-12">
+        <label class="custom-form-label">
+          <i class="bi bi-clipboard2-pulse text-accent me-2"></i> Atención médica vinculada
+        </label>
+        <p class="custom-form-subtitle mb-2">
+          Seleccione una atención médica previa para inyectar signos vitales y datos clínicos (Opcional).
+        </p>
+        <select class="form-select custom-select" [(ngModel)]="atencionSeleccionada" (change)="seleccionarAtencion()">
+          <option [ngValue]="null">Sin atención específica (Cargar solo datos base)</option>
+          @for (atencion of atenciones(); track atencion.id) {
+          <option [ngValue]="atencion">
+            {{ atencion.citas_medicas.pacientes.nombres }} {{ atencion.citas_medicas.pacientes.apellidos }} - {{
+            atencion.citas_medicas.fecha }}
+          </option>
+          }
+        </select>
       </div>
     </div>
   </div>
   @if (camposPlantilla().length > 0) {
-  <div class="row g-4">
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 sticky-top">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <div class="fs-4 me-2">
-              <i class="bi bi-file-earmark-text"></i>
-            </div>
-            <div>
-              <h5 class="mb-0">
-                Información del documento
-              </h5>
-              <small class="text-muted">
-                Complete o revise los datos antes de generar.
-              </small>
-            </div>
-          </div>
-          <div class="alert alert-light border small">
-            <strong>Importante:</strong>
-            Los campos grises se cargan automáticamente desde la ficha del paciente y no requieren edición.
-          </div>
-          @for (
-          campo of camposPlantilla();
-          track campo.nombre
-          ) {
+  <div class="row g-4 tab-animation">
+    <div class="col-lg-4">
+      <div class="dashboard-card p-4 h-100 position-relative">
+        <div class="mb-4 pb-2 border-bottom">
+          <h5 class="custom-block-title mb-1">
+            <i class="bi bi-pencil-square text-accent me-2"></i> Campos del Documento
+          </h5>
+          <small class="text-muted">Complete o revise los datos detectados.</small>
+        </div>
+        <div class="alert info-edit-banner small mb-4">
+          <i class="bi bi-info-circle-fill text-accent me-1"></i>
+          <strong>Importante:</strong> Los campos bloqueados se han sincronizado directamente desde la base de datos y
+          no requieren edición.
+        </div>
+        <div class="scrollable-fields-containerpe">
+          @for (campo of camposPlantilla(); track campo.nombre) {
           <div class="mb-4">
-            <label class="form-label fw-semibold">
-              {{ campo.nombre }}
+            <label class="custom-form-label d-block mb-1">
+              <i class="bi bi-tag text-primary me-1"></i> {{ campo.nombre }}
             </label>
             @if (campo.origen === 'libre') {
-            <input type="text" class="form-control shadow-sm" placeholder="Ingrese información" [(ngModel)]="
-                        valoresCampos[campo.nombre]
-                      " (input)="actualizarPreview()" />
-            <div class="form-text">
-              Campo editable manualmente.
+            <input type="text" class="form-control custom-input" placeholder="Ingrese información manual"
+              [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
+            <div class="form-text small text-muted mt-1">
+              <i class="bi bi-keyboard text-primary"></i> Edición manual requerida
             </div>
             }
             @if (campo.origen === 'bd') {
-            <input type="text" class="form-control bg-light shadow-sm" [value]="
-                        valoresCampos[campo.nombre]
-                      " readonly />
-            <div class="form-text text-success">
-              Información cargada automáticamente desde el paciente seleccionado.
+            <input type="text" class="form-control custom-input input-readonly" [value]="valoresCampos[campo.nombre]"
+              readonly />
+            <div class="form-text small text-success mt-1">
+              <i class="bi bi-check-circle-fill"></i> Sincronizado automáticamente
             </div>
             }
           </div>
@@ -179,54 +129,44 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-              <h5 class="mb-1">
-                <i class="bi bi-eye me-2"></i>
-                Vista previa del documento
-              </h5>
-              <p class="text-muted small mb-0">
-                Revise cómo quedará el documento final antes de generarlo.
-              </p>
-            </div>
-            <span class="badge bg-light text-dark border">
-              Vista en tiempo real
-            </span>
+    <div class="col-lg-8">
+      <div class="dashboard-card p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <div>
+            <h5 class="custom-block-title mb-1">
+              <i class="bi bi-eye text-accent me-2"></i> Previsualización Final
+            </h5>
+            <p class="text-muted small mb-0">
+              Así es como se verá el documento clínico tras la generación.
+            </p>
           </div>
-          <div class="alert alert-warning small">
-            Los cambios realizados en los campos se reflejan automáticamente en esta vista previa.
-          </div>
-          <div class="documento border rounded p-4 bg-white shadow-sm" [innerHTML]="previewHtml()"></div>
-          <div class="border-top mt-4 pt-4 d-flex justify-content-end">
-            <button class="btn btn-success btn-lg shadow-sm px-5" (click)="generarDocumento()">
-              <i class="bi bi-file-earmark-arrow-down me-2"></i>
-              Generar documento
-            </button>
-          </div>
+          <span class="badge status-live-badge">
+            <i class="bi bi-record-circle text-danger me-1 blink-anim"></i> En vivo
+          </span>
+        </div>
+        <div class="preview-container shadow-inner mb-4">
+          <div class="documento" [innerHTML]="previewHtml()"></div>
+        </div>
+        <div class="d-flex justify-content-end border-top pt-3 mt-auto">
+          <button class="btn btn-action-success px-5 py-2 d-flex align-items-center shadow-sm"
+            (click)="generarDocumento()">
+            <i class="bi bi-file-earmark-pdf-fill me-2 fs-5"></i>
+            Generar y Guardar Documento
+          </button>
         </div>
       </div>
     </div>
   </div>
   }
-  @if (
-  !pacienteSeleccionado() ||
-  !plantillaSeleccionada()
-  ) {
-  <div class="card border-0 shadow-sm mt-4">
-    <div class="card-body text-center py-5">
-      <div class="display-5 mb-3">
-        <i class="bi bi-file-earmark-text"></i>
-      </div>
-      <h5>
-        Seleccione un paciente y una plantilla
-      </h5>
-      <p class="text-muted mb-0">
-        Una vez seleccionados, el sistema cargará automáticamente la información correspondiente.
-      </p>
+  @if (!pacienteSeleccionado() || !plantillaSeleccionada()) {
+  <div class="dashboard-card empty-state-box text-center py-5 mt-4 tab-animation">
+    <div class="empty-icon mx-auto mb-3">
+      <i class="bi bi-file-earmark-break"></i>
     </div>
+    <h5 class="custom-block-title">Esperando configuración inicial</h5>
+    <p class="text-muted mb-0">
+      Seleccione el paciente y la plantilla médica en el panel superior para cargar el área de trabajo.
+    </p>
   </div>
   }
   }

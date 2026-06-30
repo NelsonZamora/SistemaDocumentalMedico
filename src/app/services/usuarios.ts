@@ -140,7 +140,8 @@ export class UsuariosService {
     const { data, error } = await this.supabase
       .from('auditoria')
       .select('*')
-      .order('fecha_hora', { ascending: false });
+      .order('fecha_hora', { ascending: false })
+      .limit(5);
 
     if (error) throw error;
 

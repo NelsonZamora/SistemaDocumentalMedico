@@ -1,174 +1,94 @@
 <div class="layout-container">
-
   <aside class="sidebar">
-    
-    <h4 class="text-center mb-3">
-      <i class="bi bi-hospital me-2"></i> 
-      Sistema Médico
-    </h4>
-
-    <div class="text-center mb-3">
-      <span class="badge bg-info">
+    <div class="sidebar-header">
+      <h4 class="mb-2">
+        <i class="bi bi-hospital me-2"></i>
+        Sistema Médico
+      </h4>
+      <span class="role-badge">
         {{ role }}
       </span>
     </div>
-
     <hr>
-
     <ul class="nav flex-column gap-1">
-
       <li class="nav-item">
-        <a
-          class="nav-link "
-          routerLink="/dashboard"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }">
           <i class="bi bi-house-door me-2"></i>
           Página Principal
         </a>
       </li>
       @if(role === 'admin' || role === 'medico' || role === 'auxiliar'){
-      <li class="nav-item mt-2">
-        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+      <li class="nav-item mt-3">
+        <div class="menu-title">
           Pacientes
         </div>
-
-        <a
-          class="nav-link"
-          routerLink="/pacientes/lista-pacientes"
-          routerLinkActive="active-link"
-        >
+        <a class="nav-link" routerLink="/pacientes/lista-pacientes" routerLinkActive="active-link">
           <i class="bi bi-people me-2"></i>
           Lista de pacientes
         </a>
-
       </li>
-
-      <li class="nav-item mt-2">
-        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
-          Citas Medicas
+      <li class="nav-item mt-3">
+        <div class="menu-title">
+          Citas Médicas
         </div>
-
-        <a
-          class="nav-link"
-          routerLink="/calendario/calendario"
-          routerLinkActive="active-link"
-        >
+        <a class="nav-link" routerLink="/calendario/calendario" routerLinkActive="active-link">
           <i class="bi bi-calendar3 me-2"></i>
-          Agenda Medica
+          Agenda Médica
         </a>
-
-        @if (role === 'medico') {
-        <a
-          class="nav-link"
-          routerLink="/calendario/atencion-medica"
-          routerLinkActive="active-link"
-        >
+        @if(role === 'medico'){
+        <a class="nav-link" routerLink="/calendario/atencion-medica" routerLinkActive="active-link">
           <i class="bi bi-clipboard2-pulse me-2"></i>
-          Atencion Medica
+          Atención Médica
         </a>
         }
       </li>
       }
-      
       @if(role === 'admin' || role === 'medico'){
       <li class="nav-item mt-3">
-        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
+        <div class="menu-title">
           Documentos
         </div>
-
         @if(role === 'admin'){
-          <a
-          class="nav-link"
-          routerLink="/plantillas"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
+        <a class="nav-link" routerLink="/plantillas" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
           <i class="bi bi-cloud-upload me-2"></i>
-          Subir Plantilla
+          Subir plantilla
         </a>
-
-        <a
-          class="nav-link"
-          routerLink="/plantillas/lista"
-          routerLinkActive="active-link"
-        >
+        <a class="nav-link" routerLink="/plantillas/lista" routerLinkActive="active-link">
           <i class="bi bi-file-earmark-text me-2"></i>
           Plantillas guardadas
         </a>
         }
-        
-
-        <a
-          class="nav-link"
-          routerLink="/plantillas/generar"
-          routerLinkActive="active-link"
-        >
+        <a class="nav-link" routerLink="/plantillas/generar" routerLinkActive="active-link">
           <i class="bi bi-file-earmark-medical me-2"></i>
           Generar documento
         </a>
       </li>
       }
-
-      @if (role === 'admin') {
-        <li class="nav-item mt-3">
-          <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
-            Gestion
-          </div>
-
-          <a
-            class="nav-link"
-            routerLink="/gestion/creacion-usuarios"
-            routerLinkActive="active-link"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <i class="bi bi-person-plus me-2"></i>
-            Creacion de usuarios
-          </a>
-
-          <a
-            class="nav-link"
-            routerLink="/gestion/gestion-usuarios"
-            routerLinkActive="active-link"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <i class="bi bi-people-fill me-2"></i>
-            Gestion de usuarios
-          </a>
-        </li>
-        
-      }
-
-      <!-- <li class="nav-item mt-3">
-        <div class="text-uppercase small text-secondary fw-bold px-3 mb-1">
-          Ajustes
+      @if(role === 'admin'){
+      <li class="nav-item mt-3">
+        <div class="menu-title">
+          Gestión
         </div>
-
-        <a
-          class="nav-link"
-          routerLink="/gestion/creacion-usuarios"
-          routerLinkActive="active-link"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <i class="bi bi-gear me-2"></i>
-          Configuracion de la cuenta
+        <a class="nav-link" routerLink="/gestion/creacion-usuarios" routerLinkActive="active-link">
+          <i class="bi bi-person-plus me-2"></i>
+          Creación de usuarios
         </a>
-      </li> -->
-
+        <a class="nav-link" routerLink="/gestion/gestion-usuarios" routerLinkActive="active-link">
+          <i class="bi bi-people-fill me-2"></i>
+          Gestión de usuarios
+        </a>
+      </li>
+      }
       <li class="nav-item mt-4">
-        <button class="btn btn-danger w-100" (click)="logout()">
+        <button class="btn btn-logout w-100" (click)="logout()">
           <i class="bi bi-box-arrow-right me-2"></i>
           Cerrar sesión
         </button>
       </li>
-
     </ul>
-
   </aside>
-
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>
-
 </div>

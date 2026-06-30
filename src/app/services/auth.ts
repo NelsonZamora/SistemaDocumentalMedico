@@ -52,6 +52,15 @@ export class AuthService {
 
     }
 
+    await this.supabase.functions.invoke(
+      'registrar-auditoria',
+      {
+        body: {
+          accion: 'LOGIN'
+        }
+      }
+    );
+
     await this.actualizarUltimoAcceso(
       data.user.id
     );
@@ -65,15 +74,15 @@ export class AuthService {
 
     const { error } =
       await this.supabase
-      .from('perfiles')
-      .update({
+        .from('perfiles')
+        .update({
 
-        ultimo_acceso:
-          new Date()
-          .toISOString()
+          ultimo_acceso:
+            new Date()
+              .toISOString()
 
-      })
-      .eq('id', userId);
+        })
+        .eq('id', userId);
 
     if (error)
       console.error(
@@ -89,17 +98,27 @@ export class AuthService {
   }
 
   async getUserProfile(userId: string) {
-  const { data, error } = await this.supabase
-    .from('perfiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
+    const { data, error } = await this.supabase
+      .from('perfiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
 
-  if (error) throw error;
-  return data;
+    if (error) throw error;
+    return data;
   }
 
   async logout() {
+
+    await this.supabase.functions.invoke(
+      'registrar-auditoria',
+      {
+        body: {
+          accion: 'LOGOUT'
+        }
+      }
+    );
+
     await this.supabase.auth.signOut();
   }
 

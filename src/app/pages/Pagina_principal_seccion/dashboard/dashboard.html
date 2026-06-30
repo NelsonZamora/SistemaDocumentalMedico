@@ -1,438 +1,109 @@
-<div class="container-fluid mt-4">
-  @if (role === 'admin') {
+<div class="dashboard container-fluid py-4">
+  <!-- Encabezado -->
   <div class="row mb-4">
-    <div class="col-md-12">
-      <h2 class="fw-bold text-dark">
-        Panel Administrativo
+    <div class="col">
+      <h2 class="page-title">
+        <i class="bi bi-hospital me-2"></i>
+        Panel Principal
       </h2>
-      <p class="text-muted">
-        Bienvenido al panel de gestión del sistema médico.
+      <p class="page-subtitle">
+        Bienvenido al Sistema de Gestión Documental Médica.
       </p>
     </div>
   </div>
-  <div class="row g-4 mb-5">
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #0d6efd; border-radius: 15px;">
+  <!-- Tarjetas -->
+  <div class="row g-4 mb-4">
+    @for (card of dashboardConfig().tarjetas; track card.titulo) {
+    <div class="col-xl-3 col-md-6">
+      <div class="dashboard-card metric-card p-3">
         <div class="d-flex align-items-center">
-          <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-people-fill text-primary fs-4"></i>
+          <div class="metric-icon me-3">
+            <i [class]="card.icono"></i>
           </div>
           <div>
-            <h6 class="text-muted mb-0">
-              Total Pacientes
-            </h6>
-            <h3 class="fw-bold mb-0">
-              1,254
-            </h3>
+            <div class="metric-title">
+              {{ card.titulo }}
+            </div>
+            <div class="metric-value">
+              {{ card.valor }}
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #198754; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-file-earmark-text text-success fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Documentos Generados
-            </h6>
-            <h3 class="fw-bold mb-0">
-              532
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #ffc107; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-person-badge-fill text-warning fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Usuarios Activos
-            </h6>
-            <h3 class="fw-bold mb-0">
-              8
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #dc3545; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Pendientes
-            </h6>
-            <h3 class="fw-bold mb-0">
-              {{ pendientes() }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
+    }
   </div>
+  <!-- Contenido -->
   <div class="row g-4">
-    <div class="col-md-8">
-      <div class="card border-0 shadow-sm p-4" style="border-radius: 20px;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5 class="fw-bold m-0">
-            Actividad Reciente del Sistema
+    <!-- Actividad -->
+    <div class="col-lg-8">
+      <div class="dashboard-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="section-title">
+            <i class="bi bi-clock-history me-2"></i>
+            @if(this.role() === "admin"){
+            Ultimas actividades en el sistema
+            }
+            @if(this.role() === "medico"){
+            Ultimos 5 pacientes atendidos
+            }
+            @if(this.role() === "auxiliar"){
+            Ultimos 5 pacientes agendados
+            }
+
           </h5>
-          <button class="btn btn-sm btn-primary">
-            Ver historial
-          </button>
         </div>
         <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
+          <table class="table align-middle table-hover">
+            <thead>
               <tr>
+
+                @if(this.role() === "admin"){
                 <th>Usuario</th>
-                <th>Acción</th>
+                <th>Accion</th>
+                <th>Modulo</th>
                 <th>Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Dr. Juan Pérez</td>
-                <td>Generó documento</td>
-                <td>Hace 5 minutos</td>
-              </tr>
-              <tr>
-                <td>Administrador</td>
-                <td>Creó nuevo usuario</td>
-                <td>Hace 20 minutos</td>
-              </tr>
-              <tr>
-                <td>Dra. María López</td>
-                <td>Registró paciente</td>
-                <td>Hace 1 hora</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background: #0d6efd;">
-        <h5 class="text-white mb-4 fw-bold">
-          Accesos Administrativos
-        </h5>
-        <div class="d-grid gap-2">
-          <button class="btn btn-light text-primary fw-bold py-2">
-            <i class="bi bi-person-plus me-2"></i>
-            Crear Usuario
-          </button>
-          <button class="btn btn-primary border border-white py-2">
-            <i class="bi bi-file-earmark-arrow-up me-2"></i>
-            Subir Plantilla
-          </button>
-          <button class="btn btn-primary border border-white py-2">
-            <i class="bi bi-bar-chart-line me-2"></i>
-            Ver Reportes
-          </button>
-        </div>
-      </div>
-      <div class="card border-0 shadow-sm p-4" style="border-radius: 20px;">
-        <h5 class="fw-bold mb-3">
-          Estado del Sistema
-        </h5>
-        <div class="p-3 bg-light rounded-3 border-start border-success border-4 mb-2">
-          <p class="small mb-0 fw-medium">
-            <i class="bi bi-database-check me-2"></i>
-            Base de datos conectada
-          </p>
-        </div>
-        <div class="p-3 bg-light rounded-3 border-start border-primary border-4 mb-2">
-          <p class="small mb-0 fw-medium">
-            <i class="bi bi-hdd-network me-2"></i>
-            Storage operativo
-          </p>
-        </div>
-        <div class="p-3 bg-light rounded-3 border-start border-warning border-4">
-          <p class="small mb-0 fw-medium">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            2 documentos pendientes
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  }
-  @if (role === 'auxiliar') {
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <h2 class="fw-bold text-dark">
-        Panel Auxiliar
-      </h2>
-      <p class="text-muted">
-        Bienvenido al panel del rol auxiliar.
-      </p>
-    </div>
-  </div>
-  <div class="row g-4 mb-5">
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #0d6efd; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-people-fill text-primary fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Total Pacientes
-            </h6>
-            <h3 class="fw-bold mb-0">
-              1,254
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #198754; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-file-earmark-text text-success fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Documentos Generados
-            </h6>
-            <h3 class="fw-bold mb-0">
-              532
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #ffc107; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-person-badge-fill text-warning fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Usuarios Activos
-            </h6>
-            <h3 class="fw-bold mb-0">
-              8
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #dc3545; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Pendientes
-            </h6>
-            <h3 class="fw-bold mb-0">
-              {{ pendientes() }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row g-4">
-    <div class="col-md-8">
-      <div class="card border-0 shadow-sm p-4" style="border-radius: 20px;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5 class="fw-bold m-0">
-            Actividad Reciente del Sistema
-          </h5>
-          <button class="btn btn-sm btn-primary">
-            Ver historial
-          </button>
-        </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>Usuario</th>
-                <th>Acción</th>
+                }
+                @if(this.role() === "medico"){
+                <th>Nombre del paciente</th>
+                <th>Motivo</th>
                 <th>Fecha</th>
+                }
+                @if(this.role() === "auxiliar"){
+                <th>Nombre del paciente</th>
+                <th>Fecha de la cita</th>
+                <th>Estado de la cita</th>
+                }
               </tr>
             </thead>
+            @if(this.role() === "admin"){
             <tbody>
+              @if (actividadReciente().length === 0) {
               <tr>
-                <td>Dr. Juan Pérez</td>
-                <td>Generó documento</td>
-                <td>Hace 5 minutos</td>
+                <td colspan="4" class="text-center py-4 text-muted">
+                  No existen registros recientes.
+                </td>
               </tr>
+              }
+              @for(item of actividadReciente(); track item.id){
               <tr>
-                <td>Administrador</td>
-                <td>Creó nuevo usuario</td>
-                <td>Hace 20 minutos</td>
+                <td>
+                  {{ item.usuario_nombre }}
+                </td>
+                <td>
+                  {{ item.accion }}
+                </td>
+                <td>
+                  {{ formatearModulo(item.modulo) }}
+                </td>
+                <td>
+                  {{ item.fecha_hora | date:'short' }}
+                </td>
               </tr>
-              <tr>
-                <td>Dra. María López</td>
-                <td>Registró paciente</td>
-                <td>Hace 1 hora</td>
-              </tr>
+              }
             </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background: #0d6efd;">
-        <h5 class="text-white mb-4 fw-bold">
-          Accesos Rápidos
-        </h5>
-        <div class="d-grid gap-2">
-          <button class="btn btn-light text-primary fw-bold py-2">
-            <i class="bi bi-person-plus me-2"></i>
-            Registrar Paciente
-          </button>
-          <button class="btn btn-primary border border-white py-2">
-            <i class="bi bi-heart-pulse me-2"></i>
-            Asignar valores a paciente
-          </button>
-          <button class="btn btn-primary border border-white py-2">
-            <i class="bi bi-bar-chart-line me-2"></i>
-            Ver Reportes
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  }
-  @if (role === 'medico') {
-  <div class="row mb-4">
-    <div class="col-md-12">
-      <h2 class="fw-bold text-dark">
-        Panel Médico
-      </h2>
-      <p class="text-muted">
-        Bienvenido. Aquí tiene el resumen de su actividad médica.
-      </p>
-    </div>
-  </div>
-  <div class="row g-4 mb-5">
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #0d6efd; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-person-heart text-primary fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Pacientes Hoy
-            </h6>
-            <h3 class="fw-bold mb-0">
-              {{ pacientesHoy() }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #198754; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-file-earmark-medical text-success fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Documentos Emitidos
-            </h6>
-            <h3 class="fw-bold mb-0">
-              {{ documentosEmitidos() }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #ffc107; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-clock-history text-warning fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Pendientes
-            </h6>
-            <h3 class="fw-bold mb-0">
-              {{ pendientes() }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card border-0 shadow-sm p-3" style="border-left: 5px solid #dc3545; border-radius: 15px;">
-        <div class="d-flex align-items-center">
-          <div class="bg-danger bg-opacity-10 p-3 rounded-circle me-3">
-            <i class="bi bi-calendar-check text-danger fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">
-              Próxima Cita de hoy
-            </h6>
-            <h3 class="fw-bold mb-0">
-              {{ proximaCita()?.hora_inicio?.substring(0,5) || 'No hay cita pendiente' }}
-            </h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row g-4">
-    <div class="col-md-8">
-      <div class="card border-0 shadow-sm p-4" style="border-radius: 20px;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5 class="fw-bold m-0">
-            Ultimos 5 Pacientes Recientes Atendidos
-          </h5>
-          <button class="btn btn-sm btn-primary">
-            Ver todos
-          </button>
-        </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>Paciente</th>
-                <th>Fecha y Hora</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <!-- <tbody>
-                <tr>
-                  <td>María Pérez</td>
-                  <td>10:30</td>
-                  <td>
-                    <span class="badge bg-success-subtle text-success">
-                      Atendido
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Carlos Ruiz</td>
-                  <td>11:00</td>
-                  <td>
-                    <span class="badge bg-warning-subtle text-warning">
-                      Pendiente
-                    </span>
-                  </td>
-                </tr>
-              </tbody> -->
+            }
+            @if(this.role() === "medico"){
             <tbody>
               @if (pacientesRecientes().length === 0) {
               <tr>
@@ -450,60 +121,39 @@
                   {{ cita.pacientes.nombres }}
                   {{ cita.pacientes.apellidos }}
                 </td>
+
+                <td>
+                  {{ cita.motivo }}
+                </td>
                 <td>
                   {{ cita.fecha }}
                   {{ cita.hora_inicio.substring(0,5) }}
                 </td>
-                <td>
-                  @if (cita.estado === 'atendida') {
-                  <span class="badge bg-success-subtle text-success">
-                    Atendido
-                  </span>
-                  }
-                  @if (cita.estado === 'programada') {
-                  <span class="badge bg-warning-subtle text-warning">
-                    Pendiente
-                  </span>
-                  }
-                  @if (cita.estado === 'cancelada') {
-                  <span class="badge bg-danger-subtle text-danger">
-                    Cancelada
-                  </span>
-                  }
-                  @if (cita.estado === 'ausente') {
-                  <span class="badge bg-secondary">
-                    Ausente
-                  </span>
-                  }
-                </td>
               </tr>
               }
             </tbody>
+            }
           </table>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background: #198754;">
-        <h5 class="text-white mb-4 fw-bold">
-          Accesos Rápidos
+    <!-- Lado derecho -->
+    <div class="col-lg-4">
+      <!-- Accesos rápidos -->
+      <div class="dashboard-card quick-access p-4 mb-4">
+        <h5 class="text-white mb-4">
+          <i class="bi bi-lightning-charge-fill me-2"></i>
+          Accesos rápidos
         </h5>
         <div class="d-grid gap-2">
-          <button class="btn btn-light text-success fw-bold py-2">
-            <i class="bi bi-person-plus me-2"></i>
-            Nuevo Paciente
+          @for (acceso of dashboardConfig().accesos; track acceso.titulo) {
+          <button class="btn btn-light" (click)="acceso.accion()">
+            <i [class]="acceso.icono + ' me-2'"></i>
+            {{ acceso.titulo }}
           </button>
-          <button class="btn btn-success border border-white py-2">
-            <i class="bi bi-file-earmark-medical me-2"></i>
-            Generar Documento
-          </button>
-          <button class="btn btn-success border border-white py-2">
-            <i class="bi bi-clock-history me-2"></i>
-            Ver Historial
-          </button>
+          }
         </div>
       </div>
     </div>
   </div>
-  }
 </div>

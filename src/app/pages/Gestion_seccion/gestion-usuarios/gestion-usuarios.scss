@@ -1,15 +1,232 @@
-.tabla-usuarios{
-    table-layout: fixed;
-    width: 100%;
+// ==========================================================================
+// Variables del Ecosistema Médico
+// ==========================================================================
+$primario: #2BB7C9;
+$primario-oscuro: #16374A;
+$secundario: #66D1DE;
+$secundario-claro: #E6F7FA;
+$btn-primario-hover: #239EAE;
+$fondo-principal: #F5FAFC;
+$fondo-secundario: #FFFFFF;
+$fondo-terciario: #EDF6F8;
+$borders: #E1E8EB;
+$texto-principal: #16374A;
+$texto-secundario: #4A6572;
+$texto-terciario: #7A8D99;
+$texto-discreto: #A6B6BD;
+
+// ==========================================================================
+// Estructuras Base
+// ==========================================================================
+.user-management-page {
+  background: $fondo-principal;
+  min-height: 100vh;
 }
 
-.tabla-usuarios th,
-.tabla-usuarios td{
-    vertical-align: middle;
+.page-title { color: $primario-oscuro; font-weight: 700; }
+.page-subtitle { color: $texto-secundario; }
+.bg-main { background-color: $fondo-principal; }
+.text-dark-blue { color: $primario-oscuro; }
+.text-accent { color: $primario; }
+.text-discreto { color: $texto-discreto; }
+
+.dashboard-card {
+  background: $fondo-secundario;
+  border-radius: 18px;
+  border: 1px solid $borders;
+  box-shadow: 0 8px 20px rgba(22, 55, 74, .06);
+  &.border-accent-top { border-top: 4px solid $primario; }
 }
 
-.rol-badge{
-    width: 80px;
+.custom-block-title {
+  color: $primario-oscuro;
+  font-weight: 600;
+}
+
+// Botones
+.btn-primary {
+  background: $primario;
+  border-color: $primario;
+  font-weight: 600;
+  &:hover { background: $btn-primario-hover; border-color: $btn-primario-hover; }
+}
+
+.btn-action-icon {
+  background: $fondo-terciario;
+  color: $primario-oscuro;
+  border: 1px solid rgba(43, 183, 201, 0.2);
+  transition: all 0.2s;
+  &:hover { background: $primario; color: white; }
+}
+
+// ==========================================================================
+// Componentes Específicos
+// ==========================================================================
+.info-card {
+  background: $secundario-claro;
+  border-color: transparent;
+  .section-title { color: $primario-oscuro; font-weight: 600; }
+}
+
+.help-item-minimal {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: $fondo-secundario;
+  padding: 12px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(43, 183, 201, 0.15);
+  height: 100%;
+  
+  .help-icon-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(43, 183, 201, 0.1);
+    color: $primario;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
     flex-shrink: 0;
-    font-size: .85rem;
+  }
+}
+
+.avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: rgba($primario, 0.15);
+  color: $primario;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: 1px solid rgba($primario, 0.3);
+  flex-shrink: 0;
+}
+
+// Badges de Roles y Estados
+.role-badge {
+  width: 90px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  &.admin { background: rgba(43, 183, 201, 0.15); color: $primario-oscuro; border: 1px solid rgba(43, 183, 201, 0.3); }
+  &.medico { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+  &.auxiliar { background: #fff3e0; color: #ef6c00; border: 1px solid #ffe0b2; }
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  &.active-status { background-color: #e8f5e9; color: #2e7d32; }
+  &.blocked-status { background-color: #ffebee; color: #c62828; }
+}
+
+// ==========================================================================
+// Tabla Personalizada
+// ==========================================================================
+.custom-table {
+  thead th {
+    background-color: $fondo-terciario;
+    color: $texto-secundario;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid $borders;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  tbody td {
+    color: $texto-principal;
+    border-bottom: 1px solid $borders;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    vertical-align: middle;
+  }
+  tbody tr {
+    transition: background-color 0.2s;
+    &:hover { background-color: rgba(43, 183, 201, 0.03); }
+  }
+}
+
+// ==========================================================================
+// Modal y Filtros
+// ==========================================================================
+.custom-modal-backdrop {
+  background: rgba(22, 55, 74, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.custom-modal-content {
+  border-radius: 20px;
+  overflow: hidden;
+  .custom-modal-header {
+    background-color: $primario-oscuro;
+    border-bottom: none;
+    .btn-close-white { filter: brightness(0) invert(1); opacity: 0.8; &:hover { opacity: 1; } }
+  }
+}
+
+.custom-form-label-sm { color: $texto-secundario; font-weight: 600; font-size: 0.8rem; margin-bottom: 4px; display: block; }
+.custom-input, .custom-select {
+  background-color: $fondo-principal;
+  border: 1px solid $borders;
+  color: $primario-oscuro;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  &:focus { border-color: $primario; box-shadow: 0 0 0 3px rgba(43, 183, 201, 0.15); outline: none; }
+}
+
+.module-code {
+  background: $fondo-terciario;
+  color: $primario-oscuro;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(43, 183, 201, 0.2);
+  font-size: 0.8rem;
+}
+
+.log-badge { padding: 6px 10px; border-radius: 6px; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.5px; }
+
+.info-edit-banner {
+  background: rgba(43, 183, 201, 0.1);
+  border: none;
+  border-left: 4px solid $primario;
+  border-radius: 8px;
+  color: $primario-oscuro;
+}
+
+// Tarjetas de Diferencias (Auditoría)
+.diff-card {
+  border: 1px solid $borders;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  &.border-danger { border-color: rgba(220, 53, 69, 0.3) !important; }
+  &.border-success { border-color: rgba(25, 135, 84, 0.3) !important; }
+  
+  .diff-header { padding: 10px 15px; font-weight: 600; font-size: 0.9rem; }
+  .bg-danger-light { background-color: #fcf0f1; }
+  .text-danger-dark { color: #a52834; }
+  .bg-success-light { background-color: #f0f9f4; }
+  .text-success-dark { color: #146c43; }
+  
+  .custom-dl {
+    dt { padding-top: 6px; padding-bottom: 6px; border-bottom: 1px dashed $borders; }
+    dd { padding-top: 6px; padding-bottom: 6px; border-bottom: 1px dashed $borders; margin-bottom: 0; }
+  }
+}
+
+.tab-animation {
+  animation: fadeIn 0.25s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
