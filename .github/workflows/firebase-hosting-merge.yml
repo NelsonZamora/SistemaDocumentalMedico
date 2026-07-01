@@ -11,7 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci && npm run build
+      - run: npm ci
+      - name: Create Angular environment
+        run: |
+          mkdir -p src/environments
+          cat > src/environments/environment.ts <<EOF
+          export const environment = {
+            production: true,
+            supabaseUrl: '${{ secrets.SUPABASE_URL }}',
+            supabaseKey: '${{ secrets.SUPABASE_ANON_KEY }}'
+          };
+          EOF
+      - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
