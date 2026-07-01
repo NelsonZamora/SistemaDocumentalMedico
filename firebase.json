@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/sistema-medico",
+    "public": "dist/sistema-medico/browser",
     "ignore": [
       "firebase.json",
       "**/.*",
