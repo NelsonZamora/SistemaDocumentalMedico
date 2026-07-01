@@ -2,12 +2,15 @@
   <aside class="sidebar">
     <div class="sidebar-header">
       <h4 class="mb-2">
-        <i class="bi bi-hospital me-2"></i>
-        Sistema Médico
-      </h4>
-      <span class="role-badge">
-        {{ role }}
-      </span>
+          <i class="bi bi-hospital me-2"></i>
+          Sistema Médico
+        </h4>
+      <div class="user-info">
+        <span class="user-name">
+          <i class="bi bi-person-circle me-2"></i>
+          Bienvenido, {{ nombreUsuario() }}  
+        </span>
+      </div>
     </div>
     <hr>
     <ul class="nav flex-column gap-1">
@@ -50,7 +53,8 @@
           Documentos
         </div>
         @if(role === 'admin'){
-        <a class="nav-link" routerLink="/plantillas" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+        <a class="nav-link" routerLink="/plantillas" routerLinkActive="active-link"
+          [routerLinkActiveOptions]="{ exact: true }">
           <i class="bi bi-cloud-upload me-2"></i>
           Subir plantilla
         </a>

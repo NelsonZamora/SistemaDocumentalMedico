@@ -127,3 +127,38 @@
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: #239EAE;
 }
+
+//USER //
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-role {
+  color: #A6B6BD;
+  font-size: .82rem;
+  margin-bottom: .25rem;
+
+  strong {
+    color: #2BB7C9;
+    font-weight: 600;
+  }
+}
+
+.user-name {
+  display: inline-flex;
+  align-items: center;
+  background: #2BB7C9;
+  color: #FFFFFF;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: .45rem .9rem;
+  font-size: .9rem;
+  box-shadow: 0 .25rem .75rem rgba(43, 183, 201, .25);
+
+  i {
+    font-size: 1rem;
+  }
+}

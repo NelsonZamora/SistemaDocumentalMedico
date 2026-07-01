@@ -2,10 +2,22 @@
   <!-- Encabezado -->
   <div class="row mb-4">
     <div class="col">
+      @if (this.role() === "admin") {
       <h2 class="page-title">
         <i class="bi bi-hospital me-2"></i>
-        Panel Principal
+        Panel Principal Administrativa
       </h2>
+      }@else if (this.role() === "medico") {
+      <h2 class="page-title">
+        <i class="bi bi-hospital me-2"></i>
+        Panel Principal Medica
+      </h2>
+      }@else if (this.role() === "auxiliar") {
+      <h2 class="page-title">
+        <i class="bi bi-hospital me-2"></i>
+        Panel Principal Auxiliar
+      </h2>
+      }
       <p class="page-subtitle">
         Bienvenido al Sistema de Gestión Documental Médica.
       </p>
@@ -72,6 +84,7 @@
                 @if(this.role() === "auxiliar"){
                 <th>Nombre del paciente</th>
                 <th>Fecha de la cita</th>
+                <th>Hora de la cita</th>
                 <th>Estado de la cita</th>
                 }
               </tr>
@@ -128,6 +141,39 @@
                 <td>
                   {{ cita.fecha }}
                   {{ cita.hora_inicio.substring(0,5) }}
+                </td>
+              </tr>
+              }
+            </tbody>
+            }
+
+            @if(this.role() === "auxiliar"){
+            <tbody>
+              @if (ultimosPacientes().length === 0) {
+              <tr>
+                <td colspan="4" class="text-center text-muted py-4">
+                  No hay pacientes agendados recientemente.
+                </td>
+              </tr>
+              }
+              @for (
+              paciente of ultimosPacientes();
+              track paciente.id
+              ) {
+              <tr>
+                <td>
+                  {{ paciente.pacientes.nombres }}
+                  {{ paciente.pacientes.apellidos }}
+                </td>
+                <td>
+                  {{ paciente.fecha }}
+                </td>
+                <td>
+                  {{ paciente.hora_inicio.substring(0,5) }}
+                </td>
+                <td>
+                  {{ paciente.estado }}
+
                 </td>
               </tr>
               }

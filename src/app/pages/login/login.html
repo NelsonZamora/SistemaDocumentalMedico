@@ -1,63 +1,82 @@
-<div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
-  <div class="card shadow-lg border-0 overflow-hidden" style="max-width: 900px; border-radius: 15px;">
-    <div class="row g-0">
-      <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center bg-white p-4">
-        <img src="logo-bg.png" alt="Medical Team" class="img-fluid">
-      </div>
-      <div class="col-md-6 p-5 bg-white">
-        <div class="text-center mb-4">
-          <div class="mb-2">
-            <i class="bi bi-intersect text-primary" style="font-size: 2rem;"></i>
-            <h5 class="fw-bold text-secondary">Centro Médico</h5>
+<div class="login-page container-fluid vh-100 d-flex align-items-center justify-content-center">
+  <div class="dashboard-card login-card overflow-hidden">
+    <div class="row g-0 h-100">
+
+      <!-- Panel Gráfico Izquierdo -->
+      <div class="col-md-6 d-none d-md-flex flex-column align-items-center justify-content-center brand-bg-panel p-5">
+        <div class="text-center text-white brand-content">
+          <div class="logo-card mb-4">
+            <img src="logo-bg.png" alt="Medical Team" class="img-fluid">
           </div>
-          <h2 class="fw-bold mt-3">Bienvenido</h2>
-          <p class="text-muted">Por favor
-            Ingrese sus credenciales
-          </p>
+          <h3 class="fw-bold mb-2">Sistema Documental Médico</h3>
+          <p class="opacity-75 small">Gestión eficiente y segura de expedientes clínicos</p>
         </div>
-        <form (ngSubmit)="onLogin()">
-          <div class="mb-4">
-            <label class="form-label fw-semibold">Correo Electrónico</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent border-end-0">
-                <i class="bi bi-envelope text-primary"></i>
-              </span>
-              <input type="email" class="form-control border-start-0" [(ngModel)]="email" name="email"
-                placeholder="nombre@ejemplo.com" required>
-            </div>
+      </div>
+
+      <!-- Panel de Formulario Derecho -->
+      <div class="col-md-6 p-4 p-lg-5 bg-white form-panel d-flex flex-column justify-content-center">
+        <div class="text-center mb-5">
+          <div class="brand-icon-wrapper mx-auto mb-3">
+            <i class="bi bi-intersect text-accent"></i>
           </div>
+          <h5 class="fw-bold text-dark-blue mb-1">Centro Médico</h5>
+          <h2 class="fw-bold text-dark-blue mt-3">Bienvenido</h2>
+          <p class="text-secondary-custom">Por favor ingrese sus credenciales para continuar</p>
+        </div>
+
+        <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate class="px-xl-3">
           <div class="mb-4">
-            <label class="form-label fw-semibold">Contraseña</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent border-end-0">
-                <i class="bi bi-lock text-primary"></i>
+            <label class="custom-form-label">Correo Electrónico</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text">
+                <i class="bi bi-envelope text-accent"></i>
               </span>
-              <input type="password" class="form-control border-start-0" [(ngModel)]="password" name="password"
-                placeholder="••••••••" required>
+              <input type="email" class="form-control" [(ngModel)]="email" name="email" #emailCtrl="ngModel" required
+                email placeholder="nombre@ejemplo.com" [class.is-invalid]="intentoLogin() && emailCtrl.invalid">
             </div>
           </div>
 
-          @if(error()){
-            <div class="alert alert-danger py-2 small">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error() }}
-            </div>
-          }
-          
-          <button class="btn btn-primary w-100 py-2 fw-bold shadow-sm mt-3" type="submit"
-            style="background-color: #17a2b8; border: none;"
-            [disabled]="cargando()">
-            
-            @if (!cargando()) {
-              <span>Iniciar Sesión</span>
-            } @else {
-              <span>
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Autenticando...
+          <div class="mb-4">
+            <label class="custom-form-label">Contraseña</label>
+            <div class="input-group custom-input-group">
+              <span class="input-group-text">
+                <i class="bi bi-lock text-accent"></i>
               </span>
+              <input type="password" class="form-control" [(ngModel)]="password" name="password" #passwordCtrl="ngModel"
+                required placeholder="••••••••" [class.is-invalid]="intentoLogin() && passwordCtrl.invalid">
+            </div>
+          </div>
+          <div class="validation-message alert alert-warning py-2 px-3 small d-flex align-items-center mb-4"
+            [class.invisible]="!(intentoLogin() && loginForm.invalid)">
+
+            <i class="bi bi-exclamation-circle me-2"></i>
+            Ingrese su correo electrónico y contraseña para continuar.
+
+          </div>
+
+
+          @if(error()){
+          <div class="alert custom-alert-danger py-2 px-3 small d-flex align-items-center mb-4 fade-in">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+            <span>{{ error() }}</span>
+          </div>
+          }
+
+          <button
+            class="btn btn-action-primary w-100 py-3 fw-bold mt-2 d-flex align-items-center justify-content-center"
+            type="submit" [disabled]="cargando()">
+            @if (!cargando()) {
+            <span><i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión</span>
+            } @else {
+            <span>
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Autenticando al sistema...
+            </span>
             }
           </button>
         </form>
       </div>
+
     </div>
   </div>
 </div>

@@ -26,17 +26,25 @@ export class DashboardComponent implements OnInit {
   role = signal<'admin' | 'medico' | 'auxiliar'>(
     (localStorage.getItem('userRole') as 'admin' | 'medico' | 'auxiliar') ?? 'auxiliar'
   );
+  //admin var
   totalPacientes = signal(0);
   documentosGenerados = signal(0);
   usuariosActivos = signal(0);
-  pendientes = signal(0);
+  citasHoy = signal(0);
+  actividadReciente = signal<any[]>([]);
+  //medico var
   pacientesHoy = signal(0);
-  pacientesRecientes = signal<any[]>([]);
   documentosEmitidos = signal(0);
   proximaCita = signal<string>('Sin citas');
-  citasHoy = signal(0);
+  pendientes = signal(0);
+  pacientesRecientes = signal<any[]>([]);
+  //auxiliar var
+  citasHoyAux = signal(0);
+  pendientesAux = signal(0);
+  totalCitasAux = signal(0);
+  medicosActivos = signal(0);
+  ultimosPacientes = signal<any[]>([]);
 
-  actividadReciente = signal<any[]>([]);
   //===========================
   // Configuración del Dashboard
   //===========================
@@ -73,10 +81,10 @@ export class DashboardComponent implements OnInit {
       default:
         return {
           tarjetas: [
-            { titulo: 'Pacientes', valor: this.totalPacientes(), icono: 'bi bi-people-fill' },
-            { titulo: 'Citas del Día', valor: this.citasHoy(), icono: 'bi bi-calendar-event' },
-            { titulo: 'Documentos', valor: this.documentosGenerados(), icono: 'bi bi-file-earmark-text' },
-            { titulo: 'Pendientes', valor: this.pendientes(), icono: 'bi bi-clock-history' }
+            { titulo: 'Citas totales de hoy', valor: this.citasHoyAux(), icono: 'bi bi-calendar-check' },
+            { titulo: 'Pacientes Atendidos Hoy', valor: this.totalCitasAux(), icono: 'bi bi-people-fill' },
+            { titulo: 'Pacientes Pendientes Hoy', valor: this.pendientesAux(), icono: 'bi bi-clock-history' },
+            { titulo: 'Medicos ', valor: this.medicosActivos(), icono: 'bi bi-file-earmark-text' }
           ],
           accesos: [
             { titulo: 'Registrar Paciente', icono: 'bi bi-person-plus', accion: () => this.router.navigate(['/pacientes/lista-pacientes']) },
@@ -95,9 +103,9 @@ export class DashboardComponent implements OnInit {
       this.totalPacientes.set(resumenAdmin.totalPacientes || 0);
       this.documentosGenerados.set(resumenAdmin.totalDocumentos || 0);
       this.usuariosActivos.set(resumenAdmin.usuariosActivos || 0);
-      this,this.pacientesHoy.set(resumenAdmin.citasHoy || 0);
+      this.citasHoy.set(resumenAdmin.citasHoy || 0);
 
-      
+
     } else if (this.role() === 'medico') {
       try {
         const resumen = await this.dashboardService.getResumenMedico();
@@ -111,7 +119,13 @@ export class DashboardComponent implements OnInit {
         console.error('Error al cargar métricas del dashboard:', error);
       }
     } else if (this.role() === 'auxiliar') {
-      this.dashboardService.getResumenAuxiliar();
+      const resumenAuxiliar = await this.dashboardService.getResumenAuxiliar();
+
+      this.citasHoyAux.set(resumenAuxiliar.citasHoy || 0);
+      this.pendientesAux.set(resumenAuxiliar.pendientes || 0);
+      this.totalCitasAux.set(resumenAuxiliar.totalCitasAux || 0);
+      this.medicosActivos.set(resumenAuxiliar.medicosActivos || 0);
+      this.ultimosPacientes.set(resumenAuxiliar.ultimosPacientes || []);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet,RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth';
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',
 })
-export class MainLayoutComponent {
+export class MainLayoutComponent{
 
   constructor(
     private auth: AuthService,
@@ -17,6 +17,10 @@ export class MainLayoutComponent {
   ) {}
 
   role = localStorage.getItem('userRole');
+  nombreUsuario = signal(
+  localStorage.getItem('userName') ?? ''
+);
+
 
   async logout() {
     await this.auth.logout();

@@ -8,12 +8,15 @@ import { Router } from '@angular/router';
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './login.html'
+  templateUrl: './login.html',
+  styleUrl: './login.scss'
 })
 export class LoginComponent {
 
   error = signal<string>('');
   cargando = signal<boolean>(false);
+
+  intentoLogin = signal(false);
 
   email = '';
   password = '';
@@ -22,9 +25,15 @@ export class LoginComponent {
     private auth: AuthService,
     private router: Router,
     private zone: NgZone
-  ) {}
+  ) { }
 
-  async onLogin() {
+  async onLogin(form: any) {
+
+    this.intentoLogin.set(true);
+
+    if (form.invalid) {
+      return;
+    }
 
     try {
 
@@ -35,6 +44,7 @@ export class LoginComponent {
       const profile = await this.auth.getUserProfile(userId!);
 
       localStorage.setItem('userRole', profile.rol);
+      localStorage.setItem('userName', profile.nombre_completo);
 
       this.zone.run(() => {
         this.router.navigate(['/dashboard']);

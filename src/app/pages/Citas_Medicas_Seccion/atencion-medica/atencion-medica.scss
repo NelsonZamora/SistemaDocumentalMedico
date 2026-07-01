@@ -1,20 +1,170 @@
+@use "sass:color";
+// ==========================================================================
+// Variables del Sistema Documental Médico
+// ==========================================================================
+$primario: #2BB7C9;
+$primario-oscuro: #16374A;
+$secundario: #66D1DE;
+$secundario-claro: #E6F7FA;
+$btn-primario-hover: #239EAE;
+$btn-exito: #2DBE60;
+$fondo-principal: #F5FAFC;
+$fondo-secundario: #FFFFFF;
+$fondo-terciario: #EDF6F8;
+$borders: #E1E8EB;
+$texto-principal: #16374A;
+$texto-secundario: #4A6572;
+$texto-terciario: #7A8D99;
+$texto-claro: #FFFFFF;
+
+// ==========================================================================
+// Estructuras Base
+// ==========================================================================
+.medical-attention-page {
+  background: $fondo-principal;
+  min-height: 100vh;
+}
+
+.page-title { color: $primario-oscuro; font-weight: 700; margin-bottom: .3rem; }
+.page-subtitle { color: $texto-secundario; font-size: 0.95rem; }
+
+.dashboard-card {
+  background: $fondo-secundario;
+  border-radius: 18px;
+  border: 1px solid $borders;
+  box-shadow: 0 8px 20px rgba(22, 55, 74, .06);
+  &.border-accent-top { border-top: 4px solid $primario; }
+  &.border-success-top { border-top: 4px solid $btn-exito; }
+}
+
+.custom-block-title { color: $primario-oscuro; font-weight: 600; }
+.text-accent { color: $primario; }
+.text-dark-blue { color: $primario-oscuro; }
+.text-tertiary { color: $texto-terciario; }
+
+// ==========================================================================
+// Instrucciones (.info-card)
+// ==========================================================================
+.info-card {
+  background: $secundario-claro;
+  border-color: transparent;
+  .help-icon-lg {
+    width: 45px; height: 45px; border-radius: 12px; background: $fondo-secundario;
+    color: $primario; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+  }
+  .section-title { color: $primario-oscuro; font-weight: 600; }
+}
+
+.custom-ol {
+  li { margin-bottom: 4px; }
+  .badge-hint { padding: 3px 8px; border-radius: 4px; font-weight: 500; font-size: 0.75rem;}
+  .success-hint { background-color: rgba($btn-exito, 0.15); color: color.adjust($btn-exito, $lightness: -15%); border: 1px solid rgba($btn-exito, 0.3); }
+  .primary-hint { background-color: rgba($primario, 0.15); color: $primario-oscuro; border: 1px solid rgba($primario, 0.3); }
+}
+
+// ==========================================================================
+// Panel Izquierdo: Lista de Citas
+// ==========================================================================
+.bg-main-soft { background-color: $fondo-principal; }
+.list-container { max-height: calc(100vh - 250px); overflow-y: auto; }
+
+.count-status-badge { background-color: $fondo-terciario; color: $primario-oscuro; border: 1px solid $borders; padding: 6px 14px; border-radius: 30px; font-weight: 600; }
+
 .cita-card {
-  border: 2px solid #e9ecef;
-  border-radius: 12px;
-  padding: 1rem;
+  background: $fondo-secundario;
+  border: 1px solid $borders;
+  border-radius: 14px;
+  padding: 1.25rem;
   cursor: pointer;
-  transition: all .2s ease;
-  background: #fff;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+
+  &:hover {
+    border-color: rgba($primario, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(22, 55, 74, 0.08);
+  }
+
+  &.cita-seleccionada {
+    border-color: $primario;
+    background-color: $secundario-claro;
+    box-shadow: 0 0 0 3px rgba($primario, 0.15);
+  }
+
+  .avatar-circle-sm {
+    width: 38px; height: 38px; border-radius: 50%;
+    background-color: rgba($primario, 0.1); color: $primario;
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  
+  .cita-motivo { background-color: rgba(22, 55, 74, 0.03); }
 }
 
-.cita-card:hover {
-  border-color: #0d6efd;
-  background: #f8f9ff;
-  transform: translateY(-2px);
+.badge-active-pulse {
+  background: rgba($primario, 0.15); color: $primario-oscuro; border: 1px solid rgba($primario, 0.3);
+  padding: 4px 10px; border-radius: 30px; font-weight: 600; font-size: 0.75rem; display: flex; align-items: center; gap: 6px;
+  .pulse-dot {
+    width: 6px; height: 6px; border-radius: 50%; background-color: $primario; display: inline-block;
+    animation: blink 1.5s infinite;
+  }
+}
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.empty-state-box {
+  .empty-icon { font-size: 3rem; color: $texto-secundario; }
 }
 
-.cita-seleccionada {
-  border-color: #198754 !important;
-  background: #f0fff4;
-  box-shadow: 0 0 0 3px rgba(25, 135, 84, .15);
+// ==========================================================================
+// Panel Derecho: Desarrollo Clínico
+// ==========================================================================
+// Info Row
+.info-row { display: flex; gap: 8px; align-items: flex-start; .info-label { color: $texto-terciario; width: 90px; flex-shrink: 0; } }
+
+// Cajas de Signos Vitales
+.bg-success-light { background-color: #f0fdf4; border-bottom-color: #dcfce7 !important; }
+.text-success-dark { color: #166534; }
+.border-success-light { border-color: #bbf7d0 !important; }
+
+.vital-sign-box {
+  background-color: $fondo-principal; border: 1px solid $borders; border-radius: 10px; padding: 10px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; height: 100%;
+  .vital-label { font-size: 0.75rem; color: $texto-secundario; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
+  .vital-value { font-size: 1.1rem; font-weight: 700; color: $primario-oscuro; small { font-size: 0.75rem; font-weight: 500; color: $texto-terciario; margin-left: 2px;} }
 }
+
+// Formularios Médicos
+.custom-form-label { color: $texto-secundario; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; display: block; }
+.custom-textarea {
+  background-color: $fondo-principal; border: 1px solid $borders; color: $primario-oscuro; border-radius: 10px; padding: 12px; font-size: 0.92rem; resize: none;
+  &:focus { background-color: $fondo-secundario; border-color: $primario; box-shadow: 0 0 0 3px rgba($primario, 0.15); outline: none; }
+  &::placeholder { color: $texto-secundario; }
+}
+
+// Botones y Acciones
+.rounded-bottom-4 { border-bottom-left-radius: 18px; border-bottom-right-radius: 18px; }
+
+.btn-outline-primary {
+  color: $primario-oscuro; border-color: $borders; font-weight: 600; background: white;
+  &:hover { background: $fondo-terciario; border-color: $primario; color: $primario-oscuro; }
+}
+
+.btn-action-success {
+  background-color: $btn-exito; color: $texto-claro; border: none; font-weight: 600; border-radius: 10px; transition: all 0.2s;
+  &:hover { background-color: color.adjust($btn-exito, $lightness: -5%); transform: translateY(-1px); box-shadow: 0 4px 12px rgba($btn-exito, 0.3) !important; }
+}
+
+// Estado Vacío Derecho
+.empty-state-container {
+  background: transparent; border: 2px dashed $borders; box-shadow: none;
+  .empty-icon-lg { font-size: 5rem; opacity: 0.5; }
+  .max-w-400 { max-width: 400px; }
+}
+
+// Scrollbars para contenedores
+.list-container::-webkit-scrollbar { width: 6px; }
+.list-container::-webkit-scrollbar-thumb { background: $texto-secundario; border-radius: 10px; }
+.list-container::-webkit-scrollbar-track { background: transparent; }
+
+// Animaciones
+.tab-animation { animation: fadeIn 0.3s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }

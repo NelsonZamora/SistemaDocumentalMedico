@@ -1,20 +1,232 @@
-.card {
+@use "sass:color";
+// ==========================================================================
+// Variables del Sistema Documental Médico
+// ==========================================================================
+$primario: #2BB7C9;
+$primario-oscuro: #16374A;
+$secundario: #66D1DE;
+$secundario-claro: #E6F7FA;
+$btn-primario-hover: #239EAE;
+$fondo-principal: #F5FAFC;
+$fondo-secundario: #FFFFFF;
+$borders: #E1E8EB;
+$texto-principal: #16374A;
+$texto-secundario: #4A6572;
+$texto-terciario: #7A8D99;
+
+// Colores de Alerta
+$error-bg: #FEF2F2;
+$error-text: #DC2626;
+$error-border: #FCA5A5;
+
+// ==========================================================================
+// Contenedores Base
+// ==========================================================================
+.login-page {
+  background-color: $fondo-principal;
+  // Añade un brillo muy sutil corporativo en las esquinas de la pantalla
+  background-image: radial-gradient(circle at top right, rgba($secundario-claro, 0.8) 0%, transparent 40%),
+    radial-gradient(circle at bottom left, rgba($primario, 0.05) 0%, transparent 40%);
+}
+
+.logo-card {
+  background: white;
+  padding: 1.5rem; // Espacio interno para que el logo respire
+  border-radius: 20px; // Bordes muy redondeados
+  display: inline-block; // Ajusta el ancho al contenido
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); // Una sombra que lo eleve del fondo azul
   transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05); // Un pequeño efecto al pasar el mouse
+  }
 }
 
-.form-control:focus {
-  box-shadow: none;
-  border-color: #17a2b8;
+.dashboard-card {
+  background: $fondo-secundario;
+  border-radius: 24px; // Bordes suaves y modernos
+  border: 1px solid $borders;
+  box-shadow: 0 15px 40px rgba(22, 55, 74, 0.08); // Sombra más profunda para pantallas de inicio
 }
 
-.input-group-text {
-  border-color: #dee2e6;
+.login-card {
+  max-width: 950px;
+  width: 100%;
+  min-height: 600px; // Garantiza un buen aspecto en resoluciones grandes
+  margin: 1.5rem;
 }
 
-.btn-primary:hover {
-  background-color: #138496 !important;
+// ==========================================================================
+// Panel Izquierdo (Branding y Logo)
+// ==========================================================================
+.brand-bg-panel {
+  background: linear-gradient(135deg, $primario-oscuro 0%, color.adjust($primario-oscuro, $lightness: -12%) 100%);
+  position: relative;
+  overflow: hidden;
+
+  // Detalle de luz circular de fondo para resaltar el logo
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba($primario, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .brand-content {
+    z-index: 1;
+  }
+
+  .brand-logo-img {
+    max-width: 280px;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+    transition: transform 0.4s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
 }
 
-body {
-  background-color: #e0f2f1;
+// ==========================================================================
+// Tipografía y Utilidades
+// ==========================================================================
+.text-accent {
+  color: $primario;
+}
+
+.text-dark-blue {
+  color: $primario-oscuro;
+}
+
+.text-secondary-custom {
+  color: $texto-secundario;
+  font-size: 0.95rem;
+}
+
+.brand-icon-wrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  background-color: $secundario-claro;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  border: 1px solid rgba($primario, 0.2);
+  box-shadow: 0 4px 10px rgba($primario, 0.1);
+}
+
+// ==========================================================================
+// Formulario y Controles
+// ==========================================================================
+.custom-form-label {
+  color: $texto-secundario;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.custom-input-group {
+  border-radius: 12px;
+  transition: all 0.2s ease;
+
+  .input-group-text {
+    background-color: $fondo-secundario;
+    border: 2px solid $borders;
+    border-right: none;
+    padding-left: 1.25rem;
+    padding-right: 0.5rem;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    transition: all 0.2s ease;
+  }
+
+  .form-control {
+    background-color: $fondo-secundario;
+    border: 2px solid $borders;
+    border-left: none;
+    padding-left: 0;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    color: $primario-oscuro;
+    box-shadow: none;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    transition: all 0.2s ease;
+
+    &::placeholder {
+      color: $texto-terciario;
+      font-size: 0.95rem;
+      opacity: 0.7;
+    }
+  }
+  
+  .validation-message{
+    height:58px;
+}
+
+  // Simulación de "Focus" agrupado para ícono e input
+  &:focus-within {
+
+    .input-group-text,
+    .form-control {
+      border-color: $primario;
+      background-color: $fondo-secundario;
+    }
+
+    box-shadow: 0 0 0 4px rgba($primario, 0.15);
+  }
+}
+
+// ==========================================================================
+// Botones y Alertas
+// ==========================================================================
+.btn-action-primary {
+  background-color: $primario;
+  color: $fondo-secundario;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background-color: $btn-primario-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($primario, 0.25);
+  }
+
+  &:disabled {
+    background-color: rgba($primario, 0.65);
+    cursor: not-allowed;
+  }
+}
+
+.custom-alert-danger {
+  background-color: $error-bg;
+  border: 1px solid $error-border;
+  color: $error-text;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+// Animación simple para la entrada de errores
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
