@@ -18,20 +18,20 @@ export class GestionUsuariosComponent
   usuarioSeleccionado = signal<any>(null);
   mostrarModalAuditoria = signal<boolean>(false);
 
-  //
   filtroUsuario = '';
   filtroModuloSelected = 'TODOS';
   filtroAccionSelected = 'TODOS';
   fechaDesde = '';
   fechaHasta = '';
+  mostrarModalReset = signal<boolean>(false); // <--- Nueva señal de control
+  usuarioAResetear = signal<any>(null);
+  nuevaPassword = signal<string>('');
+  actualizandoPassword = signal<boolean>(false);
 
-  // Signal para almacenar todos los registros de la BD
   rawLogs = signal<any[]>([]);
 
-  // Signal para gestionar el detalle del JSON seleccionado
   logSeleccionado = signal<any | null>(null);
   logsFiltrados = signal<any[]>([]);
-  //
 
   menuAbierto: string | null = null;
 
@@ -49,7 +49,67 @@ export class GestionUsuariosComponent
     this.mostrarModalAuditoria.set(true);
   }
 
-  //
+  // 2. Computed Signals (Se mantienen igual)
+  validacionesNuevaPassword = computed(() => {
+    const pass = this.nuevaPassword();
+    return {
+      longitud: pass.length >= 6,
+      mayuscula: /[A-Z]/.test(pass),
+      minuscula: /[a-z]/.test(pass),
+      numero: /\d/.test(pass),
+      especial: /[@/()\-_]/.test(pass)
+    };
+  });
+
+  colorRecuadroNueva = computed<'rojo' | 'amarillo' | 'verde'>(() => {
+    const v = this.validacionesNuevaPassword();
+    const cumplidas = [v.longitud, v.mayuscula, v.minuscula, v.numero, v.especial].filter(Boolean).length;
+
+    if (cumplidas === 0) return 'rojo';
+    if (cumplidas > 0 && cumplidas < 5) return 'amarillo';
+    return 'verde';
+  });
+
+  // 3. Métodos super simplificados
+  abrirModalReset(usuario: any) {
+    this.usuarioAResetear.set(usuario);
+    this.nuevaPassword.set('');
+    this.mostrarModalReset.set(true); // <--- Mostramos el modal
+  }
+
+  cerrarModalReset() {
+    this.mostrarModalReset.set(false); // <--- Ocultamos el modal
+    this.usuarioAResetear.set(null);
+    this.nuevaPassword.set('');
+  }
+
+  async confirmarReset() {
+    if (this.colorRecuadroNueva() !== 'verde' || !this.usuarioAResetear()) return;
+
+    this.actualizandoPassword.set(true);
+    try {
+      await this.usuariosService.resetearPassword(this.usuarioAResetear().id, this.nuevaPassword());
+
+      this.cerrarModalReset();
+
+      await Swal.fire({
+        icon: 'success',
+        title: 'Contraseña actualizada',
+        text: 'La contraseña fue modificada correctamente.',
+        confirmButtonColor: '#198754'
+      });
+    } catch (error) {
+      console.error(error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar la contraseña.',
+        confirmButtonColor: '#dc3545'
+      });
+    } finally {
+      this.actualizandoPassword.set(false);
+    }
+  }
 
   formatearModulo(modulo: string): string {
     const codigos: { [key: string]: string } = {
@@ -80,10 +140,6 @@ export class GestionUsuariosComponent
       }));
   }
 
-  /**
-   * Opcional: Hace que las propiedades internas (ej: "nombre_completo") 
-   * se vean limpias en la interfaz (ej: "Nombre Completo")
-   */
   private formatearTextoClave(texto: string): string {
     return texto
       .replace(/_/g, ' ')
@@ -145,7 +201,6 @@ export class GestionUsuariosComponent
   }
 
   verDetalle(log: any) {
-    // Alterna o selecciona la fila para inspeccionar el JSONB
     if (this.logSeleccionado()?.id === log.id) {
       this.logSeleccionado.set(null);
     } else {
@@ -167,7 +222,6 @@ export class GestionUsuariosComponent
       });
     }
   }
-  //
 
   cerrarModalAuditoria() {
     this.mostrarModalAuditoria.set(false);
@@ -224,10 +278,6 @@ export class GestionUsuariosComponent
     this.cargando.set(false);
   }
 
-  // async cambiarEstado(usuario: any) {
-  //   await this.usuariosService.cambiarEstado(usuario.id, usuario.activo);
-  // }
-
   async cambiarEstado(usuario: any) {
     const bloquear = usuario.activo;
     const confirmar = await Swal.fire({
@@ -268,10 +318,6 @@ export class GestionUsuariosComponent
     usuario.activo = true;
     await this.usuariosService.cambiarEstado(usuario.id, usuario.activo);
   }
-
-  // async cambiarRol(usuario: any) {
-  //   await this.usuariosService.cambiarRol(usuario.id, usuario.rol);
-  // }
 
   async cambiarRol(usuario: any) {
     const { value: rol } = await Swal.fire({

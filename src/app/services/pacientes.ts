@@ -24,7 +24,7 @@ export class PacientesService {
   async getPacienteHistorial(pacienteId: string) {
     const { data, error } = await this.supabase
       .from('citas_medicas')
-      .select('*')
+      .select('*,perfiles(nombre_completo)')
       .eq('paciente_id', pacienteId);
 
     if (error) throw error;

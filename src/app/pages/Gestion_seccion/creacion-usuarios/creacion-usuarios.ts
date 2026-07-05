@@ -16,7 +16,7 @@ import { UsuariosService } from '../../../services/usuarios';
   styleUrl: './creacion-usuarios.scss'
 })
 export class CreacionUsuariosComponent
-implements OnInit {
+  implements OnInit {
 
   usuarios = signal<any[]>([]);
   cargando = signal<boolean>(true);
@@ -29,7 +29,7 @@ implements OnInit {
 
   constructor(
     private usuariosService: UsuariosService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     await this.cargarUsuarios();
@@ -82,13 +82,11 @@ implements OnInit {
         timerProgressBar: true
       });
 
-      // Limpieza de campos de texto del formulario
       this.nombre_completo = '';
       this.email = '';
       this.password = '';
       this.rol = 'medico';
 
-      // Refrescamos la lista de usuarios reactivamente
       await this.cargarUsuarios();
 
     } catch (error: any) {
@@ -101,6 +99,26 @@ implements OnInit {
     } finally {
       this.creando.set(false);
     }
+  }
+
+  get validacionesPassword() {
+    const pass = this.password || '';
+    return {
+      longitud: pass.length >= 6,
+      mayuscula: /[A-Z]/.test(pass),
+      minuscula: /[a-z]/.test(pass),
+      numero: /\d/.test(pass),
+      especial: /[@/()\-_]/.test(pass)
+    };
+  }
+
+  get colorRecuadro(): 'rojo' | 'amarillo' | 'verde' {
+    const v = this.validacionesPassword;
+    const cumplidas = [v.longitud, v.mayuscula, v.minuscula, v.numero, v.especial].filter(Boolean).length;
+
+    if (cumplidas === 0) return 'rojo';
+    if (cumplidas > 0 && cumplidas < 5) return 'amarillo';
+    return 'verde';
   }
 
 }

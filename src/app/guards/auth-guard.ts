@@ -12,13 +12,6 @@ export const authGuard: CanActivateFn = async () => {
 
   const { data } = await auth.getClient().auth.getSession();
 
-  // if (data.session) {
-  //   return true;
-  // } else {
-  //   router.navigate(['/']);
-  //   return false;
-  // }
-
   if (!data.session) {
     router.navigate(['/']);
     return false;

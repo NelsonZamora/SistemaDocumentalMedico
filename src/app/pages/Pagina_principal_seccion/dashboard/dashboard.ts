@@ -26,28 +26,25 @@ export class DashboardComponent implements OnInit {
   role = signal<'admin' | 'medico' | 'auxiliar'>(
     (localStorage.getItem('userRole') as 'admin' | 'medico' | 'auxiliar') ?? 'auxiliar'
   );
-  //admin var
+
   totalPacientes = signal(0);
   documentosGenerados = signal(0);
   usuariosActivos = signal(0);
   citasHoy = signal(0);
   actividadReciente = signal<any[]>([]);
-  //medico var
+
   pacientesHoy = signal(0);
   documentosEmitidos = signal(0);
   proximaCita = signal<string>('Sin citas');
   pendientes = signal(0);
   pacientesRecientes = signal<any[]>([]);
-  //auxiliar var
+
   citasHoyAux = signal(0);
   pendientesAux = signal(0);
   totalCitasAux = signal(0);
   medicosActivos = signal(0);
   ultimosPacientes = signal<any[]>([]);
 
-  //===========================
-  // Configuración del Dashboard
-  //===========================
   dashboardConfig = computed(() => {
     switch (this.role()) {
       case 'admin':
@@ -113,7 +110,7 @@ export class DashboardComponent implements OnInit {
         this.pacientesHoy.set(resumen.pacientesHoy || 0);
         this.documentosEmitidos.set(resumen.documentosEmitidos || 0);
         this.pendientes.set(resumen.pendientes || 0);
-        this.proximaCita.set(resumen.proximaCita || "Sin citas");
+        this.proximaCita.set(resumen.proximaCita.hora_inicio || "Sin citas");
         this.pacientesRecientes.set(resumen.pacientesRecientes || []);
       } catch (error) {
         console.error('Error al cargar métricas del dashboard:', error);

@@ -708,3 +708,104 @@ textarea.form-control{
 .btn-outline-light{
     border-radius:12px;
 }
+
+//Modal Detalles
+// ==========================================================================
+// Estructuras Requeridas para el Modal Histórico
+// ==========================================================================
+.bg-main-soft { 
+  background-color: $fondo-principal !important; 
+}
+
+.text-dark-blue { 
+  color: $primario-oscuro; 
+}
+
+.page-title { 
+  color: $primario-oscuro; 
+  font-weight: 700; 
+  margin-bottom: .3rem; 
+}
+
+.text-accent { 
+  color: $primario; 
+}
+
+// Contenedores Base (Tarjetas del Historial)
+.dashboard-card {
+  background: $fondo-secundario;
+  border-radius: 18px;
+  border: 1px solid $borders;
+  box-shadow: 0 8px 20px rgba(22, 55, 74, .06);
+  transition: all 0.3s ease;
+  
+  &.border-accent-top { border-top: 4px solid $primario !important; }
+  &.border-success-top { border-top: 4px solid $btn-exito !important; }
+}
+
+.custom-block-title { 
+  color: $primario-oscuro; 
+  font-weight: 600; 
+}
+
+// Cajas de Signos Vitales (Triage Histórico)
+.bg-success-light { 
+  background-color: #f0fdf4 !important; 
+  border-bottom-color: #dcfce7 !important; 
+}
+
+.text-success-dark { 
+  color: #166534 !important; 
+}
+
+.vital-sign-box {
+  background-color: $fondo-principal; 
+  border: 1px solid $borders; 
+  border-radius: 10px; 
+  padding: 10px;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  text-align: center; 
+  height: 100%;
+  
+  .vital-label { 
+    font-size: 0.75rem; 
+    color: $texto-secundario; 
+    font-weight: 600; 
+    margin-bottom: 4px; 
+    text-transform: uppercase; 
+  }
+  
+  .vital-value { 
+    font-size: 1.1rem; 
+    font-weight: 700; 
+    color: $primario-oscuro; 
+    
+    small { 
+      font-size: 0.75rem; 
+      font-weight: 500; 
+      color: $texto-terciario; 
+      margin-left: 2px;
+    } 
+  }
+}
+
+// Estilos para las etiquetas de los bloques clínicos
+.custom-form-label { 
+  color: $texto-secundario; 
+  font-weight: 600; 
+  font-size: 0.9rem; 
+  margin-bottom: 6px; 
+  display: block; 
+}
+
+// Animación de entrada suave al abrir el modal
+.tab-animation { 
+  animation: fadeIn 0.3s ease-in-out; 
+}
+
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(5px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}

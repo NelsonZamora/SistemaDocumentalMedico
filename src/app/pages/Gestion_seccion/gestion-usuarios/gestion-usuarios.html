@@ -120,7 +120,7 @@
               </div>
             </td>
             <td>
-              <button class="btn btn-outline-secondary btn-sm rounded-pill" (click)="resetearPassword(usuario)">
+              <button class="btn btn-outline-secondary btn-sm rounded-pill" (click)="abrirModalReset(usuario)">
                 <i class="bi bi-key-fill me-1"></i> Resetear
               </button>
             </td>
@@ -349,6 +349,79 @@
         </div>
         }
       </div>
+    </div>
+  </div>
+</div>
+}
+
+@if (mostrarModalReset()) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Resetear Contraseña</h5>
+        <button type="button" class="btn-close" (click)="cerrarModalReset()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        @if (usuarioAResetear()) {
+        <p class="text-muted mb-3">
+          Estableciendo nueva contraseña para: <strong>{{ usuarioAResetear().nombre_completo }}</strong>
+        </p>
+        }
+
+        <div class="mb-3">
+          <label class="custom-form-label">Nueva Contraseña</label>
+          <input type="password" class="form-control custom-input" [ngModel]="nuevaPassword()"
+            (ngModelChange)="nuevaPassword.set($event)" placeholder="Mínimo 6 caracteres">
+
+          <div class="password-req-box mt-2 p-3 rounded" [ngClass]="'estado-' + colorRecuadroNueva()">
+            <p class="fw-bold mb-2">La contraseña requiere tener:</p>
+            <ul class="list-unstyled mb-0 ms-2">
+              <li [ngClass]="validacionesNuevaPassword().longitud ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesNuevaPassword().longitud ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                6 Caracteres mínimo
+              </li>
+              <li [ngClass]="validacionesNuevaPassword().mayuscula ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesNuevaPassword().mayuscula ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter en mayúscula
+              </li>
+              <li [ngClass]="validacionesNuevaPassword().minuscula ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesNuevaPassword().minuscula ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter en minúscula
+              </li>
+              <li [ngClass]="validacionesNuevaPassword().numero ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesNuevaPassword().numero ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter numérico
+              </li>
+              <li [ngClass]="validacionesNuevaPassword().especial ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesNuevaPassword().especial ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter especial (@/()-_)
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="cerrarModalReset()">Cancelar</button>
+
+        <button type="button" class="btn btn-primary"
+          [disabled]="colorRecuadroNueva() !== 'verde' || actualizandoPassword()" (click)="confirmarReset()">
+          @if (!actualizandoPassword()) {
+          <span>Actualizar</span>
+          } @else {
+          <span><span class="spinner-border spinner-border-sm me-2"></span> Procesando...</span>
+          }
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

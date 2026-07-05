@@ -237,7 +237,7 @@ export class GenerarDocumentoComponent implements OnInit {
       html = html.replace(regex, valor || `{${nombreCampo}}`);
     }
 
-    this.previewHtml.set(html); // Notifica instantáneamente a la vista
+    this.previewHtml.set(html);
   }
 
   async generarDocumento() {

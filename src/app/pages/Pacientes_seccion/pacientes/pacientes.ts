@@ -4,18 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { PacientesService } from '../../../services/pacientes';
 import { AuthService } from '../../../services/auth';
 import Swal from 'sweetalert2';
+import { ValidadorInputDirective } from '../../../utils/directives/validador-input';
+import { AtencionMedicaService } from '../../../services/atencion-medica';
 
 @Component({
   selector: 'app-pacientes',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ValidadorInputDirective],
   templateUrl: './pacientes.html',
   styleUrl: './pacientes.scss',
 })
 export class PacientesComponent implements OnInit {
 
   pacientesOriginales: any[] = [];
-  pacientes = signal<any[]>([]); // Inicializa como un array vacío reactivo
+  pacientes = signal<any[]>([]);
   documentosPaciente = signal<any[]>([]);
   historialPaciente = signal<any[]>([]);
 
@@ -25,6 +27,11 @@ export class PacientesComponent implements OnInit {
   mostrarModal = signal<boolean>(false);
   mostrarModalVer = signal<boolean>(false);
   mostrarModalEditar = signal<boolean>(false);
+  mostrarModalDetalleHistorial = signal<boolean>(false);
+  citaHistorialSeleccionada = signal<any>(null);
+
+  signosHistorial = signal<any>(null);
+  atencionmedicaHistorial = signal<any>(null);
 
 
   textoBusqueda: string = '';
@@ -45,7 +52,8 @@ export class PacientesComponent implements OnInit {
 
   constructor(
     private pacientesService: PacientesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private atencionMedicaService: AtencionMedicaService
   ) { }
 
   ngOnInit() {
@@ -68,7 +76,7 @@ export class PacientesComponent implements OnInit {
 
     if (!file) return;
 
-    const MAX_SIZE = 1024 * 1024; // 1 MB
+    const MAX_SIZE = 1024 * 1024;
 
     if (file.size > MAX_SIZE) {
 
@@ -101,6 +109,38 @@ export class PacientesComponent implements OnInit {
 
     this.archivo = file;
 
+  }
+
+
+  async verDetallesCitaHistorial(cita: any) {
+    this.citaHistorialSeleccionada.set(cita);
+
+    const citaId = cita.id
+    const dataSignos = await this.atencionMedicaService.getAtencionCompletabyCitaId(citaId)
+
+    console.log(dataSignos)
+
+    if (dataSignos && dataSignos.encontrado === false) {
+      await Swal.fire({
+        icon: 'info',
+        title: 'Sin registro clínico',
+        text: dataSignos.mensaje,
+        confirmButtonColor: '#2BB7C9'
+      });
+      return;
+    }
+    this.signosHistorial.set(dataSignos.signos_vitales);
+    this.atencionmedicaHistorial.set(dataSignos);
+    console.log(this.atencionmedicaHistorial())
+
+    this.mostrarModalDetalleHistorial.set(true);
+  }
+
+  cerrarModalDetalleHistorial() {
+    this.mostrarModalDetalleHistorial.set(false);
+    this.citaHistorialSeleccionada.set(null);
+    this.signosHistorial.set(null);
+    this.atencionmedicaHistorial.set(null);
   }
 
   cerrarModalVer() {
@@ -295,7 +335,7 @@ export class PacientesComponent implements OnInit {
 
   async cargarPacientes() {
     this.tablaPaciente.set(false);
-    this.cargando.set(true); // Modifica el valor de la Signal
+    this.cargando.set(true);
     this.pacientes.set([]);
 
     try {
@@ -309,7 +349,6 @@ export class PacientesComponent implements OnInit {
 
       this.pacientesOriginales = data;
 
-      // Para asignar un nuevo valor a la lista de pacientes
       this.pacientes.set(data);
 
       if (this.textoBusqueda) {
@@ -321,7 +360,7 @@ export class PacientesComponent implements OnInit {
     }
 
     this.cargando.set(false);
-    this.tablaPaciente.set(true); // Actualiza la UI instantáneamente al salir del flujo async
+    this.tablaPaciente.set(true);
   }
 
   filtrar() {
@@ -335,7 +374,7 @@ export class PacientesComponent implements OnInit {
         p.apellidos?.toLowerCase().includes(busqueda) ||
         p.cedula?.includes(busqueda)
       );
-      this.pacientes.set(filtrados); // Seteamos el resultado filtrado
+      this.pacientes.set(filtrados);
     }
   }
 

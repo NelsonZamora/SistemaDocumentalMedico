@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PlantillasService } from '../../../services/plantillas';
+import { PlantillasService, CONFIGURACION_TABLAS } from '../../../services/plantillas';
 import * as mammoth from 'mammoth';
 import * as XLSX from 'xlsx';
 import { ChangeDetectorRef } from '@angular/core';
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-plantillas',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './plantillas.html',
   styleUrl: './plantillas.scss',
 })
@@ -19,16 +19,17 @@ export class PlantillasComponent {
   camposDetectados = signal<any[]>([]);
   totalCampos = signal<number>(0);
   previewHtml = signal<string>('');
+  columnasPorTabla = signal<any[]>([]);
 
-  // Variables normales para flujos internos, binarios y formularios independientes
   archivo: File | null = null;
   nombreDocumento = '';
-  columnasPorTabla: any = {};
-  tablasDisponibles = ['pacientes'];
+
+  tablasDisponibles = [{ valor: 'pacientes', nombre: 'Pacientes' }, { valor: 'citas_medicas', nombre: 'Citas médicas' }, { valor: 'atenciones_medicas', nombre: 'Atenciones médicas' },
+    { valor: 'signos_vitales', nombre: 'Signos vitales de la cita'}];
   previewHtmlOriginal: string = '';
   valoresCampos: any = {};
 
-  constructor(private plantillasService: PlantillasService) {}
+  constructor(private plantillasService: PlantillasService) { }
 
   onFileSelected(event: any) {
     this.archivo = event.target.files[0];
@@ -68,7 +69,7 @@ export class PlantillasComponent {
 
       this.previewHtmlOriginal = html;
       this.previewHtml.set(html);
-    } 
+    }
     else if (extension === 'xlsx' || extension === 'xls') {
       const workbook = XLSX.read(arrayBuffer, { type: 'array' });
       const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -142,15 +143,15 @@ export class PlantillasComponent {
   }
 
   async subirPlantilla() {
-    try { 
+    try {
       if (!this.archivo) return;
       const ruta = await this.plantillasService.subirDocumento(this.archivo);
 
       await this.plantillasService.guardarPlantilla({
         nombre: this.archivo.name,
         ruta_archivo: ruta,
-        campos: this.camposDetectados(), // Leemos el valor actual de la Signal ()
-        total_campos: this.totalCampos()  // Leemos el valor actual de la Signal ()
+        campos: this.camposDetectados(),
+        total_campos: this.totalCampos()
       });
 
       Swal.fire({
@@ -162,8 +163,8 @@ export class PlantillasComponent {
         timer: 2500,
         timerProgressBar: true
       });
-      
-      // Reseteamos de manera limpia todos los estados reactivos
+
+
       this.archivo = null;
       this.camposDetectados.set([]);
       this.totalCampos.set(0);
@@ -190,7 +191,7 @@ export class PlantillasComponent {
       const valor = this.valoresCampos[campo];
       const regex = new RegExp(`<span class="campo-doc" data-campo="${campo}">.*?<\\/span>`, 'g');
 
-      html = html.replace(regex, 
+      html = html.replace(regex,
         `<span class="campo-doc" data-campo="${campo}">${valor || `{${campo}}`}</span>`
       );
     });
@@ -200,14 +201,29 @@ export class PlantillasComponent {
 
   async cargarColumnas(campo: any) {
     if (!campo.tabla) return;
-    if (this.columnasPorTabla[campo.tabla]) return;
+    if (this.columnasPorTabla()[campo.tabla]) return;
 
+
+    const nombreTabla = campo.tabla;
     try {
-      const columnas = await this.plantillasService.getColumnas(campo.tabla);
-      this.columnasPorTabla[campo.tabla] = columnas;
+      const todasLasColumnas = await this.plantillasService.getColumnas(nombreTabla);
+
+      const config = CONFIGURACION_TABLAS[nombreTabla];
+
+      const columnasProcesadas = todasLasColumnas
+        .filter((colNombre: string) => config.hasOwnProperty(colNombre))
+        .map((colNombre: string) => ({
+          id: colNombre,
+          etiqueta: config[colNombre]
+        }));
+
+      this.columnasPorTabla.update(current => ({
+        ...current,
+        [nombreTabla]: columnasProcesadas
+      }));
     } catch (error) {
-      console.error(error);
+      console.error("Error al procesar columnas:", error);
     }
   }
-  
+
 }

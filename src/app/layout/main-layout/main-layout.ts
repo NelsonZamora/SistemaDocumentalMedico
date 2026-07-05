@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth';
 })
 export class MainLayoutComponent{
 
+  cargando = signal<boolean>(false);
+
   constructor(
     private auth: AuthService,
     private router: Router
@@ -23,6 +25,7 @@ export class MainLayoutComponent{
 
 
   async logout() {
+    this.cargando.set(true);
     await this.auth.logout();
     this.router.navigate(['/']);
   }

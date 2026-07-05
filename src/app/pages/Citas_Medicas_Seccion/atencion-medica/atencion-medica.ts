@@ -18,12 +18,6 @@ import Swal from 'sweetalert2';
 })
 export class AtencionMedicaComponent implements OnInit {
 
-  // citasPendientes: any[] = [];
-
-  // citaSeleccionada: any = null;
-
-  // signos: any = null;
-
   citasPendientes = signal<any[]>([]);
   citaSeleccionada = signal<any>(null);
   signos = signal<any>(null);
@@ -52,7 +46,7 @@ export class AtencionMedicaComponent implements OnInit {
   }
 
   async seleccionarCita(cita: any) {
-    this.citaSeleccionada.set(cita); // Asignamos la cita seleccionada
+    this.citaSeleccionada.set(cita);
     
     const signosData = await this.atencionMedicaService.getSignos(cita.id);
     this.signos.set(signosData);
@@ -88,8 +82,6 @@ export class AtencionMedicaComponent implements OnInit {
     });
 
     this.atencion_id = nuevaAtencion.id;
-    // this.citaSeleccionada.set(null);
-    // this.signos.set(null);
     await this.cargarPendientes();
   }
 

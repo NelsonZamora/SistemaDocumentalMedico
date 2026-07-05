@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { ValidadorInputDirective } from '../../../utils/directives/validador-input';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -17,6 +18,7 @@ import { CalendarioService } from '../../../services/calendario';
   imports: [
     CommonModule,
     FormsModule,
+    ValidadorInputDirective,
     FullCalendarModule
   ],
   templateUrl: './calendario.html',

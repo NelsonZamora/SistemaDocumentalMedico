@@ -81,8 +81,8 @@
           <option [ngValue]="null">Sin atención específica (Cargar solo datos base)</option>
           @for (atencion of atenciones(); track atencion.id) {
           <option [ngValue]="atencion">
-            {{ atencion.citas_medicas.pacientes.nombres }} {{ atencion.citas_medicas.pacientes.apellidos }} - {{
-            atencion.citas_medicas.fecha }}
+            Datos de la cita medica de la fecha - {{
+            atencion.citas_medicas.fecha }} de la hora {{ atencion.citas_medicas.hora_inicio }}
           </option>
           }
         </select>

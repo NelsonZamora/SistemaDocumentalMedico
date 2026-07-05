@@ -21,46 +21,46 @@ export class AtencionMedicaService {
 
     const hoy =
       new Date()
-      .toISOString()
-      .split('T')[0];
+        .toISOString()
+        .split('T')[0];
 
     const { data, error } =
       await this.supabase
-      .from('citas_medicas')
-      .select(`
+        .from('citas_medicas')
+        .select(`
         *,
         pacientes(
           nombres,
           apellidos
         )
       `)
-      .eq('fecha', hoy)
-      .in(
-        'estado',
-        ['programada','en_espera']
-      )
-      .order(
-        'hora_inicio'
-      );
+        .eq('fecha', hoy)
+        .in(
+          'estado',
+          ['programada', 'en_espera']
+        )
+        .order(
+          'hora_inicio'
+        );
 
     if (error) throw error;
 
     return data;
   }
 
-  async getSignos( citaId: string ) {
+  async getSignos(citaId: string) {
 
     const { data } =
       await this.supabase
-      .from(
-        'signos_vitales'
-      )
-      .select('*')
-      .eq(
-        'cita_id',
-        citaId
-      )
-      .single();
+        .from(
+          'signos_vitales'
+        )
+        .select('*')
+        .eq(
+          'cita_id',
+          citaId
+        )
+        .single();
 
     return data;
 
@@ -88,6 +88,43 @@ export class AtencionMedicaService {
     if (error) throw error;
 
     return data;
+  }
+
+  async getAtencionCompletabyCitaId(
+    citaId: string
+  ) {
+
+    const { data, error } =
+      await this.supabase
+        .from('atenciones_medicas')
+        .select(`
+          *,
+          citas_medicas (
+            *,
+            pacientes (*),
+            perfiles (*)
+          ),
+          signos_vitales (*)
+        `)
+        .eq('cita_id', citaId)
+        .maybeSingle();
+
+    if (error) {
+      console.error('Error en la base de datos:', error);
+      throw error;
+    }
+
+    if (!data) {
+      return {
+        mensaje: 'No hay registro de la consulta médica',
+        encontrado: false
+      };
+    }
+
+    return {
+      ...data,
+      encontrado: true
+    };
   }
 
   async getAtencionesMedicasbyId(pacienteId: string) {
@@ -133,12 +170,12 @@ export class AtencionMedicaService {
 
     const { data, error } =
       await this.supabase
-      .from(
-        'atenciones_medicas'
-      )
-      .insert([atencion])
-      .select()
-      .single();
+        .from(
+          'atenciones_medicas'
+        )
+        .insert([atencion])
+        .select()
+        .single();
 
     if (error) throw error;
 
@@ -150,14 +187,14 @@ export class AtencionMedicaService {
 
         fecha_atencion:
           new Date()
-          .toISOString()
+            .toISOString()
 
       })
       .eq(
         'id',
         atencion.cita_id
       );
-      return data;
+    return data;
   }
 
 }

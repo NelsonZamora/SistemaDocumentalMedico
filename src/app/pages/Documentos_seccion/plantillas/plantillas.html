@@ -149,8 +149,8 @@
                 <label class="custom-form-label-sm">Origen del dato</label>
                 <select class="form-select custom-select-sm" [(ngModel)]="campo.origen">
                   <option value="" disabled selected>Seleccione origen</option>
-                  <option value="libre">✍️ Entrada libre / Manual</option>
-                  <option value="bd">🗄️ Mapear Base de Datos</option>
+                  <option value="libre">Entrada libre / Manual</option>
+                  <option value="bd">Mapear Base de Datos</option>
                 </select>
               </div>
               @if (campo.origen === 'bd') {
@@ -158,8 +158,8 @@
                 <label class="custom-form-label-sm">Tabla del sistema</label>
                 <select class="form-select custom-select-sm" [(ngModel)]="campo.tabla" (change)="cargarColumnas(campo)">
                   <option value="">Seleccionar tabla</option>
-                  @for (t of tablasDisponibles; track t) {
-                  <option [value]="t">{{ t }}</option>
+                  @for (t of tablasDisponibles; track t.valor) {
+                  <option [value]="t.valor">{{ t.nombre }}</option>
                   }
                 </select>
               </div>
@@ -167,8 +167,8 @@
                 <label class="custom-form-label-sm">Columna asignada</label>
                 <select class="form-select custom-select-sm" [(ngModel)]="campo.columna">
                   <option value="">Seleccionar columna</option>
-                  @for (col of columnasPorTabla[campo.tabla] || []; track col) {
-                  <option [value]="col">{{ col }}</option>
+                  @for (col of columnasPorTabla()[campo.tabla] || []; track col) {
+                  <option [value]="col">{{ col.etiqueta }}</option>
                   }
                 </select>
               </div>

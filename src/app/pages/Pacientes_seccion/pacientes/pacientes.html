@@ -69,7 +69,7 @@
       <div class="col-lg-8">
         <div class="search-box">
           <i class="bi bi-search"></i>
-          <input type="text" [(ngModel)]="textoBusqueda" (input)="filtrar()"
+          <input type="text" [(ngModel)]="textoBusqueda" appValidador="busqueda" (input)="filtrar()"
             placeholder="Buscar por nombre, apellido o cédula...">
           @if(textoBusqueda){
           <button class="btn-clear" (click)="textoBusqueda=''; filtrar()">
@@ -180,9 +180,10 @@
             <div class="profile-card p-3 mb-4">
               <div class="contenedor-foto mb-3 shadow-sm mx-auto">
                 @if (archivo) {
-                  <i class="bi bi-file-earmark-image text-accent"></i>
+                <i class="bi bi-file-earmark-image text-accent"></i>
                 } @else {
-                  <img [src]="form.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover" alt="Previsualización" />
+                <img [src]="form.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover"
+                  alt="Previsualización" />
                 }
               </div>
               <h5 class="mb-3 text-white">Nueva Ficha</h5>
@@ -221,8 +222,8 @@
               </button>
             </li>
             <li class="nav-item">
-              <button class="nav-link" [class.active]="pestanaActiva === 'medica'" 
-                (click)="pestanaActiva = 'medica'" type="button">
+              <button class="nav-link" [class.active]="pestanaActiva === 'medica'" (click)="pestanaActiva = 'medica'"
+                type="button">
                 <i class="bi bi-heart-pulse me-2"></i>
                 Información Médica
               </button>
@@ -232,16 +233,19 @@
           <div class="row g-3 tab-animation">
             <div class="col-md-12">
               <label class="custom-form-label">Cédula / Pasaporte</label>
-              <input type="text" class="form-control custom-input" [(ngModel)]="form.cedula" placeholder="Ej: 09XXXXXXXX">
+              <input type="text" class="form-control custom-input" appValidador="alfanumerico" [(ngModel)]="form.cedula"
+                placeholder="Ej: 09XXXXXXXX">
             </div>
             <hr class="my-2 divisor-sutil">
             <div class="col-md-6">
               <label class="custom-form-label">Nombres</label>
-              <input type="text" class="form-control custom-input" [(ngModel)]="form.nombres" placeholder="Ingrese nombres">
+              <input type="text" class="form-control custom-input" appValidador="letras" [(ngModel)]="form.nombres"
+                placeholder="Ingrese nombres">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Apellidos</label>
-              <input type="text" class="form-control custom-input" [(ngModel)]="form.apellidos" placeholder="Ingrese apellidos">
+              <input type="text" class="form-control custom-input" appValidador="letras" [(ngModel)]="form.apellidos"
+                placeholder="Ingrese apellidos">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Fecha de nacimiento</label>
@@ -268,11 +272,19 @@
             <hr class="my-2 divisor-sutil">
             <div class="col-md-6">
               <label class="custom-form-label">Correo electrónico</label>
-              <input type="email" class="form-control custom-input" [(ngModel)]="form.correo" placeholder="ejemplo@correo.com">
+              <input type="email" class="form-control custom-input"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #correoCtrl="ngModel"
+                [(ngModel)]="form.correo" placeholder="ejemplo@correo.com" required>
+              @if (correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched)) {
+              <div class="form-text text-danger mt-1 small">
+                <i class="bi bi-exclamation-circle me-1"></i> Por favor, ingrese un formato de correo válido.
+              </div>
+              }
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Teléfono móvil</label>
-              <input type="tel" class="form-control custom-input" [(ngModel)]="form.telefono" placeholder="Ej: 0987654321">
+              <input type="tel" class="form-control custom-input" appValidador="numeros" [(ngModel)]="form.telefono"
+                placeholder="Ej: 0987654321">
             </div>
           </div>
           }
@@ -299,14 +311,15 @@
                 <i class="bi bi-exclamation-triangle me-2 text-danger"></i>
                 Alergias
               </label>
-              <textarea rows="4" class="form-control custom-textarea alert-textarea" [(ngModel)]="form.antecedente_alergias"
+              <textarea rows="4" class="form-control custom-textarea alert-textarea"
+                [(ngModel)]="form.antecedente_alergias"
                 placeholder="Medicamentos, alimentos o sustancias que produzcan alergias."></textarea>
             </div>
           </div>
           }
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
-            <button class="btn btn-action-success px-5 py-2 shadow-sm d-flex align-items-center" 
-              (click)="guardar()" [disabled]="!aceptaProteccionDatos">
+            <button class="btn btn-action-success px-5 py-2 shadow-sm d-flex align-items-center" (click)="guardar()"
+              [disabled]="!aceptaProteccionDatos">
               <i class="bi bi-save2 me-2"></i>
               Registrar Paciente
             </button>
@@ -326,7 +339,8 @@
           <div>
             <div class="profile-card p-3 mb-4">
               <div class="contenedor-foto mb-3 shadow-sm mx-auto">
-                <img [src]="pacienteSeleccionado.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover" alt="Foto Paciente" />
+                <img [src]="pacienteSeleccionado.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover"
+                  alt="Foto Paciente" />
               </div>
               <h4 class="mb-2 text-white text-truncate-2">
                 {{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}
@@ -359,108 +373,108 @@
         </div>
         <div class="col-md-8 p-5 bg-white-content">
           @if (vistaActual === 'datos') {
-            <ul class="nav nav-tabs custom-nav-tabs mb-4">
-              <li class="nav-item">
-                <button class="nav-link" [class.active]="pestanaActiva === 'personal'"
-                  (click)="pestanaActiva = 'personal'" type="button">
-                  <i class="bi bi-person-vcard me-2"></i> Información Personal
-                </button>
-              </li>
-              <li class="nav-item">
-                <button class="nav-link" [class.active]="pestanaActiva === 'medica'" (click)="pestanaActiva = 'medica'"
-                  type="button">
-                  <i class="bi bi-heart-pulse me-2"></i> Información Médica
-                </button>
-              </li>
-            </ul>
-            @if(pestanaActiva === 'personal') {
-            <div class="row g-4 tab-animation">
-              <div class="col-md-12">
-                <label class="custom-form-label">Nombre completo</label>
-                <div class="data-view-value text-primary-dark">
-                  {{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}
-                </div>
+          <ul class="nav nav-tabs custom-nav-tabs mb-4">
+            <li class="nav-item">
+              <button class="nav-link" [class.active]="pestanaActiva === 'personal'"
+                (click)="pestanaActiva = 'personal'" type="button">
+                <i class="bi bi-person-vcard me-2"></i> Información Personal
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" [class.active]="pestanaActiva === 'medica'" (click)="pestanaActiva = 'medica'"
+                type="button">
+                <i class="bi bi-heart-pulse me-2"></i> Información Médica
+              </button>
+            </li>
+          </ul>
+          @if(pestanaActiva === 'personal') {
+          <div class="row g-4 tab-animation">
+            <div class="col-md-12">
+              <label class="custom-form-label">Nombre completo</label>
+              <div class="data-view-value text-primary-dark">
+                {{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}
               </div>
-              <hr class="my-1 divisor-sutil">
-              <div class="col-md-6">
-                <label class="custom-form-label">Fecha de nacimiento</label>
-                <div class="data-view-value">
-                  {{ pacienteSeleccionado.fecha_nacimiento }}
-                  @let edad = calcularEdad(pacienteSeleccionado.fecha_nacimiento);
-                  <span class="age-badge-inline ms-2">
-                    {{ edad.anios }} años, {{ edad.meses }} meses y {{ edad.dias }} días
-                  </span>
-                </div>
+            </div>
+            <hr class="my-1 divisor-sutil">
+            <div class="col-md-6">
+              <label class="custom-form-label">Fecha de nacimiento</label>
+              <div class="data-view-value">
+                {{ pacienteSeleccionado.fecha_nacimiento }}
+                @let edad = calcularEdad(pacienteSeleccionado.fecha_nacimiento);
+                <span class="age-badge-inline ms-2">
+                  {{ edad.anios }} años, {{ edad.meses }} meses y {{ edad.dias }} días
+                </span>
               </div>
-              <div class="col-md-6">
-                <label class="custom-form-label">Cédula / Pasaporte</label>
-                <div class="data-view-value fw-medium">
-                  {{ pacienteSeleccionado.cedula }}
-                </div>
+            </div>
+            <div class="col-md-6">
+              <label class="custom-form-label">Cédula / Pasaporte</label>
+              <div class="data-view-value fw-medium">
+                {{ pacienteSeleccionado.cedula }}
               </div>
-              <hr class="my-1 divisor-sutil">
-              <div class="col-md-6">
-                <label class="custom-form-label">Correo electrónico</label>
-                <div class="data-view-value email-highlight">
-                  {{ pacienteSeleccionado.correo }}
-                </div>
+            </div>
+            <hr class="my-1 divisor-sutil">
+            <div class="col-md-6">
+              <label class="custom-form-label">Correo electrónico</label>
+              <div class="data-view-value email-highlight">
+                {{ pacienteSeleccionado.correo }}
               </div>
-              <div class="col-md-6">
-                <label class="custom-form-label">Teléfono</label>
-                <div class="data-view-value">
-                  {{ pacienteSeleccionado.telefono }}
-                </div>
+            </div>
+            <div class="col-md-6">
+              <label class="custom-form-label">Teléfono</label>
+              <div class="data-view-value">
+                {{ pacienteSeleccionado.telefono }}
               </div>
-              <hr class="my-1 divisor-sutil">
-              <div class="col-md-6">
-                <label class="custom-form-label">Género</label>
-                <div class="data-view-value">
-                  {{ pacienteSeleccionado.genero }}
-                </div>
+            </div>
+            <hr class="my-1 divisor-sutil">
+            <div class="col-md-6">
+              <label class="custom-form-label">Género</label>
+              <div class="data-view-value">
+                {{ pacienteSeleccionado.genero }}
               </div>
-              <div class="col-12 mt-4">
-                <div class="p-4 rounded-3 text-center preview-identity-container">
-                  <label class="custom-form-label block-label mb-3 text-center">
-                    Documento de Identidad (Cédula)
-                  </label>
-                  <div class="border rounded bg-white p-3 mx-auto identity-card-fallback">
-                    <i class="bi bi-card-heading text-muted"></i>
-                    <p class="small text-muted mt-2 mb-0">Vista previa no disponible</p>
-                  </div>
+            </div>
+            <div class="col-12 mt-4">
+              <div class="p-4 rounded-3 text-center preview-identity-container">
+                <label class="custom-form-label block-label mb-3 text-center">
+                  Documento de Identidad (Cédula)
+                </label>
+                <div class="border rounded bg-white p-3 mx-auto identity-card-fallback">
+                  <i class="bi bi-card-heading text-muted"></i>
+                  <p class="small text-muted mt-2 mb-0">Vista previa no disponible</p>
                 </div>
               </div>
             </div>
-            }
-            @if (pestanaActiva === 'medica') {
-            <div class="row g-4 tab-animation">
-              <div class="col-12">
-                <label class="custom-form-label block-label">
-                  <i class="bi bi-file-medical me-2 text-accent"></i> Antecedentes Personales
-                </label>
-                <div class="medical-text-box">
-                  {{ pacienteSeleccionado.antecedente_personal || 'No registrado' }}
-                </div>
-              </div>
-              <hr class="my-1 divisor-sutil">
-              <div class="col-12">
-                <label class="custom-form-label block-label">
-                  <i class="bi bi-people-fill me-2 text-accent"></i> Antecedentes Familiares
-                </label>
-                <div class="medical-text-box">
-                  {{ pacienteSeleccionado.antecedente_familiar || 'No registrado' }}
-                </div>
-              </div>
-              <hr class="my-1 divisor-sutil">
-              <div class="col-12">
-                <label class="custom-form-label block-label text-danger-emphasis">
-                  <i class="bi bi-exclamation-triangle me-2 text-danger"></i> Alergias
-                </label>
-                <div class="medical-text-box allergy-box">
-                  {{ pacienteSeleccionado.antecedente_alergias || 'No registradas' }}
-                </div>
+          </div>
+          }
+          @if (pestanaActiva === 'medica') {
+          <div class="row g-4 tab-animation">
+            <div class="col-12">
+              <label class="custom-form-label block-label">
+                <i class="bi bi-file-medical me-2 text-accent"></i> Antecedentes Personales
+              </label>
+              <div class="medical-text-box">
+                {{ pacienteSeleccionado.antecedente_personal || 'No registrado' }}
               </div>
             </div>
-            }
+            <hr class="my-1 divisor-sutil">
+            <div class="col-12">
+              <label class="custom-form-label block-label">
+                <i class="bi bi-people-fill me-2 text-accent"></i> Antecedentes Familiares
+              </label>
+              <div class="medical-text-box">
+                {{ pacienteSeleccionado.antecedente_familiar || 'No registrado' }}
+              </div>
+            </div>
+            <hr class="my-1 divisor-sutil">
+            <div class="col-12">
+              <label class="custom-form-label block-label text-danger-emphasis">
+                <i class="bi bi-exclamation-triangle me-2 text-danger"></i> Alergias
+              </label>
+              <div class="medical-text-box allergy-box">
+                {{ pacienteSeleccionado.antecedente_alergias || 'No registradas' }}
+              </div>
+            </div>
+          </div>
+          }
           }
           @if (vistaActual === 'historial') {
           <div class="tab-animation">
@@ -480,7 +494,7 @@
                     <th>Fecha</th>
                     <th>Motivo de consulta</th>
                     <th>Médico asignado</th>
-                    <th>Estado</th>
+                    <th>Informe Completo</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -488,13 +502,11 @@
                   <tr>
                     <td class="fw-medium text-primary-dark">{{ historial.fecha }}</td>
                     <td>{{ historial.motivo }}</td>
-                    <td>{{ historial.medico_id }}</td>
+                    <td>{{ historial.perfiles.nombre_completo }}</td>
                     <td>
-                      <span class="badge" 
-                        [class.status-atendida]="historial.estado === 'atendida'" 
-                        [class.status-programada]="historial.estado === 'programada'">
-                        {{ historial.estado | titlecase }}
-                      </span>
+                      <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="verDetallesCitaHistorial(historial)">
+                        <i class="bi bi-eye-fill me-1"></i> Detalles
+                      </button>
                     </td>
                   </tr>
                   }
@@ -536,8 +548,7 @@
                   <tr>
                     <td class="fw-medium text-primary-dark">{{ documento.plantillas?.nombre_plantilla }}</td>
                     <td>
-                      <span class="badge" 
-                        [class.status-atendida]="documento.estado === 'finalizado'" 
+                      <span class="badge" [class.status-atendida]="documento.estado === 'finalizado'"
                         [class.status-programada]="documento.estado === 'borrador'">
                         {{ documento.estado | titlecase }}
                       </span>
@@ -581,7 +592,8 @@
           <div>
             <div class="profile-card p-3 mb-4">
               <div class="contenedor-foto mb-3 shadow-sm mx-auto">
-                <img [src]="pacienteSeleccionado.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover" alt="Foto Paciente" />
+                <img [src]="pacienteSeleccionado.foto_url || 'default-user.png'" class="w-100 h-100 object-fit-cover"
+                  alt="Foto Paciente" />
               </div>
               <h4 class="mb-3 text-white text-truncate-2">
                 {{ pacienteSeleccionado.apellidos }}, {{ pacienteSeleccionado.nombres }}
@@ -595,7 +607,8 @@
               <div class="d-flex align-items-start gap-2 text-start">
                 <i class="bi bi-info-circle-fill text-accent mt-0-5"></i>
                 <div>
-                  Edite los campos necesarios y presione <strong>"Guardar cambios"</strong> para actualizar la ficha del paciente.
+                  Edite los campos necesarios y presione <strong>"Guardar cambios"</strong> para actualizar la ficha del
+                  paciente.
                 </div>
               </div>
             </div>
@@ -609,22 +622,22 @@
             <h5 class="view-title m-0">
               <i class="bi bi-pencil-square me-2"></i>Edición de datos
             </h5>
-            <span class="badge custom-id-badge">
-              ID: {{ pacienteSeleccionado.id }}
-            </span>
           </div>
           <div class="row g-3 tab-animation">
             <div class="col-md-6">
               <label class="custom-form-label">Nombres</label>
-              <input type="text" class="form-control custom-input" [(ngModel)]="pacienteSeleccionado.nombres" placeholder="Ej: Lucía">
+              <input type="text" class="form-control custom-input" appValidador="letras"
+                [(ngModel)]="pacienteSeleccionado.nombres" placeholder="Ej: Lucía">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Apellidos</label>
-              <input type="text" class="form-control custom-input" [(ngModel)]="pacienteSeleccionado.apellidos" placeholder="Ej: Merino Díaz">
+              <input type="text" class="form-control custom-input" appValidador="letras"
+                [(ngModel)]="pacienteSeleccionado.apellidos" placeholder="Ej: Merino Díaz">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Cédula / Pasaporte</label>
-              <input type="text" class="form-control custom-input input-readonly" [(ngModel)]="pacienteSeleccionado.cedula" readonly>
+              <input type="text" class="form-control custom-input input-readonly"
+                [(ngModel)]="pacienteSeleccionado.cedula" readonly>
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Fecha de nacimiento</label>
@@ -641,11 +654,19 @@
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Correo electrónico</label>
-              <input type="email" class="form-control custom-input" [(ngModel)]="pacienteSeleccionado.correo" placeholder="ejemplo@correo.com">
+              <input type="email" class="form-control custom-input" [(ngModel)]="pacienteSeleccionado.correo"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #correoCtrl="ngModel"
+                placeholder="ejemplo@correo.com" required>
+              @if (correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched)) {
+              <div class="form-text text-danger mt-1 small">
+                <i class="bi bi-exclamation-circle me-1"></i> Por favor, ingrese un formato de correo válido.
+              </div>
+              }
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Teléfono móvil</label>
-              <input type="tel" class="form-control custom-input" [(ngModel)]="pacienteSeleccionado.telefono" placeholder="Ej: 0987654321">
+              <input type="tel" class="form-control custom-input" appValidador="numeros"
+                [(ngModel)]="pacienteSeleccionado.telefono" placeholder="Ej: 0987654321">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">Género</label>
@@ -657,13 +678,169 @@
             </div>
           </div>
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
-            <button class="btn btn-action-save px-5 py-2 shadow-sm d-flex align-items-center" (click)="actualizarPaciente()">
+            <button class="btn btn-action-save px-5 py-2 shadow-sm d-flex align-items-center"
+              (click)="actualizarPaciente()">
               <i class="bi bi-check-lg me-2"></i>
               Guardar cambios
             </button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+}
+@if (mostrarModalDetalleHistorial()) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5); z-index: 1060; overflow-y: auto;">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem;">
+      
+      <div class="modal-header bg-white border-bottom p-4">
+        <div>
+          <h3 class="modal-title page-title m-0 text-dark-blue fs-4">
+            <i class="bi bi-heart-pulse text-accent me-2"></i>
+            Informe Completo de Atención Médica
+          </h3>
+          <p class="text-muted small mb-0 mt-1">
+            Registro clínico histórico de la consulta seleccionada.
+          </p>
+        </div>
+        <button type="button" class="btn-close" (click)="cerrarModalDetalleHistorial()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body bg-main-soft p-4">
+        @if (citaHistorialSeleccionada()) {
+        <div class="row g-4">
+          
+          <div class="col-md-6">
+            <div class="dashboard-card h-100 border-accent-top bg-white p-0 overflow-hidden shadow-sm">
+              <div class="p-3 border-bottom bg-light">
+                <h6 class="custom-block-title m-0">
+                  <i class="bi bi-person-vcard text-accent me-2"></i> Datos del Paciente
+                </h6>
+              </div>
+              <div class="p-4">
+                <h5 class="fw-bold text-dark-blue mb-3">
+                  {{ citaHistorialSeleccionada().pacientes?.apellidos || '' }}, {{ citaHistorialSeleccionada().pacientes?.nombres || 'Datos Paciente' }}
+                </h5>
+                <div class="d-flex flex-column gap-2 small">
+                  <div class="info-row d-flex justify-content-between border-bottom pb-1">
+                    <span class="info-label text-muted"><i class="bi bi-calendar-event"></i> Fecha de Atención:</span>
+                    <span class="info-value fw-semibold text-dark">{{ citaHistorialSeleccionada().fecha }}</span>
+                  </div>
+                  <div class="info-row d-flex justify-content-between border-bottom pb-1">
+                    <span class="info-label text-muted"><i class="bi bi-person-badge"></i> Médico Tratante:</span>
+                    <span class="info-value fw-semibold text-dark">{{ citaHistorialSeleccionada().perfiles?.nombre_completo || 'N/A' }}</span>
+                  </div>
+                  <div class="info-row d-flex flex-column gap-1 mt-1">
+                    <span class="info-label text-muted"><i class="bi bi-chat-left-text"></i> Motivo inicial registrado:</span>
+                    <span class="info-value text-dark bg-light p-2 rounded border-start border-3 border-info small">
+                      {{ citaHistorialSeleccionada().motivo }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="dashboard-card h-100 border-success-top bg-white p-0 overflow-hidden shadow-sm">
+              <div class="p-3 border-bottom bg-success-light">
+                <h6 class="custom-block-title m-0 text-success-dark">
+                  <i class="bi bi-activity me-2"></i> Triage / Signos Vitales Históricos
+                </h6>
+              </div>
+              <div class="p-4">
+                <div class="row g-3">
+                  <div class="col-6">
+                    <div class="vital-sign-box bg-light p-2 rounded text-center border">
+                      <span class="vital-label d-block text-muted small">P. Arterial</span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.presion_arterial || '--/--' }}</span>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="vital-sign-box bg-light p-2 rounded text-center border">
+                      <span class="vital-label d-block text-muted small">F. Cardíaca</span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.frecuencia_cardiaca || '--' }} <small class="fs-6 text-muted">bpm</small></span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="vital-sign-box bg-light p-2 rounded text-center border">
+                      <span class="vital-label d-block text-muted small">Sat. O₂</span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.saturacion || '--' }}<small class="fs-6 text-muted">%</small></span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="vital-sign-box bg-light p-2 rounded text-center border">
+                      <span class="vital-label d-block text-muted small">Temp.</span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.temperatura || '--' }}<small class="fs-6 text-muted">°C</small></span>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="vital-sign-box bg-light p-2 rounded text-center border">
+                      <span class="vital-label d-block text-muted small">Peso/Talla</span>
+                      <span class="vital-value fw-bold text-dark fs-6">{{ signosHistorial()?.peso || '-' }}<small class="text-muted">kg</small> / {{ signosHistorial()?.talla || '-' }}<small class="text-muted">m</small></span>
+                    </div>
+                  </div>
+                </div>
+                @if (signosHistorial()?.observaciones) {
+                <div class="alert alert-info mt-3 mb-0 p-2 small border-0 bg-success-light text-success-dark rounded">
+                  <i class="bi bi-journal-text me-1"></i> <strong>Obs Triage:</strong> {{ signosHistorial().observaciones }}
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="dashboard-card bg-white shadow-sm p-0 overflow-hidden">
+              <div class="p-3 border-bottom bg-light">
+                <h5 class="custom-block-title m-0">
+                  <i class="bi bi-clipboard2-pulse text-accent me-2"></i> Evolución Clínica de la Consulta
+                </h5>
+              </div>
+              
+              <div class="p-4">
+                <div class="row g-3">
+                  <div class="col-md-12">
+                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-chat-square-quote text-primary me-1"></i> Motivo de consulta (Ampliado)</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.motivo_consulta || 'No registrado' }}</div>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-file-medical text-primary me-1"></i> Enfermedad Actual</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.enfermedad_actual || 'No registrado' }}</div>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-person-bounding-box text-primary me-1"></i> Examen Físico</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.examen_fisico || 'No registrado' }}</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-clipboard-check text-primary me-1"></i> Diagnóstico (CIE-10 / Texto)</label>
+                    <div class="p-3 bg-light rounded border text-dark fw-medium">{{ atencionmedicaHistorial()?.diagnostico || 'No registrado' }}</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-capsule text-primary me-1"></i> Tratamiento / Plan</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.tratamiento || 'No registrado' }}</div>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-journal-plus text-primary me-1"></i> Observaciones Generales</label>
+                    <div class="p-3 bg-light rounded border text-dark text-muted italic">{{ atencionmedicaHistorial()?.observaciones || 'Sin observaciones adicionales' }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        }
+      </div>
+
+      <div class="modal-footer bg-white border-top p-3 d-flex justify-content-end gap-2" style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+        <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="cerrarModalDetalleHistorial()">
+          <i class="bi bi-xl-circle me-1"></i> Cerrar Informe
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

@@ -165,3 +165,39 @@ export class PlantillasService {
   }
   
 }
+
+export const CONFIGURACION_TABLAS: Record<string, Record<string, string>> = {
+  pacientes: {
+    cedula: 'Cédula',
+    nombres: 'Nombres',
+    apellidos: 'Apellidos',
+    fecha_nacimiento: 'Fecha de Nacimiento',
+    telefono: 'Teléfono',
+    correo: 'Correo',
+    genero: 'Genero',
+    antecedente_personal: 'Antecedentes Personales',
+    antecedente_familiar: 'Antecedentes Familiares',
+    antecedente_alergias: 'Antecedentes de Alergias'
+  },
+  citas_medicas: {
+    motivo: 'Motivo de consulta',
+    fecha: 'Fecha de la cita',
+    estado: 'Estado'
+  },
+  atenciones_medicas: {
+    motivo_consulta: 'Motivo de consulta',
+    enfermedad_actual: 'Enfermedad actual',
+    diagnostico: 'Diagnóstico',
+    tratamiento: 'Tratamiento',
+    examen_fisico: 'Examen Fisico',
+    observaciones: 'Observaciones'
+  },
+  signos_vitales: {
+    presion_arterial: 'Presion Arterial',
+    frecuencia_cardiaca: 'Frecuencia Cardiaca',
+    saturacion: 'Saturacion',
+    temperatura: 'Temperatura',
+    peso: 'Peso',
+    talla: 'Talla'
+  }
+};

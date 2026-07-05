@@ -58,23 +58,59 @@
           <label class="custom-form-label">
             Nombre completo <span class="text-danger">*</span>
           </label>
-          <input type="text" class="form-control custom-input" placeholder="Ej: Dr. Juan Carlos Bodoque"
-            [(ngModel)]="nombre_completo">
+          <input type="text" name="nombre_completo" class="form-control custom-input" placeholder="Ej: Dr. Juan Carlos Bodoque"
+            [(ngModel)]="nombre_completo" #nombreCtrl="ngModel" required>
         </div>
 
         <div class="mb-3">
           <label class="custom-form-label">
             Correo electrónico <span class="text-danger">*</span>
           </label>
-          <input type="email" class="form-control custom-input" placeholder="usuario@correo.com" [(ngModel)]="email">
+          <input type="email" name="email" class="form-control custom-input" placeholder="usuario@correo.com" [(ngModel)]="email"
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #correoCtrl="ngModel" required>
+          @if (correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched)) {
+          <div class="form-text text-danger mt-1 small">
+            <i class="bi bi-exclamation-circle me-1"></i> Por favor, ingrese un formato de correo válido.
+          </div>
+          }
         </div>
 
         <div class="mb-3">
-          <label class="custom-form-label">
-            Contraseña <span class="text-danger">*</span>
-          </label>
-          <input type="password" class="form-control custom-input" placeholder="Mínimo 6 caracteres"
-            [(ngModel)]="password">
+          <label class="custom-form-label">Contraseña</label>
+          <input type="password" class="form-control custom-input" [(ngModel)]="password"
+            placeholder="Mínimo 6 caracteres">
+
+          <div class="password-req-box mt-2 p-3 rounded" [ngClass]="'estado-' + colorRecuadro">
+            <p class="fw-bold mb-2">La contraseña requiere tener:</p>
+
+            <ul class="list-unstyled mb-0 ms-2">
+              <li [ngClass]="validacionesPassword.longitud ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesPassword.longitud ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                6 Caracteres mínimo
+              </li>
+              <li [ngClass]="validacionesPassword.mayuscula ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesPassword.mayuscula ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter en mayúscula
+              </li>
+              <li [ngClass]="validacionesPassword.minuscula ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesPassword.minuscula ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter en minúscula
+              </li>
+              <li [ngClass]="validacionesPassword.numero ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesPassword.numero ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter numérico
+              </li>
+              <li [ngClass]="validacionesPassword.especial ? 'text-success' : 'text-danger'">
+                <i class="bi me-2"
+                  [ngClass]="validacionesPassword.especial ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+                Carácter especial (@/()-_)
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div class="mb-4">
@@ -88,7 +124,7 @@
           </select>
         </div>
 
-        <button class="btn btn-primary rounded-pill w-100 py-2 mt-2" [disabled]="creando()" (click)="crearUsuario()">
+        <button class="btn btn-primary rounded-pill w-100 py-2 mt-2" [disabled]="creando() || nombreCtrl.invalid || correoCtrl.invalid || colorRecuadro !== 'verde'" (click)="crearUsuario()">
           @if (!creando()) {
           <span><i class="bi bi-person-plus-fill me-2"></i> Crear usuario</span>
           } @else {
