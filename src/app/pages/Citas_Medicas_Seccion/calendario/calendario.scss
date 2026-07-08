@@ -298,3 +298,58 @@ $texto-discreto: #A6B6BD;
     }
   }
 }
+
+// ==========================================================================
+// AUTOCOMPLETE CUSTOM - DROPDOWN DE PACIENTES
+// ==========================================================================
+.searchable-dropdown {
+  .dropdown-list-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050; // Para que pase por encima de otros elementos del formulario
+    background: $fondo-secundario;
+    border: 1px solid $borders;
+    border-radius: 12px;
+    margin-top: 6px;
+    max-height: 220px;
+    overflow-y: auto; // Activa el scroll si hay muchos pacientes
+    box-shadow: 0 10px 25px rgba(22, 55, 74, 0.12);
+
+    li {
+      padding: 12px 16px;
+      color: $texto-secundario;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-bottom: 1px solid $fondo-terciario;
+      transition: background 0.2s ease;
+
+      &:last-child { 
+        border-bottom: none; 
+      }
+      
+      &:hover {
+        background: $fondo-terciario;
+        color: $primario-oscuro;
+      }
+
+      &.empty-msg {
+        color: $texto-discreto;
+        cursor: default;
+        text-align: center;
+        padding: 20px;
+        &:hover { background: transparent; }
+      }
+    }
+    
+    // Estilo para el scrollbar para que coincida con el diseño
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: $borders;
+      border-radius: 10px;
+    }
+  }
+}

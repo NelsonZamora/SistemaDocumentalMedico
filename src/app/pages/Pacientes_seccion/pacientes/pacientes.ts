@@ -39,6 +39,7 @@ export class PacientesComponent implements OnInit {
   antecedentes_personales = '';
   antecedentes_familiares = '';
   antecedentes_alergias = '';
+  role = localStorage.getItem('userRole');
 
   pacienteSeleccionado: any = null;
   aceptaProteccionDatos = false;
@@ -341,26 +342,32 @@ export class PacientesComponent implements OnInit {
     try {
       const data = await this.pacientesService.getPacientes();
 
-      for (let p of data) {
-        if (p.foto_perfil) {
-          p.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
+      if (data && data.length > 0) {
+        for (let p of data) {
+          if (p.foto_perfil) {
+            p.foto_url = await this.pacientesService.getFotoUrl(p.foto_perfil);
+          }
         }
+
+        this.pacientesOriginales = data;
+        this.pacientes.set(data);
+
+        if (this.textoBusqueda) {
+          this.filtrar();
+        }
+
+        this.tablaPaciente.set(true);
+      } else {
+        this.pacientesOriginales = [];
+        this.tablaPaciente.set(false);
       }
 
-      this.pacientesOriginales = data;
-
-      this.pacientes.set(data);
-
-      if (this.textoBusqueda) {
-        this.filtrar();
-      }
 
     } catch (error) {
       console.error(error);
     }
 
     this.cargando.set(false);
-    this.tablaPaciente.set(true);
   }
 
   filtrar() {

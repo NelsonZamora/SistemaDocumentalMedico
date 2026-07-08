@@ -475,7 +475,8 @@ $texto-discreto: #A6B6BD;
   color: white;
 }
 .info-card {
-  background: #E6F7FA;
+  background: $secundario-claro;
+  border-color: transparent;
 }
 .help-item {
   display: flex;
@@ -741,6 +742,11 @@ textarea.form-control{
   
   &.border-accent-top { border-top: 4px solid $primario !important; }
   &.border-success-top { border-top: 4px solid $btn-exito !important; }
+  &.info-card {
+    background: $secundario-claro;
+    border-color: transparent;
+    box-shadow: none;
+  }
 }
 
 .custom-block-title { 
@@ -748,7 +754,6 @@ textarea.form-control{
   font-weight: 600; 
 }
 
-// Cajas de Signos Vitales (Triage Histórico)
 .bg-success-light { 
   background-color: #f0fdf4 !important; 
   border-bottom-color: #dcfce7 !important; 

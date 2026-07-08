@@ -157,9 +157,12 @@
                 <button class="btn btn-outline-primary btn-sm" (click)="verPaciente(p);$event.stopPropagation()">
                   <i class="bi bi-eye"></i> Ver
                 </button>
+                @if(role === 'medico' || role === 'admin'){
                 <button class="btn btn-primary btn-sm" (click)="editarPaciente(p);$event.stopPropagation()">
                   <i class="bi bi-pencil"></i> Editar
                 </button>
+                }
+
               </div>
             </td>
           </tr>
@@ -221,6 +224,7 @@
                 Información Personal
               </button>
             </li>
+            @if(role === 'medico' || role === 'admin'){
             <li class="nav-item">
               <button class="nav-link" [class.active]="pestanaActiva === 'medica'" (click)="pestanaActiva = 'medica'"
                 type="button">
@@ -228,6 +232,7 @@
                 Información Médica
               </button>
             </li>
+            }
           </ul>
           @if(pestanaActiva === 'personal') {
           <div class="row g-3 tab-animation">
@@ -504,7 +509,8 @@
                     <td>{{ historial.motivo }}</td>
                     <td>{{ historial.perfiles.nombre_completo }}</td>
                     <td>
-                      <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="verDetallesCitaHistorial(historial)">
+                      <button class="btn btn-outline-primary btn-sm rounded-pill px-3"
+                        (click)="verDetallesCitaHistorial(historial)">
                         <i class="bi bi-eye-fill me-1"></i> Detalles
                       </button>
                     </td>
@@ -691,10 +697,11 @@
 </div>
 }
 @if (mostrarModalDetalleHistorial()) {
-<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.5); z-index: 1060; overflow-y: auto;">
+<div class="modal fade show d-block" tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5); z-index: 1060; overflow-y: auto;">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem;">
-      
+
       <div class="modal-header bg-white border-bottom p-4">
         <div>
           <h3 class="modal-title page-title m-0 text-dark-blue fs-4">
@@ -711,7 +718,7 @@
       <div class="modal-body bg-main-soft p-4">
         @if (citaHistorialSeleccionada()) {
         <div class="row g-4">
-          
+
           <div class="col-md-6">
             <div class="dashboard-card h-100 border-accent-top bg-white p-0 overflow-hidden shadow-sm">
               <div class="p-3 border-bottom bg-light">
@@ -721,7 +728,8 @@
               </div>
               <div class="p-4">
                 <h5 class="fw-bold text-dark-blue mb-3">
-                  {{ citaHistorialSeleccionada().pacientes?.apellidos || '' }}, {{ citaHistorialSeleccionada().pacientes?.nombres || 'Datos Paciente' }}
+                  {{ citaHistorialSeleccionada().pacientes?.apellidos || '' }}, {{
+                  citaHistorialSeleccionada().pacientes?.nombres || 'Datos Paciente' }}
                 </h5>
                 <div class="d-flex flex-column gap-2 small">
                   <div class="info-row d-flex justify-content-between border-bottom pb-1">
@@ -730,10 +738,12 @@
                   </div>
                   <div class="info-row d-flex justify-content-between border-bottom pb-1">
                     <span class="info-label text-muted"><i class="bi bi-person-badge"></i> Médico Tratante:</span>
-                    <span class="info-value fw-semibold text-dark">{{ citaHistorialSeleccionada().perfiles?.nombre_completo || 'N/A' }}</span>
+                    <span class="info-value fw-semibold text-dark">{{
+                      citaHistorialSeleccionada().perfiles?.nombre_completo || 'N/A' }}</span>
                   </div>
                   <div class="info-row d-flex flex-column gap-1 mt-1">
-                    <span class="info-label text-muted"><i class="bi bi-chat-left-text"></i> Motivo inicial registrado:</span>
+                    <span class="info-label text-muted"><i class="bi bi-chat-left-text"></i> Motivo inicial
+                      registrado:</span>
                     <span class="info-value text-dark bg-light p-2 rounded border-start border-3 border-info small">
                       {{ citaHistorialSeleccionada().motivo }}
                     </span>
@@ -755,37 +765,44 @@
                   <div class="col-6">
                     <div class="vital-sign-box bg-light p-2 rounded text-center border">
                       <span class="vital-label d-block text-muted small">P. Arterial</span>
-                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.presion_arterial || '--/--' }}</span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.presion_arterial || '--/--'
+                        }}</span>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="vital-sign-box bg-light p-2 rounded text-center border">
                       <span class="vital-label d-block text-muted small">F. Cardíaca</span>
-                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.frecuencia_cardiaca || '--' }} <small class="fs-6 text-muted">bpm</small></span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.frecuencia_cardiaca || '--'
+                        }} <small class="fs-6 text-muted">bpm</small></span>
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="vital-sign-box bg-light p-2 rounded text-center border">
                       <span class="vital-label d-block text-muted small">Sat. O₂</span>
-                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.saturacion || '--' }}<small class="fs-6 text-muted">%</small></span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.saturacion || '--' }}<small
+                          class="fs-6 text-muted">%</small></span>
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="vital-sign-box bg-light p-2 rounded text-center border">
                       <span class="vital-label d-block text-muted small">Temp.</span>
-                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.temperatura || '--' }}<small class="fs-6 text-muted">°C</small></span>
+                      <span class="vital-value fw-bold text-dark fs-5">{{ signosHistorial()?.temperatura || '--'
+                        }}<small class="fs-6 text-muted">°C</small></span>
                     </div>
                   </div>
                   <div class="col-4">
                     <div class="vital-sign-box bg-light p-2 rounded text-center border">
                       <span class="vital-label d-block text-muted small">Peso/Talla</span>
-                      <span class="vital-value fw-bold text-dark fs-6">{{ signosHistorial()?.peso || '-' }}<small class="text-muted">kg</small> / {{ signosHistorial()?.talla || '-' }}<small class="text-muted">m</small></span>
+                      <span class="vital-value fw-bold text-dark fs-6">{{ signosHistorial()?.peso || '-' }}<small
+                          class="text-muted">kg</small> / {{ signosHistorial()?.talla || '-' }}<small
+                          class="text-muted">m</small></span>
                     </div>
                   </div>
                 </div>
                 @if (signosHistorial()?.observaciones) {
                 <div class="alert alert-info mt-3 mb-0 p-2 small border-0 bg-success-light text-success-dark rounded">
-                  <i class="bi bi-journal-text me-1"></i> <strong>Obs Triage:</strong> {{ signosHistorial().observaciones }}
+                  <i class="bi bi-journal-text me-1"></i> <strong>Obs Triage:</strong> {{
+                  signosHistorial().observaciones }}
                 </div>
                 }
               </div>
@@ -799,32 +816,44 @@
                   <i class="bi bi-clipboard2-pulse text-accent me-2"></i> Evolución Clínica de la Consulta
                 </h5>
               </div>
-              
+
               <div class="p-4">
                 <div class="row g-3">
                   <div class="col-md-12">
-                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-chat-square-quote text-primary me-1"></i> Motivo de consulta (Ampliado)</label>
-                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.motivo_consulta || 'No registrado' }}</div>
+                    <label class="custom-form-label text-secondary fw-semibold"><i
+                        class="bi bi-chat-square-quote text-primary me-1"></i> Motivo de consulta (Ampliado)</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.motivo_consulta ||
+                      'No registrado' }}</div>
                   </div>
                   <div class="col-md-12">
-                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-file-medical text-primary me-1"></i> Enfermedad Actual</label>
-                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.enfermedad_actual || 'No registrado' }}</div>
+                    <label class="custom-form-label text-secondary fw-semibold"><i
+                        class="bi bi-file-medical text-primary me-1"></i> Enfermedad Actual</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.enfermedad_actual
+                      || 'No registrado' }}</div>
                   </div>
                   <div class="col-md-12">
-                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-person-bounding-box text-primary me-1"></i> Examen Físico</label>
-                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.examen_fisico || 'No registrado' }}</div>
+                    <label class="custom-form-label text-secondary fw-semibold"><i
+                        class="bi bi-person-bounding-box text-primary me-1"></i> Examen Físico</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.examen_fisico ||
+                      'No registrado' }}</div>
                   </div>
                   <div class="col-md-6">
-                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-clipboard-check text-primary me-1"></i> Diagnóstico (CIE-10 / Texto)</label>
-                    <div class="p-3 bg-light rounded border text-dark fw-medium">{{ atencionmedicaHistorial()?.diagnostico || 'No registrado' }}</div>
+                    <label class="custom-form-label text-secondary fw-semibold"><i
+                        class="bi bi-clipboard-check text-primary me-1"></i> Diagnóstico (CIE-10 / Texto)</label>
+                    <div class="p-3 bg-light rounded border text-dark fw-medium">{{
+                      atencionmedicaHistorial()?.diagnostico || 'No registrado' }}</div>
                   </div>
                   <div class="col-md-6">
-                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-capsule text-primary me-1"></i> Tratamiento / Plan</label>
-                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.tratamiento || 'No registrado' }}</div>
+                    <label class="custom-form-label text-secondary fw-semibold"><i
+                        class="bi bi-capsule text-primary me-1"></i> Tratamiento / Plan</label>
+                    <div class="p-3 bg-light rounded border text-dark">{{ atencionmedicaHistorial()?.tratamiento || 'No
+                      registrado' }}</div>
                   </div>
                   <div class="col-md-12">
-                    <label class="custom-form-label text-secondary fw-semibold"><i class="bi bi-journal-plus text-primary me-1"></i> Observaciones Generales</label>
-                    <div class="p-3 bg-light rounded border text-dark text-muted italic">{{ atencionmedicaHistorial()?.observaciones || 'Sin observaciones adicionales' }}</div>
+                    <label class="custom-form-label text-secondary fw-semibold"><i
+                        class="bi bi-journal-plus text-primary me-1"></i> Observaciones Generales</label>
+                    <div class="p-3 bg-light rounded border text-dark text-muted italic">{{
+                      atencionmedicaHistorial()?.observaciones || 'Sin observaciones adicionales' }}</div>
                   </div>
                 </div>
               </div>
@@ -835,7 +864,8 @@
         }
       </div>
 
-      <div class="modal-footer bg-white border-top p-3 d-flex justify-content-end gap-2" style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+      <div class="modal-footer bg-white border-top p-3 d-flex justify-content-end gap-2"
+        style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
         <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="cerrarModalDetalleHistorial()">
           <i class="bi bi-xl-circle me-1"></i> Cerrar Informe
         </button>

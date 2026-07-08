@@ -32,6 +32,10 @@ export class CalendarioComponent implements OnInit {
 
   mostrarModal = signal<boolean>(false);
   pestanaActiva = signal<'cita' | 'signos'>('cita');
+  textoBusquedaPaciente = signal('');
+  mostrarListaPacientes = signal(false);
+  textoBusquedaMedico = signal('');
+  mostrarListaMedicos = signal(false);
 
   fechaSeleccionada = '';
   presion_arterial = '';
@@ -262,5 +266,56 @@ export class CalendarioComponent implements OnInit {
     this.paciente_id = '';
     this.medico_id = '';
     this.motivo = '';
+  }
+
+  pacientesFiltrados = computed(() => {
+    const busqueda = this.textoBusquedaPaciente().toLowerCase().trim();
+
+    if (!busqueda) return this.pacientes();
+
+    return this.pacientes().filter((p: any) =>
+      `${p.apellidos} ${p.nombres}`.toLowerCase().includes(busqueda) ||
+      (p.cedula && p.cedula.includes(busqueda))
+    );
+  });
+
+  buscarPaciente(texto: string) {
+    this.textoBusquedaPaciente.set(texto);
+    this.paciente_id = '';
+  }
+
+  seleccionarPaciente(paciente: any) {
+    this.paciente_id = paciente.id;
+    this.textoBusquedaPaciente.set(`${paciente.apellidos}, ${paciente.nombres}`);
+    this.mostrarListaPacientes.set(false);
+  }
+
+  ocultarLista() {
+    setTimeout(() => this.mostrarListaPacientes.set(false), 200);
+  }
+
+  medicosFiltrados = computed(() => {
+    const busqueda = this.textoBusquedaMedico().toLowerCase().trim();
+
+    if (!busqueda) return this.medicos();
+
+    return this.medicos().filter((m: any) =>
+      m.nombre_completo.toLowerCase().includes(busqueda)
+    );
+  });
+
+  buscarMedico(texto: string) {
+    this.textoBusquedaMedico.set(texto);
+    this.medico_id = ''; 
+  }
+
+  seleccionarMedico(medico: any) {
+    this.medico_id = medico.id;
+    this.textoBusquedaMedico.set(medico.nombre_completo);
+    this.mostrarListaMedicos.set(false);
+  }
+
+  ocultarListaMedicos() {
+    setTimeout(() => this.mostrarListaMedicos.set(false), 200);
   }
 }
