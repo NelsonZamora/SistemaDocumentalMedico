@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GenerarDocumento } from './generar-documento';
+import { GenerarDocumentoComponent } from './generar-documento';
 
 describe('GenerarDocumento', () => {
-  let component: GenerarDocumento;
-  let fixture: ComponentFixture<GenerarDocumento>;
+  let component: GenerarDocumentoComponent;
+  let fixture: ComponentFixture<GenerarDocumentoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GenerarDocumento],
+      imports: [GenerarDocumentoComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(GenerarDocumento);
+    fixture = TestBed.createComponent(GenerarDocumentoComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
