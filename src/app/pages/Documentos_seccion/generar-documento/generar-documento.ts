@@ -34,7 +34,7 @@ export class GenerarDocumentoComponent implements OnInit {
   atencionSeleccionada = signal<any>(null);
 
   camposPlantilla = signal<any[]>([]);
-  
+
   previewHtml = signal<string>('');
   cargando = signal<boolean>(true);
 
@@ -47,7 +47,7 @@ export class GenerarDocumentoComponent implements OnInit {
     private plantillasService: PlantillasService,
     private pacientesService: PacientesService,
     private generarDocumentoService: AtencionMedicaService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.contextoClinico = history.state?.contextoClinico;
@@ -57,7 +57,7 @@ export class GenerarDocumentoComponent implements OnInit {
 
   async cargarContexto() {
     const pts = this.pacientes();
-    
+
     if (this.contextoClinico?.paciente_id) {
       const encontrado = pts.find(p => p.id === this.contextoClinico.paciente_id);
       this.pacienteSeleccionado.set(encontrado || null);
@@ -130,7 +130,7 @@ export class GenerarDocumentoComponent implements OnInit {
         });
 
         this.previewHtmlOriginal = html;
-      } 
+      }
       else if (extension === 'xlsx' || extension === 'xls') {
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -166,7 +166,7 @@ export class GenerarDocumentoComponent implements OnInit {
 
         html = html.replace(/>([^<]*\{([^}]+)\}[^<]*)</g, (match, contenido, campo) => {
           const limpio = campo.trim().toLowerCase();
-          const reemplazo = contenido.replace(`{${campo}}`, 
+          const reemplazo = contenido.replace(`{${campo}}`,
             `<span class="campo-doc" data-campo="${limpio}">{${campo}}</span>`
           );
           return `>${reemplazo}<`;
@@ -204,23 +204,20 @@ export class GenerarDocumentoComponent implements OnInit {
   actualizarCamposAtencion() {
     const atencion = this.atencionSeleccionada();
     if (!atencion) return;
+    
+    const signos = atencion.signos_vitales || {};
 
-    const signos = atencion.signos_vitales;
+    for (const campo of this.camposPlantilla()) {
 
-    this.valoresCampos['motivo_consulta'] = atencion.motivo_consulta || '';
-    this.valoresCampos['enfermedad actual'] = atencion.enfermedad_actual || '';
-    this.valoresCampos['examen fisico'] = atencion.examen_fisico || '';
-    this.valoresCampos['diagnostico'] = atencion.diagnostico || '';
-    this.valoresCampos['tratamiento'] = atencion.tratamiento || '';
-    this.valoresCampos['observaciones'] = atencion.observaciones || '';
+      if (campo.origen === 'bd') {
+        if (atencion[campo.columna] !== undefined && atencion[campo.columna] !== null) {
+          this.valoresCampos[campo.nombre] = atencion[campo.columna];
+        }
+        else if (signos[campo.columna] !== undefined && signos[campo.columna] !== null) {
+          this.valoresCampos[campo.nombre] = signos[campo.columna];
+        }
+      }
 
-    if (signos) {
-      this.valoresCampos['presion arterial'] = signos.presion_arterial || '';
-      this.valoresCampos['frecuencia cardiaca'] = signos.frecuencia_cardiaca || '';
-      this.valoresCampos['saturacion'] = signos.saturacion || '';
-      this.valoresCampos['temperatura'] = signos.temperatura || '';
-      this.valoresCampos['peso'] = signos.peso || '';
-      this.valoresCampos['talla'] = signos.talla || '';
     }
 
     this.actualizarPreview();
@@ -228,7 +225,7 @@ export class GenerarDocumentoComponent implements OnInit {
 
   actualizarPreview() {
     let html = this.previewHtmlOriginal;
-
+    console.log(this.camposPlantilla())
     for (const campo of this.camposPlantilla()) {
       const nombreCampo = campo.nombre.trim();
       const valor = this.valoresCampos[nombreCampo] || '';
@@ -283,7 +280,7 @@ export class GenerarDocumentoComponent implements OnInit {
         });
 
         saveAs(output, `${nombreArchivo}.docx`);
-      } 
+      }
       else if (extension === 'xlsx' || extension === 'xls') {
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(arrayBuffer);

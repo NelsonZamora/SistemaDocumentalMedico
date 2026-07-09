@@ -115,10 +115,8 @@ export class GestionUsuariosComponent
     const codigos: { [key: string]: string } = {
       'perfiles': 'Perfiles',
       'pacientes': 'Pacientes',
-      'procesos_clinicos': 'Procesos Clínicos',
       'plantillas': 'Plantillas',
       'documentos': 'Documentos',
-      'historial_ediciones': 'Historial de Ediciones',
       'citas_medicas': 'Citas Médicas',
       'signos_vitales': 'Signos Vitales',
       'atenciones_medicas': 'Atenciones Médicas',

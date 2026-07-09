@@ -136,14 +136,15 @@ export class CalendarioComponent implements OnInit {
   }
 
   onDateClick(info: any) {
-    this.pestanaActiva.set('cita');
-    this.citaSeleccionada.set(null);
+    this.limpiarCampos();
 
     this.fechaSeleccionada = info.dateStr;
     this.mostrarModal.set(true);
   }
 
   abrirNuevaCita() {
+    this.limpiarCampos();
+
     const ahora = new Date();
     this.fechaSeleccionada = ahora.toISOString().split('T')[0];
     this.hora_inicio = ahora.toTimeString().substring(0, 5);
@@ -191,6 +192,7 @@ export class CalendarioComponent implements OnInit {
   }
 
   onEventClick(info: any) {
+    this.limpiarCampos();
     this.pestanaActiva.set('cita');
 
     const extendedProps = info.event.extendedProps;
@@ -202,6 +204,16 @@ export class CalendarioComponent implements OnInit {
     this.hora_inicio = extendedProps.hora_inicio;
     this.hora_fin = extendedProps.hora_fin;
     this.motivo = extendedProps.motivo || '';
+
+    const pacienteEncontrado = this.pacientes().find(p => p.id === this.paciente_id);
+    if (pacienteEncontrado) {
+      this.textoBusquedaPaciente.set(`${pacienteEncontrado.apellidos}, ${pacienteEncontrado.nombres}`);
+    }
+
+    const medicoEncontrado = this.medicos().find(m => m.id === this.medico_id);
+    if (medicoEncontrado) {
+      this.textoBusquedaMedico.set(medicoEncontrado.nombre_completo);
+    }
 
     this.mostrarModal.set(true);
   }
@@ -261,11 +273,9 @@ export class CalendarioComponent implements OnInit {
   }
 
   cerrarModal() {
+
     this.mostrarModal.set(false);
-    this.pestanaActiva.set('cita');
-    this.paciente_id = '';
-    this.medico_id = '';
-    this.motivo = '';
+    this.limpiarCampos();
   }
 
   pacientesFiltrados = computed(() => {
@@ -306,13 +316,23 @@ export class CalendarioComponent implements OnInit {
 
   buscarMedico(texto: string) {
     this.textoBusquedaMedico.set(texto);
-    this.medico_id = ''; 
+    this.medico_id = '';
   }
 
   seleccionarMedico(medico: any) {
     this.medico_id = medico.id;
     this.textoBusquedaMedico.set(medico.nombre_completo);
     this.mostrarListaMedicos.set(false);
+  }
+
+  limpiarCampos() {
+    this.pestanaActiva.set('cita');
+    this.citaSeleccionada.set(null);
+    this.paciente_id = '';
+    this.medico_id = '';
+    this.textoBusquedaPaciente.set('');
+    this.textoBusquedaMedico.set('');
+    this.motivo = '';
   }
 
   ocultarListaMedicos() {

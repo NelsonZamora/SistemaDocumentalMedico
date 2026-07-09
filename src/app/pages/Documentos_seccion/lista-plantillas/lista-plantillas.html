@@ -100,7 +100,8 @@
               </span>
             </td>
             <td>
-              <span class="text-muted small text-truncate d-inline-block" style="max-width: 200px;" title="{{ plantilla.archivo_url_path }}">
+              <span class="text-muted small text-truncate d-inline-block" style="max-width: 200px;"
+                title="{{ plantilla.archivo_url_path }}">
                 {{ plantilla.archivo_url_path }}
               </span>
             </td>
@@ -110,7 +111,8 @@
               </span>
             </td>
             <td class="text-end pe-4">
-              <button class="btn btn-primary btn-sm py-1 px-3 rounded-pill" (click)="abrirEditar(plantilla); $event.stopPropagation()">
+              <button class="btn btn-primary btn-sm py-1 px-3 rounded-pill"
+                (click)="abrirEditar(plantilla); $event.stopPropagation()">
                 <i class="bi bi-pencil-square me-1"></i> Editar
               </button>
             </td>
@@ -169,7 +171,8 @@
                 <div class="help-icon-sm"><i class="bi bi-person-vcard"></i></div>
                 <div>
                   <strong class="d-block mb-1">Información del paciente</strong>
-                  <span class="text-muted small">El sistema inyectará automáticamente los datos desde la base de datos.</span>
+                  <span class="text-muted small">El sistema inyectará automáticamente los datos desde la base de
+                    datos.</span>
                 </div>
               </div>
             </div>
@@ -195,18 +198,20 @@
                     </div>
                     <div class="mb-2">
                       <label class="custom-form-label-sm">Origen del dato</label>
-                      <select class="form-select custom-select-sm" [(ngModel)]="campo.origen" (change)="cambiarOrigen(campo)">
-                        <option value="libre">✍️ Ingresar manualmente</option>
-                        <option value="bd">🗄️ Info. del paciente (BD)</option>
+                      <select class="form-select custom-select-sm" [(ngModel)]="campo.origen"
+                        (change)="cambiarOrigen(campo)">
+                        <option value="libre">Entrada libre / Ingreso Manual</option>
+                        <option value="bd">Informacion Guardada del paciente</option>
                       </select>
                     </div>
                     @if (campo.origen === 'bd') {
                     <div class="mb-2 tab-animation">
                       <label class="custom-form-label-sm">Tabla del sistema</label>
-                      <select class="form-select custom-select-sm" [(ngModel)]="campo.tabla" (change)="cargarColumnas(campo)">
+                      <select class="form-select custom-select-sm" [(ngModel)]="campo.tabla"
+                        (change)="cargarColumnas(campo)">
                         <option value="">Seleccionar tabla</option>
-                        @for (t of tablasDisponibles; track t) {
-                        <option [value]="t">{{ t }}</option>
+                        @for (t of tablasDisponibles; track t.valor) {
+                        <option [value]="t.valor">{{ t.nombre }}</option>
                         }
                       </select>
                     </div>
@@ -214,8 +219,8 @@
                       <label class="custom-form-label-sm">Columna asignada</label>
                       <select class="form-select custom-select-sm" [(ngModel)]="campo.columna">
                         <option value="">Seleccionar columna</option>
-                        @for (col of columnasPorTabla[campo.tabla] || []; track col) {
-                        <option [value]="col">{{ col }}</option>
+                        @for (col of columnasPorTabla()[campo.tabla] || []; track col) {
+                        <option [value]="col.id">{{ col.etiqueta }}</option>
                         }
                       </select>
                     </div>
@@ -223,7 +228,8 @@
                     @if (campo.origen === 'libre') {
                     <div class="mb-0 tab-animation">
                       <label class="custom-form-label-sm">Valor de ejemplo (Vista previa)</label>
-                      <input type="text" class="form-control custom-input-sm" placeholder="Ej: Resultado X" [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
+                      <input type="text" class="form-control custom-input-sm" placeholder="Ej: Resultado X"
+                        [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
                     </div>
                     }
                   </div>

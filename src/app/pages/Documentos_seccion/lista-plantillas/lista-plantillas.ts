@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlantillasService } from '../../../services/plantillas';
+import { PlantillasService, CONFIGURACION_TABLAS} from '../../../services/plantillas';
 import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -23,11 +23,12 @@ export class ListaPlantillasComponent implements OnInit {
   modalEditar = signal<boolean>(false);
   camposDetectados = signal<any[]>([]);
   previewHtml = signal<string>('');
-
+  columnasPorTabla= signal<any[]>([]);
   plantillaEditando: any = null;
   valoresCampos: any = {};
-  columnasPorTabla: any = {};
-  tablasDisponibles = ['pacientes'];
+
+  tablasDisponibles = [{ valor: 'pacientes', nombre: 'Pacientes' }, { valor: 'citas_medicas', nombre: 'Citas médicas' }, { valor: 'atenciones_medicas', nombre: 'Atenciones médicas' },
+    { valor: 'signos_vitales', nombre: 'Signos vitales de la cita'}];
   camposOriginales: any[] = [];
   previewHtmlOriginal = '';
 
@@ -170,17 +171,43 @@ export class ListaPlantillasComponent implements OnInit {
     }
   }
 
-  async cargarColumnas(campo: any) {
-    if (!campo.tabla) return;
-    try {
-      const columnas = await this.plantillasService.getColumnas(campo.tabla);
-      this.columnasPorTabla = {
-        ...this.columnasPorTabla,
-        [campo.tabla]: columnas
-      };
-    } catch (error) {
-      console.error(error);
-    }
+  // async cargarColumnas(campo: any) {
+  //   if (!campo.tabla) return;
+  //   try {
+  //     const columnas = await this.plantillasService.getColumnas(campo.tabla);
+  //     this.columnasPorTabla = {
+  //       ...this.columnasPorTabla,
+  //       [campo.tabla]: columnas
+  //     };
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  async cargarColumnas(campo: any){
+        if (!campo.tabla) return;
+        if (this.columnasPorTabla()[campo.tabla]) return;
+    
+    
+        const nombreTabla = campo.tabla;
+        try {
+          const todasLasColumnas = await this.plantillasService.getColumnas(nombreTabla);
+    
+          const config = CONFIGURACION_TABLAS[nombreTabla];
+    
+          const columnasProcesadas = todasLasColumnas
+            .filter((colNombre: string) => config.hasOwnProperty(colNombre))
+            .map((colNombre: string) => ({
+              id: colNombre,
+              etiqueta: config[colNombre]
+            }));
+    
+          this.columnasPorTabla.update(current => ({
+            ...current,
+            [nombreTabla]: columnasProcesadas
+          }));
+        } catch (error) {
+          console.error("Error al procesar columnas:", error);
+        }
   }
 
   actualizarPreview() {

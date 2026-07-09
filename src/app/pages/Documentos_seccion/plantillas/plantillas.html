@@ -149,8 +149,8 @@
                 <label class="custom-form-label-sm">Origen del dato</label>
                 <select class="form-select custom-select-sm" [(ngModel)]="campo.origen">
                   <option value="" disabled selected>Seleccione origen</option>
-                  <option value="libre">Entrada libre / Manual</option>
-                  <option value="bd">Mapear Base de Datos</option>
+                  <option value="libre">Entrada libre / Ingreso Manual</option>
+                  <option value="bd">Informacion Guardada del paciente</option>
                 </select>
               </div>
               @if (campo.origen === 'bd') {
@@ -168,7 +168,7 @@
                 <select class="form-select custom-select-sm" [(ngModel)]="campo.columna">
                   <option value="">Seleccionar columna</option>
                   @for (col of columnasPorTabla()[campo.tabla] || []; track col) {
-                  <option [value]="col">{{ col.etiqueta }}</option>
+                  <option [value]="col.id">{{ col.etiqueta }}</option>
                   }
                 </select>
               </div>
