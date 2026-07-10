@@ -80,7 +80,6 @@
           <tr>
             <th class="ps-4">Nombre de Plantilla</th>
             <th>Campos Dinámicos</th>
-            <th>Archivo Origen</th>
             <th>Fecha de Creación</th>
             <th class="text-end pe-4">Acciones</th>
           </tr>
@@ -100,20 +99,18 @@
               </span>
             </td>
             <td>
-              <span class="text-muted small text-truncate d-inline-block" style="max-width: 200px;"
-                title="{{ plantilla.archivo_url_path }}">
-                {{ plantilla.archivo_url_path }}
-              </span>
-            </td>
-            <td>
               <span class="text-muted small">
                 <i class="bi bi-calendar3 me-1"></i> {{ plantilla.creado_at | date:'short' }}
               </span>
             </td>
             <td class="text-end pe-4">
-              <button class="btn btn-primary btn-sm py-1 px-3 rounded-pill"
+              <button class="btn btn-primary btn-sm py-1 px-3 rounded-pill  me-2"
                 (click)="abrirEditar(plantilla); $event.stopPropagation()">
                 <i class="bi bi-pencil-square me-1"></i> Editar
+              </button>
+              <button class="btn btn-danger btn-sm py-1 px-3 rounded-pill"
+                (click)="eliminarPlantilla(plantilla); $event.stopPropagation()">
+                <i class="bi bi-trash-fill me-1"></i> Borrar
               </button>
             </td>
           </tr>

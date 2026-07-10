@@ -33,7 +33,7 @@ export class PacientesComponent implements OnInit {
   signosHistorial = signal<any>(null);
   atencionmedicaHistorial = signal<any>(null);
 
-
+  pestanaActivaEditar: string = 'personal';
   textoBusqueda: string = '';
   pestanaActiva = 'personal';
   antecedentes_personales = '';
@@ -151,6 +151,7 @@ export class PacientesComponent implements OnInit {
 
   cerrarModalEditar() {
     this.mostrarModalEditar.set(false);
+    this.pestanaActivaEditar = 'personal';
   }
 
   calcularEdad(fecha: string) {
@@ -274,6 +275,7 @@ export class PacientesComponent implements OnInit {
   }
 
   async editarPaciente(p: any) {
+    this.pestanaActivaEditar = 'personal';
     this.pacienteSeleccionado = { ...p };
 
     if (p.foto_perfil) {
@@ -306,7 +308,10 @@ export class PacientesComponent implements OnInit {
           telefono: this.pacienteSeleccionado.telefono,
           genero: this.pacienteSeleccionado.genero,
           fecha_nacimiento: this.pacienteSeleccionado.fecha_nacimiento,
-          foto_perfil: urlFoto
+          foto_perfil: urlFoto,
+          antecedente_personal: this.pacienteSeleccionado.antecedente_personal,
+          antecedente_familiar: this.pacienteSeleccionado.antecedente_familiar,
+          antecedente_alergias: this.pacienteSeleccionado.antecedente_alergias
         }
       );
 

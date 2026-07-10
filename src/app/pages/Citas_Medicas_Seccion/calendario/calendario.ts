@@ -189,6 +189,7 @@ export class CalendarioComponent implements OnInit {
       timer: 2500,
       timerProgressBar: true
     });
+    this.cerrarModal();
   }
 
   onEventClick(info: any) {

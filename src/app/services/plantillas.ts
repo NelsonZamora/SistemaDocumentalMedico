@@ -43,6 +43,34 @@ export class PlantillasService {
     if (error) throw error;
   }
 
+  async eliminarPlantilla(id: string) {
+    // Obtener la información de la plantilla
+    const { data, error: errorConsulta } = await this.supabase
+      .from('plantillas')
+      .select('archivo_url_path')
+      .eq('id', id)
+      .single();
+
+    if (errorConsulta) throw errorConsulta;
+
+    // Eliminar el archivo del bucket si existe
+    if (data.archivo_url_path) {
+      const { error: errorStorage } = await this.supabase.storage
+        .from('documentos')
+        .remove([data.archivo_url_path]);
+
+      if (errorStorage) throw errorStorage;
+    }
+
+    // Eliminar el registro de la base de datos
+    const { error: errorEliminar } = await this.supabase
+      .from('plantillas')
+      .delete()
+      .eq('id', id);
+
+    if (errorEliminar) throw errorEliminar;
+  }
+
   async getPlantillas() {
     const { data, error } = await this.supabase
       .from('plantillas')
@@ -57,12 +85,12 @@ export class PlantillasService {
   }
 
   async getColumnas(tabla: string) {
-      const { data, error } = await this.supabase
-        .rpc('obtener_columnas', { tabla });
+    const { data, error } = await this.supabase
+      .rpc('obtener_columnas', { tabla });
 
-      if (error) throw error;
+    if (error) throw error;
 
-      return data.map((c: any) => c.columna);
+    return data.map((c: any) => c.columna);
   }
 
   async actualizarPlantilla(id: string, campos: any[]) {
@@ -163,7 +191,7 @@ export class PlantillasService {
         }]);
     if (error) throw error;
   }
-  
+
 }
 
 export const CONFIGURACION_TABLAS: Record<string, Record<string, string>> = {

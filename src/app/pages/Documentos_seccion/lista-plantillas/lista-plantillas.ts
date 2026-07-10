@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlantillasService, CONFIGURACION_TABLAS} from '../../../services/plantillas';
+import { PlantillasService, CONFIGURACION_TABLAS } from '../../../services/plantillas';
 import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -23,16 +23,16 @@ export class ListaPlantillasComponent implements OnInit {
   modalEditar = signal<boolean>(false);
   camposDetectados = signal<any[]>([]);
   previewHtml = signal<string>('');
-  columnasPorTabla= signal<any[]>([]);
+  columnasPorTabla = signal<any[]>([]);
   plantillaEditando: any = null;
   valoresCampos: any = {};
 
   tablasDisponibles = [{ valor: 'pacientes', nombre: 'Pacientes' }, { valor: 'citas_medicas', nombre: 'Citas médicas' }, { valor: 'atenciones_medicas', nombre: 'Atenciones médicas' },
-    { valor: 'signos_vitales', nombre: 'Signos vitales de la cita'}];
+  { valor: 'signos_vitales', nombre: 'Signos vitales de la cita' }];
   camposOriginales: any[] = [];
   previewHtmlOriginal = '';
 
-  constructor(private plantillasService: PlantillasService, private cd: ChangeDetectorRef) {}
+  constructor(private plantillasService: PlantillasService, private cd: ChangeDetectorRef) { }
 
   async ngOnInit() {
     await this.cargarPlantillas();
@@ -84,7 +84,7 @@ export class ListaPlantillasComponent implements OnInit {
         });
 
         this.previewHtmlOriginal = html;
-      } 
+      }
       else if (extension === 'xlsx' || extension === 'xls') {
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -142,13 +142,54 @@ export class ListaPlantillasComponent implements OnInit {
     }
   }
 
+  async eliminarPlantilla(plantilla: any) {
+    const resultado = await Swal.fire({
+      title: '¿Eliminar plantilla?',
+      text: 'Esta acción eliminará la plantilla y su documento de forma permanente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      reverseButtons: true
+    });
+
+    if (!resultado.isConfirmed) {
+      return;
+    }
+
+    try {
+      await this.plantillasService.eliminarPlantilla(plantilla.id);
+
+      await Swal.fire({
+        title: '¡Eliminada!',
+        text: 'La plantilla fue eliminada correctamente.',
+        icon: 'success',
+        timer: 1800,
+        showConfirmButton: false
+      });
+
+      await this.cargarPlantillas(); // Recargar la tabla
+    } catch (error) {
+      console.error(error);
+
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo eliminar la plantilla.',
+        icon: 'error'
+      });
+    }
+
+  }
+
   async guardarCambios() {
     try {
       await this.plantillasService.actualizarPlantilla(
         this.plantillaEditando.id,
         this.camposDetectados()
       );
-      
+
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -158,7 +199,7 @@ export class ListaPlantillasComponent implements OnInit {
         timer: 2500,
         timerProgressBar: true
       });
-      
+
       this.modalEditar.set(false);
       await this.cargarPlantillas();
     } catch (error) {
@@ -183,31 +224,31 @@ export class ListaPlantillasComponent implements OnInit {
   //     console.error(error);
   //   }
   // }
-  async cargarColumnas(campo: any){
-        if (!campo.tabla) return;
-        if (this.columnasPorTabla()[campo.tabla]) return;
-    
-    
-        const nombreTabla = campo.tabla;
-        try {
-          const todasLasColumnas = await this.plantillasService.getColumnas(nombreTabla);
-    
-          const config = CONFIGURACION_TABLAS[nombreTabla];
-    
-          const columnasProcesadas = todasLasColumnas
-            .filter((colNombre: string) => config.hasOwnProperty(colNombre))
-            .map((colNombre: string) => ({
-              id: colNombre,
-              etiqueta: config[colNombre]
-            }));
-    
-          this.columnasPorTabla.update(current => ({
-            ...current,
-            [nombreTabla]: columnasProcesadas
-          }));
-        } catch (error) {
-          console.error("Error al procesar columnas:", error);
-        }
+  async cargarColumnas(campo: any) {
+    if (!campo.tabla) return;
+    if (this.columnasPorTabla()[campo.tabla]) return;
+
+
+    const nombreTabla = campo.tabla;
+    try {
+      const todasLasColumnas = await this.plantillasService.getColumnas(nombreTabla);
+
+      const config = CONFIGURACION_TABLAS[nombreTabla];
+
+      const columnasProcesadas = todasLasColumnas
+        .filter((colNombre: string) => config.hasOwnProperty(colNombre))
+        .map((colNombre: string) => ({
+          id: colNombre,
+          etiqueta: config[colNombre]
+        }));
+
+      this.columnasPorTabla.update(current => ({
+        ...current,
+        [nombreTabla]: columnasProcesadas
+      }));
+    } catch (error) {
+      console.error("Error al procesar columnas:", error);
+    }
   }
 
   actualizarPreview() {
@@ -215,8 +256,8 @@ export class ListaPlantillasComponent implements OnInit {
     Object.keys(this.valoresCampos).forEach(campo => {
       const valor = this.valoresCampos[campo];
       const regex = new RegExp(`<span class="campo-doc" data-campo="${campo}">.*?<\\/span>`, 'g');
-      
-      html = html.replace(regex, 
+
+      html = html.replace(regex,
         `<span class="campo-doc" data-campo="${campo}">${valor || `{${campo}}`}</span>`
       );
     });

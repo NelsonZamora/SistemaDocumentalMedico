@@ -624,11 +624,26 @@
           </button>
         </div>
         <div class="col-md-8 p-5 bg-white-content">
-          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4 header-edit-container">
-            <h5 class="view-title m-0">
-              <i class="bi bi-pencil-square me-2"></i>Edición de datos
-            </h5>
-          </div>
+          <ul class="nav nav-tabs custom-nav-tabs mb-4">
+            <li class="nav-item">
+              <button class="nav-link" [class.active]="pestanaActivaEditar === 'personal'"
+                (click)="pestanaActivaEditar = 'personal'" type="button">
+                <i class="bi bi-person-vcard me-2"></i>
+                Información Personal
+              </button>
+            </li>
+            @if(role === 'medico' || role === 'admin'){
+            <li class="nav-item">
+              <button class="nav-link" [class.active]="pestanaActivaEditar === 'medica'"
+                (click)="pestanaActivaEditar = 'medica'" type="button">
+                <i class="bi bi-heart-pulse me-2"></i>
+                Información Médica
+              </button>
+            </li>
+            }
+          </ul>
+
+          @if (pestanaActivaEditar === 'personal') {
           <div class="row g-3 tab-animation">
             <div class="col-md-6">
               <label class="custom-form-label">Nombres</label>
@@ -683,6 +698,40 @@
               </select>
             </div>
           </div>
+          }
+
+          @if (pestanaActivaEditar === 'medica') {
+          <div class="row g-3 tab-animation">
+            <div class="col-12">
+              <label class="custom-form-label block-label">
+                <i class="bi bi-file-medical me-2 text-accent"></i>
+                Antecedentes Personales
+              </label>
+              <textarea rows="4" class="form-control custom-textarea"
+                [(ngModel)]="pacienteSeleccionado.antecedente_personal"
+                placeholder="Describa enfermedades previas, cirugías, tratamientos, etc."></textarea>
+            </div>
+            <div class="col-12">
+              <label class="custom-form-label block-label">
+                <i class="bi bi-people-fill me-2 text-accent"></i>
+                Antecedentes Familiares
+              </label>
+              <textarea rows="4" class="form-control custom-textarea"
+                [(ngModel)]="pacienteSeleccionado.antecedente_familiar"
+                placeholder="Describa enfermedades hereditarias o antecedentes familiares relevantes."></textarea>
+            </div>
+            <div class="col-12">
+              <label class="custom-form-label block-label text-danger-emphasis">
+                <i class="bi bi-exclamation-triangle me-2 text-danger"></i>
+                Alergias
+              </label>
+              <textarea rows="4" class="form-control custom-textarea alert-textarea"
+                [(ngModel)]="pacienteSeleccionado.antecedente_alergias"
+                placeholder="Medicamentos, alimentos o sustancias que produzcan alergias."></textarea>
+            </div>
+          </div>
+          }
+
           <div class="mt-5 pt-3 border-top d-flex justify-content-end">
             <button class="btn btn-action-save px-5 py-2 shadow-sm d-flex align-items-center"
               (click)="actualizarPaciente()">
