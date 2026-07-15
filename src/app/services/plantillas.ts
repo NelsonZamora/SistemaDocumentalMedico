@@ -44,38 +44,22 @@ export class PlantillasService {
   }
 
   async eliminarPlantilla(id: string) {
-    // Obtener la información de la plantilla
-    const { data, error: errorConsulta } = await this.supabase
+    const { error } = await this.supabase
       .from('plantillas')
-      .select('archivo_url_path')
-      .eq('id', id)
-      .single();
-
-    if (errorConsulta) throw errorConsulta;
-
-    // Eliminar el archivo del bucket si existe
-    if (data.archivo_url_path) {
-      const { error: errorStorage } = await this.supabase.storage
-        .from('documentos')
-        .remove([data.archivo_url_path]);
-
-      if (errorStorage) throw errorStorage;
-    }
-
-    // Eliminar el registro de la base de datos
-    const { error: errorEliminar } = await this.supabase
-      .from('plantillas')
-      .delete()
+      .update({
+        activa: false
+      })
       .eq('id', id);
 
-    if (errorEliminar) throw errorEliminar;
+    if (error) throw error;
   }
 
   async getPlantillas() {
     const { data, error } = await this.supabase
       .from('plantillas')
       .select('*')
-      .order('creado_at', { ascending: false });
+      .order('creado_at', { ascending: false })
+      .eq('activa', true);
 
     if (error) {
       console.error(error);
@@ -91,6 +75,16 @@ export class PlantillasService {
     if (error) throw error;
 
     return data.map((c: any) => c.columna);
+  }
+
+  async existePlantilla(nombre: string): Promise<boolean> {
+    const { count, error } = await this.supabase
+      .from('plantillas')
+      .select('id', { count: 'exact', head: true })
+      .eq('nombre_plantilla', nombre)
+      .eq('activa', true);
+    if (error) throw error;
+    return (count ?? 0) > 0;
   }
 
   async actualizarPlantilla(id: string, campos: any[]) {

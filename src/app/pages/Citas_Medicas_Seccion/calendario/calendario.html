@@ -127,7 +127,7 @@
               <div class="position-relative searchable-dropdown">
 
                 <input type="text" class="form-control custom-input"
-                  placeholder="Buscar paciente por nombre o apellido..." [ngModel]="textoBusquedaPaciente()"
+                  placeholder="Buscar por nombre, apellido o cédula..." [ngModel]="textoBusquedaPaciente()"
                   (ngModelChange)="buscarPaciente($event)" (focus)="mostrarListaPacientes.set(true)"
                   (blur)="ocultarLista()">
 
@@ -137,7 +137,7 @@
 
                     @for (paciente of pacientesFiltrados(); track paciente.id) {
                     <li (mousedown)="seleccionarPaciente(paciente)">
-                      <span class="fw-bold text-dark-blue">{{ paciente.apellidos }}</span>, {{ paciente.nombres }}
+                      <span class="fw-bold text-dark-blue">{{ paciente.apellidos }}</span>, {{ paciente.nombres }} - C.I {{ paciente.cedula }}
                     </li>
                     }
 

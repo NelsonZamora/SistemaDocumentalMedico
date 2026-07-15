@@ -23,9 +23,10 @@ export class PlantillasComponent {
 
   archivo: File | null = null;
   nombreDocumento = '';
+  nombrePersonalizado = '';
 
   tablasDisponibles = [{ valor: 'pacientes', nombre: 'Pacientes' }, { valor: 'citas_medicas', nombre: 'Citas médicas' }, { valor: 'atenciones_medicas', nombre: 'Atenciones médicas' },
-    { valor: 'signos_vitales', nombre: 'Signos vitales de la cita'}];
+  { valor: 'signos_vitales', nombre: 'Signos vitales de la cita' }];
   previewHtmlOriginal: string = '';
   valoresCampos: any = {};
 
@@ -145,6 +146,23 @@ export class PlantillasComponent {
   async subirPlantilla() {
     try {
       if (!this.archivo) return;
+
+      const nombreFinal = this.nombrePersonalizado.trim() || this.archivo.name;
+
+      const yaExiste = await this.plantillasService.existePlantilla(nombreFinal);
+      if (yaExiste) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'warning',
+          title: 'Ese nombre ya está en uso. Por favor, cambie el nombre o el archivo.',
+          showConfirmButton: false,
+          timer: 4000,
+          timerProgressBar: true
+        });
+        return;
+      }
+
       const ruta = await this.plantillasService.subirDocumento(this.archivo);
 
       await this.plantillasService.guardarPlantilla({
@@ -166,12 +184,14 @@ export class PlantillasComponent {
 
 
       this.archivo = null;
+      this.nombrePersonalizado = '';
       this.camposDetectados.set([]);
       this.totalCampos.set(0);
       this.previewHtml.set('');
       this.previewHtmlOriginal = '';
       this.valoresCampos = {};
     } catch (error: any) {
+      console.log(error)
       Swal.fire({
         toast: true,
         position: 'top-end',

@@ -25,7 +25,7 @@
           </div>
           <div>
             <strong class="d-block mb-1">1. Suba el documento</strong>
-            <span class="text-muted small">Seleccione un archivo estructurado en Word (.docx).</span>
+            <span class="text-muted small">Seleccione un archivo estructurado.</span>
           </div>
         </div>
       </div>
@@ -78,7 +78,8 @@
     </div>
     <div class="small text-muted d-flex align-items-center gap-2">
       <i class="bi bi-exclamation-circle text-primary"></i>
-      <span>Los marcadores de posición deben escribirse estrictamente entre llaves simples dentro del documento original.</span>
+      <span>Los marcadores de posición deben escribirse estrictamente entre llaves simples dentro del documento
+        original.</span>
     </div>
   </div>
   <!-- Zona de Carga de Archivos -->
@@ -86,19 +87,31 @@
     <div class="row align-items-end g-3">
       <div class="col-md-8">
         <label class="custom-form-label">
-          <i class="bi bi-file-earmark-word text-accent me-2"></i> Documento Base (Word)
+          <i class="bi bi-file-earmark-word text-accent me-2"></i> Documento Base
         </label>
         <input type="file" class="form-control custom-input" accept=".docx,.xlsx" (change)="onFileSelected($event)">
         <div class="form-text text-muted small mt-1">
-          Formatos soportados por el motor de renderizado: <strong class="text-dark">.docx</strong> o <strong class="text-dark">.xlsx</strong>
+          Formatos soportados por el motor de renderizado: <strong class="text-dark">.docx</strong> o <strong
+            class="text-dark">.xlsx</strong>
+        </div>
+        <label class="custom-form-label mt-3">
+          <i class="bi bi-pencil-square text-accent me-2"></i> Nombre de la plantilla (opcional)
+        </label>
+        <input type="text" class="form-control custom-input" placeholder="Dejar vacío para usar el nombre del archivo"
+          [(ngModel)]="nombrePersonalizado">
+        <div class="form-text text-muted small mt-1">
+          Si no especifica un nombre, se usará el nombre original del archivo@if (archivo) { : <strong
+            class="text-dark">{{ archivo.name }}</strong> }.
         </div>
       </div>
       <div class="col-md-4">
         <div class="d-flex flex-column flex-sm-row gap-2">
-          <button class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center" (click)="analizarDocumento(); $event.stopPropagation()">
+          <button class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center"
+            (click)="analizarDocumento(); $event.stopPropagation()">
             <i class="bi bi-search me-2"></i> Analizar
           </button>
-          <button class="btn btn-action-success w-100 py-2 d-flex align-items-center justify-content-center" (click)="subirPlantilla(); $event.stopPropagation()" [disabled]="totalCampos() === 0">
+          <button class="btn btn-action-success w-100 py-2 d-flex align-items-center justify-content-center"
+            (click)="subirPlantilla(); $event.stopPropagation()" [disabled]="totalCampos() === 0">
             <i class="bi bi-cloud-upload me-2"></i> Guardar
           </button>
         </div>
@@ -113,10 +126,12 @@
     </div>
     <h5 class="fw-bold text-dark-blue">No se detectaron campos dinámicos</h5>
     <p class="text-muted mb-0 mx-auto max-w-600">
-      El documento <strong class="text-primary-dark">{{ archivo.name }}</strong> fue procesado con éxito, pero no contiene etiquetas válidas encerradas entre llaves.
+      El documento <strong class="text-primary-dark">{{ archivo.name }}</strong> fue procesado con éxito, pero no
+      contiene etiquetas válidas encerradas entre llaves.
     </p>
     <div class="small text-muted mt-3 pt-2 border-top-dashed">
-      Por favor, inserte marcadores como <code class="custom-code">{{ '{datos}' }}</code> en su archivo local, vuelva a cargarlo y pulse "Analizar".
+      Por favor, inserte marcadores como <code class="custom-code">{{ '{datos}' }}</code> en su archivo local, vuelva a
+      cargarlo y pulse "Analizar".
     </div>
   </div>
   }
@@ -176,7 +191,8 @@
               @if (campo.origen === 'libre') {
               <div class="mb-0 tab-animation">
                 <label class="custom-form-label-sm">Valor de simulación</label>
-                <input type="text" class="form-control custom-input-sm" placeholder="Ej: Juan Pérez" [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
+                <input type="text" class="form-control custom-input-sm" placeholder="Ej: Juan Pérez"
+                  [(ngModel)]="valoresCampos[campo.nombre]" (input)="actualizarPreview()" />
               </div>
               }
             </div>

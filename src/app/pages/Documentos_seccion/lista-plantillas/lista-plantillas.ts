@@ -144,11 +144,11 @@ export class ListaPlantillasComponent implements OnInit {
 
   async eliminarPlantilla(plantilla: any) {
     const resultado = await Swal.fire({
-      title: '¿Eliminar plantilla?',
-      text: 'Esta acción eliminará la plantilla y su documento de forma permanente.',
+      title: 'Archivar plantilla?',
+      text: 'Una vez archivada, la plantilla no podrá utilizarse para generar nuevos documentos. Los documentos existentes permanecerán disponibles. Para volver a usarla será necesario cargarla y configurarla nuevamente.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonText: 'Sí, archivar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
@@ -163,8 +163,8 @@ export class ListaPlantillasComponent implements OnInit {
       await this.plantillasService.eliminarPlantilla(plantilla.id);
 
       await Swal.fire({
-        title: '¡Eliminada!',
-        text: 'La plantilla fue eliminada correctamente.',
+        title: 'Archivado!',
+        text: 'La plantilla fue archivada correctamente.',
         icon: 'success',
         timer: 1800,
         showConfirmButton: false
