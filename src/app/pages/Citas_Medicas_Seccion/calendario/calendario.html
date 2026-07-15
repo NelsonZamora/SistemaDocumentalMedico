@@ -26,8 +26,9 @@
             <i class="bi bi-calendar-plus"></i>
           </div>
           <div>
-            <strong>Registrar citas</strong>
-            <p>Utilice el botón "Nueva cita" para programar consultas médicas y asignarlas a un paciente y médico.</p>
+            <strong>Agendar una cita</strong>
+            <p>Presione "Nueva cita" o haga clic directamente sobre un día del calendario. Busque al paciente y al
+              médico escribiendo su nombre o cédula.</p>
           </div>
         </div>
       </div>
@@ -37,8 +38,8 @@
             <i class="bi bi-pencil-square"></i>
           </div>
           <div>
-            <strong>Modificar información</strong>
-            <p>Seleccione una cita del calendario para actualizar horarios, paciente, médico o motivo de consulta.</p>
+            <strong>Editar una cita existente</strong>
+            <p>Haga clic sobre la cita en el calendario para cambiar el horario, el paciente, el médico o el motivo.</p>
           </div>
         </div>
       </div>
@@ -49,8 +50,8 @@
           </div>
           <div>
             <strong>Registrar signos vitales</strong>
-            <p>Desde una cita existente puede acceder a la pestaña de signos vitales para registrar la información
-              clínica inicial.</p>
+            <p>Dentro de una cita ya agendada, abra la pestaña "Signos Vitales" para anotar presión, frecuencia
+              cardíaca, temperatura, peso y talla.</p>
           </div>
         </div>
       </div>
@@ -137,7 +138,8 @@
 
                     @for (paciente of pacientesFiltrados(); track paciente.id) {
                     <li (mousedown)="seleccionarPaciente(paciente)">
-                      <span class="fw-bold text-dark-blue">{{ paciente.apellidos }}</span>, {{ paciente.nombres }} - C.I {{ paciente.cedula }}
+                      <span class="fw-bold text-dark-blue">{{ paciente.apellidos }}</span>, {{ paciente.nombres }} - C.I
+                      {{ paciente.cedula }}
                     </li>
                     }
 

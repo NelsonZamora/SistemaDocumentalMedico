@@ -15,34 +15,48 @@
       <i class="bi bi-info-circle me-2"></i> ¿Cómo funciona la creación de usuarios?
     </h6>
     <div class="row g-3">
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="help-item-minimal">
           <div class="help-icon-sm"><i class="bi bi-person-lines-fill"></i></div>
           <div>
             <strong class="d-block">1. Datos personales</strong>
-            <span class="text-muted small">Complete la información básica y el correo de acceso.</span>
+            <span class="text-muted small">Ingrese el nombre completo y el correo que la persona usará para entrar al
+              sistema.</span>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
+        <div class="help-item-minimal">
+          <div class="help-icon-sm"><i class="bi bi-key"></i></div>
+          <div>
+            <strong class="d-block">2. Cree una contraseña segura</strong>
+            <span class="text-muted small">Verá cada requisito (mayúscula, número, símbolo, etc.) marcarse en verde a
+              medida que lo cumple.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
         <div class="help-item-minimal">
           <div class="help-icon-sm"><i class="bi bi-shield-lock"></i></div>
           <div>
-            <strong class="d-block">2. Asignar permisos</strong>
-            <span class="text-muted small">Defina el nivel de acceso (Médico, Admin o Auxiliar).</span>
+            <strong class="d-block">3. Asigne un rol</strong>
+            <span class="text-muted small">Elija si es Médico, Administrador o Auxiliar, según lo que necesite
+              usar.</span>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
         <div class="help-item-minimal">
           <div class="help-icon-sm"><i class="bi bi-check2-circle"></i></div>
           <div>
-            <strong class="d-block">3. Acceso inmediato</strong>
-            <span class="text-muted small">El usuario podrá ingresar al instante con sus credenciales.</span>
+            <strong class="d-block">4. Acceso inmediato</strong>
+            <span class="text-muted small">Apenas guarde, la persona ya puede ingresar con su correo y
+              contraseña.</span>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 
   <div class="row g-4">
@@ -58,16 +72,17 @@
           <label class="custom-form-label">
             Nombre completo <span class="text-danger">*</span>
           </label>
-          <input type="text" name="nombre_completo" class="form-control custom-input" placeholder="Ej: Dr. Juan Carlos Bodoque"
-            [(ngModel)]="nombre_completo" #nombreCtrl="ngModel" required>
+          <input type="text" name="nombre_completo" class="form-control custom-input"
+            placeholder="Ej: Dr. Juan Carlos Bodoque" [(ngModel)]="nombre_completo" #nombreCtrl="ngModel" required>
         </div>
 
         <div class="mb-3">
           <label class="custom-form-label">
             Correo electrónico <span class="text-danger">*</span>
           </label>
-          <input type="email" name="email" class="form-control custom-input" placeholder="usuario@correo.com" [(ngModel)]="email"
-            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #correoCtrl="ngModel" required>
+          <input type="email" name="email" class="form-control custom-input" placeholder="usuario@correo.com"
+            [(ngModel)]="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #correoCtrl="ngModel"
+            required>
           @if (correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched)) {
           <div class="form-text text-danger mt-1 small">
             <i class="bi bi-exclamation-circle me-1"></i> Por favor, ingrese un formato de correo válido.
@@ -124,7 +139,9 @@
           </select>
         </div>
 
-        <button class="btn btn-primary rounded-pill w-100 py-2 mt-2" [disabled]="creando() || nombreCtrl.invalid || correoCtrl.invalid || colorRecuadro !== 'verde'" (click)="crearUsuario()">
+        <button class="btn btn-primary rounded-pill w-100 py-2 mt-2"
+          [disabled]="creando() || nombreCtrl.invalid || correoCtrl.invalid || colorRecuadro !== 'verde'"
+          (click)="crearUsuario()">
           @if (!creando()) {
           <span><i class="bi bi-person-plus-fill me-2"></i> Crear usuario</span>
           } @else {
