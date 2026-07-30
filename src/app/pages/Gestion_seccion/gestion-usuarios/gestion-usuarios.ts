@@ -58,6 +58,27 @@ export class GestionUsuariosComponent
     }
   }
 
+  paginaActualAuditoria = signal<number>(1);
+  totalPaginasAuditoria = computed(() =>
+    Math.max(1, Math.ceil(this.logsFiltrados().length / this.itemsPorPagina))
+  );
+  logsPaginados = computed(() => {
+    const inicio = (this.paginaActualAuditoria() - 1) * this.itemsPorPagina;
+    return this.logsFiltrados().slice(inicio, inicio + this.itemsPorPagina);
+  });
+
+  irPaginaAnteriorAuditoria() {
+    if (this.paginaActualAuditoria() > 1) {
+      this.paginaActualAuditoria.update(p => p - 1);
+    }
+  }
+
+  irPaginaSiguienteAuditoria() {
+    if (this.paginaActualAuditoria() < this.totalPaginasAuditoria()) {
+      this.paginaActualAuditoria.update(p => p + 1);
+    }
+  }
+
   constructor(
     private usuariosService: UsuariosService
   ) { }
@@ -218,7 +239,7 @@ export class GestionUsuariosComponent
     });
 
     this.logsFiltrados.set(resultado);
-
+    this.paginaActualAuditoria.set(1);
   }
 
   verDetalle(log: any) {
@@ -234,6 +255,7 @@ export class GestionUsuariosComponent
       const auditoria = await this.usuariosService.obtenerAuditoriaById(this.usuarioSeleccionado().id);
       this.rawLogs.set(auditoria);
       this.logsFiltrados.set(auditoria);
+      this.paginaActualAuditoria.set(1);
     } catch (error) {
       console.error(error);
       await Swal.fire({
