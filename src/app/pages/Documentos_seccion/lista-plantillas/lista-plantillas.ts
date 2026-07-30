@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlantillasService, CONFIGURACION_TABLAS } from '../../../services/plantillas';
 import { ChangeDetectorRef } from '@angular/core';
@@ -32,6 +32,29 @@ export class ListaPlantillasComponent implements OnInit {
   camposOriginales: any[] = [];
   previewHtmlOriginal = '';
 
+  // Paginación
+  readonly itemsPorPagina = 5;
+  paginaActualPlantillas = signal<number>(1);
+  totalPaginasPlantillas = computed(() =>
+    Math.max(1, Math.ceil(this.plantillas().length / this.itemsPorPagina))
+  );
+  plantillasPaginadas = computed(() => {
+    const inicio = (this.paginaActualPlantillas() - 1) * this.itemsPorPagina;
+    return this.plantillas().slice(inicio, inicio + this.itemsPorPagina);
+  });
+
+  irPaginaAnteriorPlantillas() {
+    if (this.paginaActualPlantillas() > 1) {
+      this.paginaActualPlantillas.update(p => p - 1);
+    }
+  }
+
+  irPaginaSiguientePlantillas() {
+    if (this.paginaActualPlantillas() < this.totalPaginasPlantillas()) {
+      this.paginaActualPlantillas.update(p => p + 1);
+    }
+  }
+
   constructor(private plantillasService: PlantillasService, private cd: ChangeDetectorRef) { }
 
   async ngOnInit() {
@@ -43,6 +66,7 @@ export class ListaPlantillasComponent implements OnInit {
       this.cargando.set(true);
       const data = await this.plantillasService.getPlantillas();
       this.plantillas.set(data);
+      this.paginaActualPlantillas.set(1);
       this.cargando.set(false);
     } catch (error) {
       console.error(error);

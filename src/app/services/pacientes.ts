@@ -39,12 +39,25 @@ export class PacientesService {
         estado,
         creado_at,
         archivo_final_path,
+        contenido_final,
         plantillas (
-          nombre_plantilla
+          nombre_plantilla,
+          archivo_url_path,
+          contenido_json
         )
       `)
       .eq('paciente_id', pacienteId)
       .order('creado_at', { ascending: false });
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  async descargarDocumentoGenerado(path: string) {
+    const { data, error } = await this.supabase.storage
+      .from('documentos_generados')
+      .download(path);
 
     if (error) throw error;
 
@@ -93,14 +106,14 @@ export class PacientesService {
     if (error) throw error;
   }
 
-    async actualizarPaciente(id: number, paciente: any) {
+  async actualizarPaciente(id: number, paciente: any) {
 
-      const { error } = await this.supabase
-        .from('pacientes')
-        .update(paciente)
-        .eq('id', id);
+    const { error } = await this.supabase
+      .from('pacientes')
+      .update(paciente)
+      .eq('id', id);
 
-      if (error) throw error;
-    }
+    if (error) throw error;
+  }
 
 }

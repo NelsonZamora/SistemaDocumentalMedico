@@ -35,6 +35,29 @@ export class GestionUsuariosComponent
 
   menuAbierto: string | null = null;
 
+  // Paginación
+  readonly itemsPorPagina = 5;
+  paginaActualUsuarios = signal<number>(1);
+  totalPaginasUsuarios = computed(() =>
+    Math.max(1, Math.ceil(this.usuarios().length / this.itemsPorPagina))
+  );
+  usuariosPaginados = computed(() => {
+    const inicio = (this.paginaActualUsuarios() - 1) * this.itemsPorPagina;
+    return this.usuarios().slice(inicio, inicio + this.itemsPorPagina);
+  });
+
+  irPaginaAnteriorUsuarios() {
+    if (this.paginaActualUsuarios() > 1) {
+      this.paginaActualUsuarios.update(p => p - 1);
+    }
+  }
+
+  irPaginaSiguienteUsuarios() {
+    if (this.paginaActualUsuarios() < this.totalPaginasUsuarios()) {
+      this.paginaActualUsuarios.update(p => p + 1);
+    }
+  }
+
   constructor(
     private usuariosService: UsuariosService
   ) { }
@@ -272,6 +295,7 @@ export class GestionUsuariosComponent
     this.cargando.set(true);
     const lista = await this.usuariosService.getUsuarios();
     this.usuarios.set(lista);
+    this.paginaActualUsuarios.set(1);
 
     this.cargando.set(false);
   }
@@ -296,15 +320,11 @@ export class GestionUsuariosComponent
     if (!confirmar.isConfirmed) return;
 
     if (bloquear) {
-
       await this.bloquearUsuario(usuario);
-
     } else {
-
       await this.activarUsuario(usuario);
-
     }
-
+    await this.cargarUsuarios();
   }
 
   async bloquearUsuario(usuario: any) {

@@ -26,8 +26,9 @@ export const authGuard: CanActivateFn = async () => {
       title: 'Sesión finalizada',
       text: 'Su sesión ha sido cerrada por la administración. Comuníquese con el administrador del sistema.'
     });
+    router.navigate(['/']);
     return false;
   }
-
+  
   return true;
 };  

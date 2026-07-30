@@ -130,7 +130,7 @@
                 <input type="text" class="form-control custom-input"
                   placeholder="Buscar por nombre, apellido o cédula..." [ngModel]="textoBusquedaPaciente()"
                   (ngModelChange)="buscarPaciente($event)" (focus)="mostrarListaPacientes.set(true)"
-                  (blur)="ocultarLista()">
+                  (blur)="ocultarLista()" appValidador="alfanumerico">
 
                 @if (mostrarListaPacientes()) {
                 <div class="dropdown-list-container">
@@ -162,7 +162,7 @@
 
                 <input type="text" class="form-control custom-input" placeholder="Buscar médico por nombre..."
                   [ngModel]="textoBusquedaMedico()" (ngModelChange)="buscarMedico($event)"
-                  (focus)="mostrarListaMedicos.set(true)" (blur)="ocultarListaMedicos()">
+                  (focus)="mostrarListaMedicos.set(true)" (blur)="ocultarListaMedicos()" appValidador="alfanumerico">
 
                 @if (mostrarListaMedicos()) {
                 <div class="dropdown-list-container">
@@ -197,7 +197,7 @@
               <label class="custom-form-label">
                 <i class="bi bi-clock me-2 text-accent"></i> Hora Inicio
               </label>
-              <input type="time" class="form-control custom-input" [(ngModel)]="hora_inicio" [min]="horaMinima">
+              <input type="time" class="form-control custom-input" [(ngModel)]="hora_inicio" [min]="horaMinima" (ngModelChange)="onCambioHoraInicio($event)">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">

@@ -125,7 +125,7 @@
           </tr>
         </thead>
         <tbody>
-          @for(p of pacientes(); track p.id){
+          @for(p of pacientesPaginados(); track p.id){
           <tr>
             <td>
               <div class="patient-info">
@@ -165,6 +165,23 @@
         </tbody>
       </table>
     </div>
+    @if (totalPaginasPacientes() > 1) {
+    <div class="d-flex justify-content-between align-items-center p-3 border-top">
+      <small class="text-muted">
+        Página {{ paginaActualPacientes() }} de {{ totalPaginasPacientes() }}
+      </small>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary btn-sm" [disabled]="paginaActualPacientes() === 1"
+          (click)="irPaginaAnteriorPacientes()">
+          <i class="bi bi-chevron-left"></i> Anterior
+        </button>
+        <button class="btn btn-outline-secondary btn-sm"
+          [disabled]="paginaActualPacientes() === totalPaginasPacientes()" (click)="irPaginaSiguientePacientes()">
+          Siguiente <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    }
   </div>
   }
 </div>
@@ -232,9 +249,9 @@
           @if(pestanaActiva === 'personal') {
           <div class="row g-3 tab-animation">
             <div class="col-md-12">
-              <label class="custom-form-label">Cédula / Pasaporte</label>
-              <input type="text" class="form-control custom-input" appValidador="alfanumerico" [(ngModel)]="form.cedula"
-                placeholder="Ej: 09XXXXXXXX">
+              <label class="custom-form-label">Cédula</label>
+              <input type="text" class="form-control custom-input" appValidador="numeros" [(ngModel)]="form.cedula"
+                placeholder="Ej: 09XXXXXXXX" maxlength="10">
             </div>
             <hr class="my-2 divisor-sutil">
             <div class="col-md-6">
@@ -274,7 +291,7 @@
               <label class="custom-form-label">Correo electrónico</label>
               <input type="email" class="form-control custom-input"
                 pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #correoCtrl="ngModel"
-                [(ngModel)]="form.correo" placeholder="ejemplo@correo.com" required>
+                [(ngModel)]="form.correo" placeholder="ejemplo@correo.com">
               @if (correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched)) {
               <div class="form-text text-danger mt-1 small">
                 <i class="bi bi-exclamation-circle me-1"></i> Por favor, ingrese un formato de correo válido.
@@ -360,11 +377,13 @@
                 <i class="bi bi-clock-history me-2"></i>
                 Historial de Visitas
               </div>
+              @if(role === 'medico' || role === 'admin'){
               <div class="list-group-item list-group-item-action p-3"
                 [class.menu-item-active]="vistaActual === 'documentos'" (click)="verDocumentosPaciente()">
                 <i class="bi bi-file-earmark-text me-2"></i>
                 Documentos
               </div>
+              }
             </div>
           </div>
           <button class="btn btn-secondary w-100 mt-5 py-2" (click)="cerrarModalVer()">
@@ -407,7 +426,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <label class="custom-form-label">Cédula / Pasaporte</label>
+              <label class="custom-form-label">Cédula</label>
               <div class="data-view-value fw-medium">
                 {{ pacienteSeleccionado.cedula }}
               </div>
@@ -494,26 +513,48 @@
                     <th>Fecha</th>
                     <th>Motivo de consulta</th>
                     <th>Médico asignado</th>
+                    @if(role === 'medico' || role === 'admin'){
                     <th>Informe Completo</th>
+                    }
                   </tr>
                 </thead>
                 <tbody>
-                  @for (historial of historialPaciente(); track historial.id) {
+                  @for (historial of historialPaginado(); track historial.id) {
                   <tr>
                     <td class="fw-medium text-primary-dark">{{ historial.fecha }}</td>
                     <td>{{ historial.motivo }}</td>
                     <td>{{ historial.perfiles.nombre_completo }}</td>
+                    @if(role === 'medico' || role === 'admin'){
                     <td>
                       <button class="btn btn-outline-primary btn-sm rounded-pill px-3"
                         (click)="verDetallesCitaHistorial(historial)">
                         <i class="bi bi-eye-fill me-1"></i> Detalles
                       </button>
                     </td>
+                    }
                   </tr>
                   }
                 </tbody>
               </table>
             </div>
+            @if (totalPaginasHistorial() > 1) {
+            <div class="d-flex justify-content-between align-items-center pt-3">
+              <small class="text-muted">
+                Página {{ paginaActualHistorial() }} de {{ totalPaginasHistorial() }}
+              </small>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" [disabled]="paginaActualHistorial() === 1"
+                  (click)="irPaginaAnteriorHistorial()">
+                  <i class="bi bi-chevron-left"></i> Anterior
+                </button>
+                <button class="btn btn-outline-secondary btn-sm"
+                  [disabled]="paginaActualHistorial() === totalPaginasHistorial()"
+                  (click)="irPaginaSiguienteHistorial()">
+                  Siguiente <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+            }
             } @else {
             <div class="text-center py-5 empty-state-box">
               <i class="bi bi-calendar-x text-muted mb-3"></i>
@@ -545,7 +586,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @for (documento of documentosPaciente(); track documento.id) {
+                  @for (documento of documentosPaginados(); track documento.id) {
                   <tr>
                     <td class="fw-medium text-primary-dark">{{ documento.plantillas?.nombre_plantilla }}</td>
                     <td>
@@ -557,8 +598,8 @@
                     <td class="text-muted">{{ documento.creado_at | date:'shortDate' }}</td>
                     <td class="text-end">
                       @if (documento.archivo_final_path) {
-                      <button class="btn btn-action-download btn-sm">
-                        <i class="bi bi-download me-1"></i> Descargar
+                      <button class="btn btn-action-download btn-sm" (click)="verDocumento(documento)">
+                        <i class="bi bi-eye me-1"></i> Visualizar informe
                       </button>
                       } @else {
                       <span class="text-muted small italic">Sin archivo</span>
@@ -569,6 +610,24 @@
                 </tbody>
               </table>
             </div>
+            @if (totalPaginasDocumentos() > 1) {
+            <div class="d-flex justify-content-between align-items-center pt-3">
+              <small class="text-muted">
+                Página {{ paginaActualDocumentos() }} de {{ totalPaginasDocumentos() }}
+              </small>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary btn-sm" [disabled]="paginaActualDocumentos() === 1"
+                  (click)="irPaginaAnteriorDocumentos()">
+                  <i class="bi bi-chevron-left"></i> Anterior
+                </button>
+                <button class="btn btn-outline-secondary btn-sm"
+                  [disabled]="paginaActualDocumentos() === totalPaginasDocumentos()"
+                  (click)="irPaginaSiguienteDocumentos()">
+                  Siguiente <i class="bi bi-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+            }
             } @else {
             <div class="text-center py-5 empty-state-box">
               <i class="bi bi-file-earmark-x text-muted mb-3"></i>
@@ -651,7 +710,7 @@
                 [(ngModel)]="pacienteSeleccionado.apellidos" placeholder="Ej: Merino Díaz">
             </div>
             <div class="col-md-6">
-              <label class="custom-form-label">Cédula / Pasaporte</label>
+              <label class="custom-form-label">Cédula</label>
               <input type="text" class="form-control custom-input input-readonly"
                 [(ngModel)]="pacienteSeleccionado.cedula" readonly>
             </div>
@@ -915,6 +974,49 @@
         </button>
       </div>
 
+    </div>
+  </div>
+</div>
+}
+@if (mostrarModalPreviewDocumento()) {
+<div class="modal fade show d-block" tabindex="-1"
+  style="background-color: rgba(0, 0, 0, 0.5); z-index: 1060; overflow-y: auto;">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 1rem;">
+      <div class="modal-header bg-white border-bottom p-4">
+        <div>
+          <h3 class="modal-title page-title m-0 text-dark-blue fs-4">
+            <i class="bi bi-file-earmark-text text-accent me-2"></i>
+            Vista Previa del Documento
+          </h3>
+          <p class="text-muted small mb-0 mt-1">
+            {{ documentoSeleccionado()?.plantillas?.nombre_plantilla }}
+          </p>
+        </div>
+        <button type="button" class="btn-close" (click)="cerrarModalPreviewDocumento()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-main-soft p-4">
+        @if (cargandoPreviewDocumento()) {
+        <div class="d-flex flex-column align-items-center justify-content-center py-5">
+          <div class="spinner-border text-accent mb-3" role="status"></div>
+          <h6 class="text-muted">Cargando vista previa...</h6>
+        </div>
+        } @else {
+        <div class="preview-container shadow-inner mb-0">
+          <div class="documento" [innerHTML]="previewDocumentoHtml()"></div>
+        </div>
+        }
+      </div>
+      <div class="modal-footer bg-white border-top p-3 d-flex justify-content-end gap-2"
+        style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+        <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="cerrarModalPreviewDocumento()">
+          <i class="bi bi-x-lg me-1"></i> Cerrar
+        </button>
+        <button type="button" class="btn btn-action-download rounded-pill px-4" [disabled]="cargandoPreviewDocumento()"
+          (click)="descargarDocumentoLocal()">
+          <i class="bi bi-download me-1"></i> Descargar localmente
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -166,7 +166,7 @@ export class PlantillasComponent {
       const ruta = await this.plantillasService.subirDocumento(this.archivo);
 
       await this.plantillasService.guardarPlantilla({
-        nombre: this.archivo.name,
+        nombre: nombreFinal,
         ruta_archivo: ruta,
         campos: this.camposDetectados(),
         total_campos: this.totalCampos()

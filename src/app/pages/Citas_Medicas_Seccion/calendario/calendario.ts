@@ -278,6 +278,17 @@ export class CalendarioComponent implements OnInit {
     this.mostrarModal.set(false);
     this.limpiarCampos();
   }
+  
+  onCambioHoraInicio(nuevaHora: string) {
+    if (!nuevaHora) return;
+
+    const [horas, minutos] = nuevaHora.split(':').map(Number);
+
+    const fin = new Date();
+    fin.setHours(horas, minutos + 30, 0, 0);
+
+    this.hora_fin = fin.toTimeString().substring(0, 5);
+  }
 
   pacientesFiltrados = computed(() => {
     const busqueda = this.textoBusquedaPaciente().toLowerCase().trim();

@@ -814,3 +814,97 @@ textarea.form-control{
   from { opacity: 0; transform: translateY(5px); } 
   to { opacity: 1; transform: translateY(0); } 
 }
+// ==========================================================================
+// Vista Previa de Documento (consistente con Generar Documento)
+// ==========================================================================
+.preview-container {
+  max-height: 600px;
+  overflow: auto;
+  background: #E1E8EB;
+  padding: 20px;
+  border: 1px solid $borders;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.documento {
+  background: $fondo-secundario;
+  width: auto;
+  max-width: 100%;
+  transform-origin: top center;
+  zoom: 0.85;
+  margin: auto;
+  padding: 35px;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(22, 55, 74, 0.08);
+  line-height: 1.6;
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+  color: #333333;
+
+  ::ng-deep img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: inline-block;
+  }
+
+  ::ng-deep table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    background: $fondo-secundario;
+    table-layout: auto;
+    margin: auto;
+  }
+
+  ::ng-deep td,
+  ::ng-deep th {
+    border: 1px solid #2c3e50 !important;
+    padding: 8px 10px !important;
+    vertical-align: middle;
+    font-size: 13px;
+    white-space: pre-wrap;
+    min-width: 45px;
+  }
+
+  ::ng-deep td[style],
+  ::ng-deep th[style] {
+    white-space: pre-wrap;
+  }
+
+  ::ng-deep p {
+    margin-bottom: 12px;
+  }
+
+  ::ng-deep h1,
+  ::ng-deep h2,
+  ::ng-deep h3 {
+    margin-bottom: 14px;
+    font-weight: 700;
+    color: $primario-oscuro;
+  }
+}
+
+::ng-deep .campo-doc {
+  background: rgba(43, 183, 201, 0.15) !important;
+  color: $primario-oscuro !important;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 700;
+  border: 1px dashed $primario !important;
+  display: inline-block;
+}
+
+.preview-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.preview-container::-webkit-scrollbar-thumb {
+  background: $texto-discreto;
+  border-radius: 10px;
+}
+
+.preview-container::-webkit-scrollbar-track {
+  background: $fondo-terciario;
+}

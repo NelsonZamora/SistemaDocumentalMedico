@@ -204,7 +204,7 @@ export class GenerarDocumentoComponent implements OnInit {
   actualizarCamposAtencion() {
     const atencion = this.atencionSeleccionada();
     if (!atencion) return;
-    
+
     const signos = atencion.signos_vitales || {};
 
     for (const campo of this.camposPlantilla()) {
@@ -327,7 +327,7 @@ export class GenerarDocumentoComponent implements OnInit {
         timer: 2500,
         timerProgressBar: true
       });
-
+      this.limpiarFormulario();
     } catch (error) {
       console.error(error);
       Swal.fire({
@@ -338,4 +338,15 @@ export class GenerarDocumentoComponent implements OnInit {
     }
   }
 
+  limpiarFormulario() {
+    this.pacienteSeleccionado.set(null);
+    this.plantillaSeleccionada.set(null);
+    this.atencionSeleccionada.set(null);
+    this.atenciones.set([]);
+    this.camposPlantilla.set([]);
+    this.previewHtml.set('');
+    this.previewHtmlOriginal = '';
+    this.valoresCampos = {};
+    this.tipoArchivo = '';
+  }
 }
