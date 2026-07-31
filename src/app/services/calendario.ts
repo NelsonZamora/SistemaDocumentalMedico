@@ -15,8 +15,8 @@ export class CalendarioService {
   async getCitas() {
     const { data, error } =
       await this.supabase
-      .from('citas_medicas')
-      .select(`
+        .from('citas_medicas')
+        .select(`
         *,
         pacientes(nombres,apellidos),
         perfiles(nombre_completo)
@@ -30,8 +30,8 @@ export class CalendarioService {
   async crearCita(cita: any) {
     const { error } =
       await this.supabase
-      .from('citas_medicas')
-      .insert([cita]);
+        .from('citas_medicas')
+        .insert([cita]);
 
     if (error) throw error;
   }
@@ -39,9 +39,19 @@ export class CalendarioService {
   async actualizarCita(id: string, datos: any) {
     const { error } =
       await this.supabase
-      .from('citas_medicas')
-      .update(datos)
-      .eq('id', id);
+        .from('citas_medicas')
+        .update(datos)
+        .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async cancelarCita(id: string) {
+    const { error } =
+      await this.supabase
+        .from('citas_medicas')
+        .update({ estado: 'cancelada' })
+        .eq('id', id);
 
     if (error) throw error;
   }
@@ -49,9 +59,9 @@ export class CalendarioService {
   async getPacientes() {
     const { data, error } =
       await this.supabase
-      .from('pacientes')
-      .select('*')
-      .order('apellidos');
+        .from('pacientes')
+        .select('*')
+        .order('apellidos');
 
     if (error) throw error;
 
@@ -61,9 +71,9 @@ export class CalendarioService {
   async getMedicos() {
     const { data, error } =
       await this.supabase
-      .from('perfiles')
-      .select('*')
-      .eq('rol', 'medico');
+        .from('perfiles')
+        .select('*')
+        .eq('rol', 'medico');
 
     if (error) throw error;
 
@@ -91,9 +101,9 @@ export class CalendarioService {
 
       const { error } =
         await this.supabase
-        .from('signos_vitales')
-        .update(datos)
-        .eq('cita_id', datos.cita_id);
+          .from('signos_vitales')
+          .update(datos)
+          .eq('cita_id', datos.cita_id);
 
       if (error) throw error;
 
@@ -101,8 +111,8 @@ export class CalendarioService {
 
       const { error } =
         await this.supabase
-        .from('signos_vitales')
-        .insert([datos]);
+          .from('signos_vitales')
+          .insert([datos]);
 
       if (error) throw error;
     }

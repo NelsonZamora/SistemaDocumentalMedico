@@ -32,6 +32,9 @@ export class AtencionMedicaService {
         pacientes(
           nombres,
           apellidos
+        ),
+        signos_vitales(
+          id
         )
       `)
         .eq('fecha', hoy)
@@ -65,6 +68,36 @@ export class AtencionMedicaService {
     return data;
 
   }
+
+  async guardarSignosVitales(datos: any) {
+
+  const { data: existente } =
+    await this.supabase
+      .from('signos_vitales')
+      .select('id')
+      .eq('cita_id', datos.cita_id)
+      .maybeSingle();
+
+  if (existente) {
+
+    const { error } =
+      await this.supabase
+        .from('signos_vitales')
+        .update(datos)
+        .eq('cita_id', datos.cita_id);
+
+    if (error) throw error;
+
+  } else {
+
+    const { error } =
+      await this.supabase
+        .from('signos_vitales')
+        .insert([datos]);
+
+    if (error) throw error;
+  }
+}
 
   async getAtencionCompleta(
     atencionId: string

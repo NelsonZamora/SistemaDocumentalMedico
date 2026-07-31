@@ -21,12 +21,17 @@
           Flujo de Atención Clínica
         </h6>
         <ol class="mb-0 ps-3 small text-muted custom-ol">
-        <li><strong>Seleccione un paciente:</strong> en la lista de la izquierda aparecen las citas del día, haga clic en la que va atendera.</li>
-        <li><strong>Revise sus signos vitales:</strong> a la derecha verá la presión, frecuencia cardíaca, temperatura y demás datos que ya registró enfermería.</li>
-        <li><strong>Escriba la consulta:</strong> complete el motivo, la enfermedad actual, el examen físico, el diagnóstico y el tratamiento.</li>
-        <li><strong>Guarde la atención:</strong> presione <span class="badge badge-hint success-hint">Guardar Atención</span> para dejarla en la historia del paciente.</li>
-        <li><strong>Emita documentos si lo necesita:</strong> use <span class="badge badge-hint primary-hint">Ir a Documentos</span> para generar recetas o certificados con estos mismos datos.</li>
-      </ol>
+          <li><strong>Seleccione un paciente:</strong> en la lista de la izquierda aparecen las citas del día, haga clic
+            en la que va atendera.</li>
+          <li><strong>Revise sus signos vitales:</strong> a la derecha verá la presión, frecuencia cardíaca, temperatura
+            y demás datos que ya registró enfermería.</li>
+          <li><strong>Escriba la consulta:</strong> complete el motivo, la enfermedad actual, el examen físico, el
+            diagnóstico y el tratamiento.</li>
+          <li><strong>Guarde la atención:</strong> presione <span class="badge badge-hint success-hint">Guardar
+              Atención</span> para dejarla en la historia del paciente.</li>
+          <li><strong>Emita documentos si lo necesita:</strong> use <span class="badge badge-hint primary-hint">Ir a
+              Documentos</span> para generar recetas o certificados con estos mismos datos.</li>
+        </ol>
       </div>
     </div>
   </div>
@@ -50,10 +55,9 @@
           }
 
           @for (cita of citasPendientes(); track cita.id) {
-          <div class="cita-card tab-animation mb-3" 
-               [class.cita-seleccionada]="citaSeleccionada()?.id === cita.id"
-               (click)="seleccionarCita(cita)">
-            
+          <div class="cita-card tab-animation mb-3" [class.cita-seleccionada]="citaSeleccionada()?.id === cita.id"
+            (click)="seleccionarCita(cita)">
+
             <div class="d-flex justify-content-between align-items-start mb-2">
               <div class="d-flex align-items-center gap-3">
                 <div class="avatar-circle-sm">
@@ -68,15 +72,20 @@
                   </small>
                 </div>
               </div>
-              
+
               @if (citaSeleccionada()?.id === cita.id) {
-                <span class="badge badge-active-pulse"><span class="pulse-dot"></span> Atendiendo</span>
+              <span class="badge badge-active-pulse"><span class="pulse-dot"></span> Atendiendo</span>
               }
             </div>
 
             @if (cita.motivo) {
             <div class="cita-motivo mt-3 p-2 rounded small text-muted border-start border-3 border-info">
               {{ cita.motivo }}
+            </div>
+            }
+            @if (!tieneSignosRegistrados(cita)) {
+            <div class="mt-2 small text-danger d-flex align-items-center gap-1">
+              <i class="bi bi-exclamation-triangle-fill"></i> Signos Vitales no registrados
             </div>
             }
           </div>
@@ -88,7 +97,7 @@
     <div class="col-xl-8 col-lg-7">
       @if (citaSeleccionada()) {
       <div class="d-flex flex-column gap-4 tab-animation h-100">
-        
+
         <div class="row g-4">
           <div class="col-md-6">
             <div class="dashboard-card h-100 border-accent-top">
@@ -108,7 +117,8 @@
                   </div>
                   <div class="info-row">
                     <span class="info-label"><i class="bi bi-clock"></i> Hora inicio:</span>
-                    <span class="info-value fw-semibold text-dark">{{ citaSeleccionada().hora_inicio.substring(0,5) }}</span>
+                    <span class="info-value fw-semibold text-dark">{{ citaSeleccionada().hora_inicio.substring(0,5)
+                      }}</span>
                   </div>
                   <div class="info-row">
                     <span class="info-label"><i class="bi bi-chat-left-text"></i> Motivo:</span>
@@ -121,12 +131,18 @@
 
           <div class="col-md-6">
             <div class="dashboard-card h-100 border-success-top">
-              <div class="p-3 border-bottom bg-success-light">
+              <div class="p-3 border-bottom bg-success-light d-flex justify-content-between align-items-center">
                 <h6 class="custom-block-title m-0 text-success-dark">
                   <i class="bi bi-activity me-2"></i> Triage / Signos Vitales
                 </h6>
+                @if (signos()) {
+                <span class="badge bg-success-subtle text-success-dark">Registrado</span>
+                } @else {
+                <span class="badge bg-warning text-dark">Pendiente</span>
+                }
               </div>
               <div class="p-4">
+                @if (signos()) {
                 <div class="row g-3">
                   <div class="col-6">
                     <div class="vital-sign-box">
@@ -155,13 +171,49 @@
                   <div class="col-4">
                     <div class="vital-sign-box">
                       <span class="vital-label">Peso/Talla</span>
-                      <span class="vital-value">{{ signos()?.peso || '-' }}<small>kg</small> / {{ signos()?.talla || '-' }}<small>m</small></span>
+                      <span class="vital-value">{{ signos()?.peso || '-' }}<small>kg</small> / {{ signos()?.talla || '-'
+                        }}<small>m</small></span>
                     </div>
                   </div>
                 </div>
-                @if (signos()?.observaciones) {
-                <div class="alert info-edit-banner mt-3 mb-0 p-2 small border-success-light text-success-dark">
-                  <i class="bi bi-journal-text me-1"></i> <strong>Obs:</strong> {{ signos().observaciones }}
+                } @else {
+                <div class="row g-3">
+                  <div class="col-6">
+                    <label class="custom-form-label small">Presión Arterial</label>
+                    <input type="text" class="form-control custom-input" [(ngModel)]="presion_arterial"
+                      appValidador="signos" placeholder="Ej: 120/80">
+                  </div>
+                  <div class="col-6">
+                    <label class="custom-form-label small">F. Cardíaca (lpm)</label>
+                    <input type="number" class="form-control custom-input" [(ngModel)]="frecuencia_cardiaca"
+                      appValidador="signos" placeholder="Ej: 75">
+                  </div>
+                  <div class="col-4">
+                    <label class="custom-form-label small">Sat. O₂ (%)</label>
+                    <input type="number" class="form-control custom-input" [(ngModel)]="saturacion"
+                      appValidador="signos" placeholder="Ej: 98">
+                  </div>
+                  <div class="col-4">
+                    <label class="custom-form-label small">Temp. (°C)</label>
+                    <input type="number" step="0.1" class="form-control custom-input" [(ngModel)]="temperatura"
+                      appValidador="signos" placeholder="Ej: 36.5">
+                  </div>
+                  <div class="col-4">
+                    <label class="custom-form-label small">Peso (kg)</label>
+                    <input type="number" step="0.1" class="form-control custom-input" [(ngModel)]="peso"
+                      appValidador="signos" placeholder="Ej: 70.5">
+                  </div>
+                  <div class="col-12">
+                    <label class="custom-form-label small">Talla (m)</label>
+                    <input type="number" step="0.01" class="form-control custom-input" [(ngModel)]="talla"
+                      appValidador="signos" placeholder="Ej: 1.75">
+                  </div>
+
+                  <div class="col-12">
+                    <button class="btn btn-action-success w-100" (click)="guardarSignosVitalesAtencion()">
+                      <i class="bi bi-heart-pulse me-2"></i> Guardar signos vitales
+                    </button>
+                  </div>
                 </div>
                 }
               </div>
@@ -169,39 +221,47 @@
           </div>
         </div>
 
+        @if (signos()) {
         <div class="dashboard-card flex-grow-1 d-flex flex-column">
           <div class="p-4 border-bottom bg-white d-flex align-items-center">
             <h5 class="custom-block-title m-0">
               <i class="bi bi-clipboard2-pulse text-accent me-2"></i> Evolución Clínica
             </h5>
           </div>
-          
+
           <div class="p-4 flex-grow-1">
             <div class="row g-4">
               <div class="col-md-12">
-                <label class="custom-form-label"><i class="bi bi-chat-square-quote text-primary me-1"></i> Motivo de consulta (Ampliado)</label>
-                <textarea rows="2" class="form-control custom-textarea" placeholder="Desarrolle el motivo de la consulta..." [(ngModel)]="motivo_consulta"></textarea>
+                <label class="custom-form-label"><i class="bi bi-chat-square-quote text-primary me-1"></i> Motivo de
+                  consulta (Ampliado)</label>
+                <textarea rows="2" class="form-control custom-textarea"
+                  placeholder="Desarrolle el motivo de la consulta..." [(ngModel)]="motivo_consulta"></textarea>
               </div>
               <div class="col-md-12">
-                <label class="custom-form-label"><i class="bi bi-file-medical text-primary me-1"></i> Enfermedad Actual</label>
-                <textarea rows="3" class="form-control custom-textarea" placeholder="Historia de la enfermedad..." [(ngModel)]="enfermedad_actual"></textarea>
+                <label class="custom-form-label"><i class="bi bi-file-medical text-primary me-1"></i> Enfermedad
+                  Actual</label>
+                <textarea rows="3" class="form-control custom-textarea" placeholder="Historia de la enfermedad..."
+                  [(ngModel)]="enfermedad_actual"></textarea>
               </div>
               <div class="col-md-12">
-                <label class="custom-form-label"><i class="bi bi-person-bounding-box text-primary me-1"></i> Examen Físico</label>
-                <textarea rows="3" class="form-control custom-textarea" placeholder="Hallazgos del examen físico..." [(ngModel)]="examen_fisico"></textarea>
+                <label class="custom-form-label"><i class="bi bi-person-bounding-box text-primary me-1"></i> Examen
+                  Físico</label>
+                <textarea rows="3" class="form-control custom-textarea" placeholder="Hallazgos del examen físico..."
+                  [(ngModel)]="examen_fisico"></textarea>
               </div>
               <div class="col-md-6">
-                <label class="custom-form-label"><i class="bi bi-clipboard-check text-primary me-1"></i> Diagnóstico (CIE-10 / Texto)</label>
-                <textarea rows="3" class="form-control custom-textarea" placeholder="Diagnóstico presuntivo o definitivo..." [(ngModel)]="diagnostico"></textarea>
+                <label class="custom-form-label"><i class="bi bi-clipboard-check text-primary me-1"></i> Diagnóstico
+                  (CIE-10 / Texto)</label>
+                <textarea rows="3" class="form-control custom-textarea"
+                  placeholder="Diagnóstico presuntivo o definitivo..." [(ngModel)]="diagnostico"></textarea>
               </div>
               <div class="col-md-6">
-                <label class="custom-form-label"><i class="bi bi-capsule text-primary me-1"></i> Tratamiento / Plan</label>
-                <textarea rows="3" class="form-control custom-textarea" placeholder="Indicaciones y medicamentos..." [(ngModel)]="tratamiento"></textarea>
+                <label class="custom-form-label"><i class="bi bi-capsule text-primary me-1"></i> Tratamiento /
+                  Plan</label>
+                <textarea rows="3" class="form-control custom-textarea" placeholder="Indicaciones y medicamentos..."
+                  [(ngModel)]="tratamiento"></textarea>
               </div>
-              <div class="col-md-12">
-                <label class="custom-form-label"><i class="bi bi-journal-plus text-primary me-1"></i> Observaciones Generales</label>
-                <textarea rows="2" class="form-control custom-textarea" placeholder="Notas adicionales (opcional)..." [(ngModel)]="observaciones"></textarea>
-              </div>
+              
             </div>
           </div>
 
@@ -214,16 +274,29 @@
             </button>
           </div>
         </div>
-
+        } @else {
+        <div
+          class="dashboard-card flex-grow-1 d-flex flex-column align-items-center justify-content-center p-5 text-center empty-state-container">
+          <div class="empty-icon-lg mb-3">
+            <i class="bi bi-exclamation-triangle text-warning"></i>
+          </div>
+          <h5 class="custom-block-title text-muted mb-2">Signos vitales pendientes</h5>
+          <p class="text-tertiary max-w-400 mx-auto mb-0">
+            Por favor registre signos vitales para seguir con la atención médica.
+          </p>
+        </div>
+        }
       </div>
       } @else {
-      <div class="dashboard-card h-100 d-flex flex-column align-items-center justify-content-center p-5 text-center empty-state-container">
+      <div
+        class="dashboard-card h-100 d-flex flex-column align-items-center justify-content-center p-5 text-center empty-state-container">
         <div class="empty-icon-lg mb-4">
           <i class="bi bi-heart-pulse text-muted"></i>
         </div>
         <h4 class="custom-block-title text-muted mb-2">Sala de Espera</h4>
         <p class="text-tertiary max-w-400 mx-auto">
-          Seleccione un paciente de la lista de "Citas del Día" a la izquierda para comenzar el registro de la atención médica.
+          Seleccione un paciente de la lista de "Citas del Día" a la izquierda para comenzar el registro de la atención
+          médica.
         </p>
       </div>
       }

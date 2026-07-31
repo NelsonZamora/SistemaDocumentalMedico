@@ -3,6 +3,7 @@ import { LoginComponent } from './pages/login/login';
 import { authGuard } from './guards/auth-guard';
 import { guestGuard } from './guards/guest-guard';
 import { adminGuard } from './guards/admin-guard';
+import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
 
@@ -51,6 +52,7 @@ export const routes: Routes = [
 
       {
         path: 'plantillas',
+        canActivate: [roleGuard(['admin'])],
         loadComponent: () =>
           import('./pages/Documentos_seccion/plantillas/plantillas')
             .then(m => m.PlantillasComponent)
@@ -58,6 +60,7 @@ export const routes: Routes = [
 
       {
         path: 'plantillas/lista',
+        canActivate: [roleGuard(['admin'])],
         loadComponent: () =>
           import('./pages/Documentos_seccion/lista-plantillas/lista-plantillas')
             .then(m => m.ListaPlantillasComponent)
@@ -65,6 +68,7 @@ export const routes: Routes = [
       
       {
         path: 'plantillas/generar',
+        canActivate: [roleGuard(['admin', 'medico'])],
         loadComponent: () =>
           import('./pages/Documentos_seccion/generar-documento/generar-documento')
             .then(m => m.GenerarDocumentoComponent)

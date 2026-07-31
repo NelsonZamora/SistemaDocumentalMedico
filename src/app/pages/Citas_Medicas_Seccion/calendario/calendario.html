@@ -197,7 +197,8 @@
               <label class="custom-form-label">
                 <i class="bi bi-clock me-2 text-accent"></i> Hora Inicio
               </label>
-              <input type="time" class="form-control custom-input" [(ngModel)]="hora_inicio" [min]="horaMinima" (ngModelChange)="onCambioHoraInicio($event)">
+              <input type="time" class="form-control custom-input" [(ngModel)]="hora_inicio" [min]="horaMinima"
+                (ngModelChange)="onCambioHoraInicio($event)">
             </div>
             <div class="col-md-6">
               <label class="custom-form-label">
@@ -256,6 +257,12 @@
           }
           <div class="mt-5 pt-3 border-top d-flex justify-content-end gap-3">
             @if (pestanaActiva() === 'cita') {
+            @if (citaSeleccionada() && citaSeleccionada().estado === 'programada') {
+            <button class="btn btn-outline-danger px-4 py-2 shadow-sm d-flex align-items-center"
+              (click)="cancelarCita()">
+              <i class="bi bi-x-circle me-2"></i> Cancelar cita
+            </button>
+            }
             <button class="btn btn-action-success px-5 py-2 shadow-sm d-flex align-items-center"
               (click)="guardarCita()">
               <i class="bi bi-floppy me-2"></i> Guardar cita

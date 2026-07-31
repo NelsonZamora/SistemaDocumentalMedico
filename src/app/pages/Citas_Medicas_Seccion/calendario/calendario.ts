@@ -109,6 +109,7 @@ export class CalendarioComponent implements OnInit {
       title: `${cita.pacientes.nombres} ${cita.pacientes.apellidos}`,
       start: `${cita.fecha}T${cita.hora_inicio}`,
       end: `${cita.fecha}T${cita.hora_fin}`,
+      classNames: cita.estado === 'cancelada' ? ['evento-cancelado'] : [],
       extendedProps: cita
     }));
 
@@ -273,12 +274,51 @@ export class CalendarioComponent implements OnInit {
     }
   }
 
+  async cancelarCita() {
+    const citaActual = this.citaSeleccionada();
+    if (!citaActual) return;
+
+    const confirmacion = await Swal.fire({
+      icon: 'warning',
+      title: '¿Cancelar esta cita?',
+      text: 'La cita quedará marcada como cancelada y no se podrá revertir desde aquí.',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar cita',
+      cancelButtonText: 'Volver',
+      confirmButtonColor: '#d33'
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    try {
+      await this.calendarioService.cancelarCita(citaActual.id);
+      this.cerrarModal();
+      await this.cargarCitas();
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Cita cancelada correctamente',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo cancelar la cita'
+      });
+    }
+  }
+
   cerrarModal() {
 
     this.mostrarModal.set(false);
     this.limpiarCampos();
   }
-  
+
   onCambioHoraInicio(nuevaHora: string) {
     if (!nuevaHora) return;
 
