@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit {
         this.pacientesHoy.set(resumen.pacientesHoy || 0);
         this.documentosEmitidos.set(resumen.documentosEmitidos || 0);
         this.pendientes.set(resumen.pendientes || 0);
-        this.proximaCita.set(resumen.proximaCita.hora_inicio || "Sin citas");
+        this.proximaCita.set(resumen.proximaCita?.hora_inicio ? resumen.proximaCita.hora_inicio.substring(0, 5) : 'Sin citas' );
         this.pacientesRecientes.set(resumen.pacientesRecientes || []);
       } catch (error) {
         console.error('Error al cargar métricas del dashboard:', error);

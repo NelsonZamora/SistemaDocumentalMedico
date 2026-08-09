@@ -16,6 +16,7 @@ $texto-principal: #16374A;
 $texto-secundario: #4A6572;
 $texto-terciario: #7A8D99;
 $texto-claro: #FFFFFF;
+$texto-discreto: #A6B6BD;
 
 // ==========================================================================
 // Estructuras Base
@@ -168,3 +169,19 @@ $texto-claro: #FFFFFF;
 // Animaciones
 .tab-animation { animation: fadeIn 0.3s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  .custom-input, .custom-select, .custom-textarea {
+    background-color: $fondo-principal;
+    border: 1px solid $borders;
+    color: $primario-oscuro;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    &:focus {
+      background-color: $fondo-secundario;
+      border-color: $primario;
+      box-shadow: 0 0 0 3px rgba(43, 183, 201, 0.15);
+      outline: none;
+    }
+    &::placeholder { color: $texto-discreto; }
+  }
