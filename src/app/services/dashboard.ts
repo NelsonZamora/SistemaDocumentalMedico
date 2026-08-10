@@ -23,7 +23,7 @@ export class DashboardService {
       .gt('hora_inicio', horaActual).order('hora_inicio').limit(1).maybeSingle();
 
     const { data: pacientesRecientes } = await supabase.from('citas_medicas').select('*, pacientes(nombres, apellidos)')
-      .eq('medico_id', medicoId).or(`fecha.lt.${hoy},and(fecha.eq.${hoy},hora_inicio.lt.${horaActual})`)
+      .eq('medico_id', medicoId).eq('estado', 'atendida').or(`fecha.lt.${hoy},and(fecha.eq.${hoy},hora_inicio.lt.${horaActual})`)
       .order('fecha', { ascending: false }).order('hora_inicio', { ascending: false }).limit(5);
 
     return {
