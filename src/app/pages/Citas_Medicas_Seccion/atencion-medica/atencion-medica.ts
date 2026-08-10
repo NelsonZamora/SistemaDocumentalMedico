@@ -53,6 +53,7 @@ export class AtencionMedicaComponent implements OnInit {
   async cargarPendientes() {
     const pendientes = await this.atencionMedicaService.getPendientes();
     this.citasPendientes.set(pendientes);
+    console.log(this.citasPendientes())
   }
 
   tieneSignosRegistrados(cita: any): boolean {

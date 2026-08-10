@@ -147,21 +147,41 @@ export class CalendarioComponent implements OnInit {
     this.limpiarCampos();
 
     const ahora = new Date();
-    this.fechaSeleccionada = ahora.toISOString().split('T')[0];
-    this.hora_inicio = ahora.toTimeString().substring(0, 5);
+    // this.fechaSeleccionada = ahora.toISOString().split('T')[0];
+    // this.hora_inicio = ahora.toTimeString().substring(0, 5);
 
-    const fin = new Date();
+    // const fin = new Date();
+    // fin.setMinutes(fin.getMinutes() + 30);
+    // this.hora_fin = fin.toTimeString().substring(0, 5);
+
+    // Fecha actual local
+    this.fechaSeleccionada =
+      `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
+
+    // Hora actual local
+    this.hora_inicio =
+      `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+
+    // 30 minutos después
+    const fin = new Date(ahora);
     fin.setMinutes(fin.getMinutes() + 30);
-    this.hora_fin = fin.toTimeString().substring(0, 5);
+
+    this.hora_fin =
+      `${String(fin.getHours()).padStart(2, '0')}:${String(fin.getMinutes()).padStart(2, '0')}`;
 
     this.mostrarModal.set(true);
   }
 
   get horaMinima(): string {
-    const hoy = new Date().toISOString().split('T')[0];
+
+    const ahora = new Date();
+    const hoy =
+      `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`;
+
     if (this.fechaSeleccionada === hoy) {
-      return new Date().toTimeString().substring(0, 5);
+      return `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
     }
+
     return '00:00';
   }
 

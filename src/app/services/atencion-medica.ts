@@ -19,11 +19,13 @@ export class AtencionMedicaService {
 
   async getPendientes() {
 
-    const hoy =
+    const hoy2 =
       new Date()
         .toISOString()
         .split('T')[0];
 
+    const fecha = new Date();
+    const hoy = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
     const { data, error } =
       await this.supabase
         .from('citas_medicas')
@@ -71,33 +73,33 @@ export class AtencionMedicaService {
 
   async guardarSignosVitales(datos: any) {
 
-  const { data: existente } =
-    await this.supabase
-      .from('signos_vitales')
-      .select('id')
-      .eq('cita_id', datos.cita_id)
-      .maybeSingle();
-
-  if (existente) {
-
-    const { error } =
+    const { data: existente } =
       await this.supabase
         .from('signos_vitales')
-        .update(datos)
-        .eq('cita_id', datos.cita_id);
+        .select('id')
+        .eq('cita_id', datos.cita_id)
+        .maybeSingle();
 
-    if (error) throw error;
+    if (existente) {
 
-  } else {
+      const { error } =
+        await this.supabase
+          .from('signos_vitales')
+          .update(datos)
+          .eq('cita_id', datos.cita_id);
 
-    const { error } =
-      await this.supabase
-        .from('signos_vitales')
-        .insert([datos]);
+      if (error) throw error;
 
-    if (error) throw error;
+    } else {
+
+      const { error } =
+        await this.supabase
+          .from('signos_vitales')
+          .insert([datos]);
+
+      if (error) throw error;
+    }
   }
-}
 
   async getAtencionCompleta(
     atencionId: string
@@ -212,16 +214,17 @@ export class AtencionMedicaService {
 
     if (error) throw error;
 
+    const fecha = new Date();
+
+    const hoy =
+      `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
     await this.supabase
       .from('citas_medicas')
       .update({
 
         estado: 'atendida',
 
-        fecha_atencion:
-          new Date()
-            .toISOString()
-
+        fecha_atencion: hoy
       })
       .eq(
         'id',

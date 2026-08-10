@@ -8,7 +8,9 @@ export class DashboardService {
   async getResumenMedico() {
     const supabase = this.authService.getClient();
     const medicoId = await this.authService.getUserId();
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy2 = new Date().toISOString().split('T')[0];
+    const fecha = new Date();
+    const hoy = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
 
     const { count: pacientesHoy } = await supabase.from('citas_medicas').select('*', { count: 'exact', head: true })
       .eq('medico_id', medicoId).eq('fecha', hoy).eq('estado', 'atendida');
@@ -37,7 +39,9 @@ export class DashboardService {
 
   async getResumenAdmin() {
     const supabase = this.authService.getClient();
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy2 = new Date().toISOString().split('T')[0];
+    const fecha = new Date();
+    const hoy = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
 
     const { count: totalPacientes } = await supabase.from('pacientes').select('*', { count: 'exact', head: true });
     const { count: totalDocumentos } = await supabase.from('documentos').select('*', { count: 'exact', head: true });
@@ -49,7 +53,9 @@ export class DashboardService {
 
   async getResumenAuxiliar() {
     const supabase = this.authService.getClient();
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy2 = new Date().toISOString().split('T')[0];
+    const fecha = new Date();
+    const hoy = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
 
     const { count: citasHoy } = await supabase.from('citas_medicas').select('*', { count: 'exact', head: true }).eq('fecha', hoy).eq('estado', 'atendida');
     const { count: totalCitasAux } = await supabase.from('citas_medicas').select('*', { count: 'exact', head: true }).eq('fecha', hoy);
