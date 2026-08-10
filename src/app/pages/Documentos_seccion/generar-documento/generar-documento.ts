@@ -64,7 +64,7 @@ export class GenerarDocumentoComponent implements OnInit {
     }
 
     if (this.contextoClinico?.atencion_medica_id) {
-      const dataAtenciones = await this.generarDocumentoService.getAtencionesMedicas();
+      const dataAtenciones = await this.generarDocumentoService.getAtencionesMedicasbyId(this.contextoClinico.paciente_id);
       this.atenciones.set(dataAtenciones);
 
       const encontrada = dataAtenciones.find(a => a.id === this.contextoClinico.atencion_medica_id);
