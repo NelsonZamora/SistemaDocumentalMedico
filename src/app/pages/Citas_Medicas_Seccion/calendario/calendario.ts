@@ -185,6 +185,10 @@ export class CalendarioComponent implements OnInit {
     return '00:00';
   }
 
+  get citaAtendida(): boolean {
+    return this.citaSeleccionada()?.estado === 'atendida';
+  }
+
   async guardarSignosVitales() {
     const citaActual = this.citaSeleccionada();
 
